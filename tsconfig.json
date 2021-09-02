@@ -11,6 +11,12 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
+    "paths": {
+      "ngx-webrtc-lib": [
+        "dist/ngx-webrtc-lib/ngx-webrtc-lib",
+        "dist/ngx-webrtc-lib"
+      ]
+    },
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,

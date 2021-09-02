@@ -105,6 +105,37 @@
           }
         }
       }
+    },
+    "ngx-webrtc-lib": {
+      "projectType": "library",
+      "root": "projects/ngx-webrtc-lib",
+      "sourceRoot": "projects/ngx-webrtc-lib/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngx-webrtc-lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-webrtc-lib/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-webrtc-lib/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-webrtc-lib/src/test.ts",
+            "tsConfig": "projects/ngx-webrtc-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "ngx-webrtc"
