@@ -6,7 +6,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./webrtc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WebrtcComponent implements OnInit {
+export class WebRtcComponent implements OnInit {
 
   constructor() { }
 
