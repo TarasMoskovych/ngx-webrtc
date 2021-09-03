@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WebrtcComponent } from './webrtc.component';
+import { WebRtcComponent } from './webrtc.component';
 
-describe('WebrtcComponent', () => {
-  let component: WebrtcComponent;
-  let fixture: ComponentFixture<WebrtcComponent>;
+describe('WebRtcComponent', () => {
+  let component: WebRtcComponent;
+  let fixture: ComponentFixture<WebRtcComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WebrtcComponent ]
+      declarations: [ WebRtcComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WebrtcComponent);
+    fixture = TestBed.createComponent(WebRtcComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

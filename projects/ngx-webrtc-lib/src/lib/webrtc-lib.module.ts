@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
-import { WebrtcComponent } from './webrtc.component';
+import { WebRtcComponent } from './webrtc.component';
 
 @NgModule({
   declarations: [
-    WebrtcComponent
+    WebRtcComponent,
   ],
   imports: [
   ],
   exports: [
-  ]
+    WebRtcComponent,
+  ],
 })
-export class WebrtcModule { }
+export class WebRtcModule { }
