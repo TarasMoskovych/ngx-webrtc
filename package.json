@@ -7,6 +7,7 @@
     "build": "ng build",
     "build:lib": "ng build --project ngx-webrtc-lib",
     "watch": "ng build --watch --configuration development",
+    "publish": "cd ./projects/ngx-webrtc-lib && npm publish --access public",
     "test": "ng test"
   },
   "dependencies": {

@@ -14,9 +14,7 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build:lib
-      - name: After build
-        run: cd dist/ngx-webrtc-lib
       - name: Publish project
-        run: npm publish --access public
+        run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
