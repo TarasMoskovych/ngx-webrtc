@@ -6,6 +6,15 @@
     "@angular/core": "^12.2.0"
   },
   "dependencies": {
+    "agora-rtc-sdk": "^3.6.4",
+    "ngx-agora": "^2.0.1",
     "tslib": "^2.3.0"
-  }
+  },
+  "main": "bundles/ngx-webrtc-lib.umd.js",
+  "module": "fesm2015/ngx-webrtc-lib.js",
+  "es2015": "fesm2015/ngx-webrtc-lib.js",
+  "esm2015": "esm2015/ngx-webrtc-lib.js",
+  "fesm2015": "fesm2015/ngx-webrtc-lib.js",
+  "typings": "ngx-webrtc-lib.d.ts",
+  "sideEffects": false
 }

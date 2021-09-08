@@ -3,5 +3,9 @@
   "dest": "../../dist/ngx-webrtc-lib",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "agora-rtc-sdk",
+    "ngx-agora"
+  ]
 }

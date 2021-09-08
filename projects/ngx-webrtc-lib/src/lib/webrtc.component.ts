@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { WebRtcService } from './services';
 
 @Component({
   selector: 'ngx-webrtc',
@@ -8,7 +9,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class WebRtcComponent implements OnInit {
 
-  constructor() { }
+  constructor(private webRtcService: WebRtcService) { }
 
   ngOnInit(): void {
   }
