@@ -12,6 +12,7 @@ export class WebRtcComponent implements OnInit {
   constructor(private webRtcService: WebRtcService) { }
 
   ngOnInit(): void {
+    console.log(this.webRtcService);
   }
 
 }
