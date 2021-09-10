@@ -104,6 +104,15 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -141,9 +150,21 @@
             "tsConfig": "projects/ngx-webrtc-lib/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-webrtc-lib/**/*.ts",
+              "projects/ngx-webrtc-lib/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "ngx-webrtc"
+  "defaultProject": "ngx-webrtc",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }
