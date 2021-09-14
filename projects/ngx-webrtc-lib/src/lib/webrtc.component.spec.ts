@@ -1,22 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { WebRtcService } from './services';
 import { WebRtcComponent } from './webrtc.component';
 
 describe('WebRtcComponent', () => {
   let component: WebRtcComponent;
-  let fixture: ComponentFixture<WebRtcComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ WebRtcComponent ]
-    })
-    .compileComponents();
-  });
+  let webRtcService: jasmine.SpyObj<WebRtcService>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WebRtcComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    webRtcService = jasmine.createSpyObj('WebRtcService', ['']);
+    component = new WebRtcComponent(webRtcService);
+    component.ngOnInit();
   });
 
   it('should create', () => {

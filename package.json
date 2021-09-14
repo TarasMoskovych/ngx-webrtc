@@ -8,7 +8,8 @@
     "build:lib": "ng build --project ngx-webrtc-lib",
     "watch": "ng build --watch --configuration development",
     "publish": "npm run build:lib && cd ./dist/ngx-webrtc-lib && npm publish",
-    "test": "ng test",
+    "test": "ng test --project ngx-webrtc-lib",
+    "test:prod": "ng test --project ngx-webrtc-lib --no-watch --browsers=ChromeHeadlessCI",
     "lint": "ng lint"
   },
   "dependencies": {
