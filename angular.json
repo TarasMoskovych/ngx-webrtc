@@ -90,6 +90,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
@@ -146,6 +147,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/ngx-webrtc-lib/src/test.ts",
             "tsConfig": "projects/ngx-webrtc-lib/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js"
