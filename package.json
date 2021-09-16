@@ -10,7 +10,8 @@
     "publish": "npm run build:lib && cd ./dist/ngx-webrtc-lib && npm publish",
     "test": "ng test --project ngx-webrtc-lib",
     "test:prod": "ng test --project ngx-webrtc-lib --no-watch --browsers=ChromeHeadlessCI",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "postinstall": "npm ci --prefix ./projects/ngx-webrtc-lib"
   },
   "dependencies": {
     "@angular/animations": "~12.2.0",
