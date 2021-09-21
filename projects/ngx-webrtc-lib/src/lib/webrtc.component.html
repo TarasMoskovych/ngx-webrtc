@@ -1,1 +1,2 @@
-<p>webrtc works!</p>
+<div [id]="localContainerId" class="local"></div>
+<div *ngFor="let call of remoteCalls" [id]="call" class="remote"></div>
