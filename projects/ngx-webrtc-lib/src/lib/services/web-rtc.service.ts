@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AgoraClient, ClientConfig, ClientEvent, NgxAgoraService, Stream, StreamSpec } from 'ngx-agora';
+import { Subject } from 'rxjs';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -19,9 +20,11 @@ export class WebRtcService {
   private client: AgoraClient;
   private localStream: Stream;
   private uid: string;
+  private streamStarted = new Subject<number>();
 
-  localContainerId = 'local-video';
-  remoteCalls: string[] = [];
+  public localContainerId = 'local-video';
+  public remoteCalls: string[] = [];
+  public streamStarted$ = this.streamStarted.asObservable();
 
   constructor(private ngxAgoraService: NgxAgoraService) { }
 
@@ -79,6 +82,10 @@ export class WebRtcService {
   private assignClientHandlers(): void {
     this.client.on(ClientEvent.LocalStreamPublished, () => {
       console.log('Publish local stream successfully');
+    });
+
+    this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
+      this.streamStarted.next(evt.stream.subscribeLTS);
     });
 
     this.client.on(ClientEvent.Error, error => {

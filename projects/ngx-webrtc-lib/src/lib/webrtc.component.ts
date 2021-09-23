@@ -10,6 +10,8 @@ export class WebRtcComponent implements OnInit {
   @Input() uid: string;
   @Input() debug = false;
 
+  public streamStarted$ = this.webRtcService.streamStarted$;
+
   constructor(private webRtcService: WebRtcService) { }
 
   ngOnInit(): void {
