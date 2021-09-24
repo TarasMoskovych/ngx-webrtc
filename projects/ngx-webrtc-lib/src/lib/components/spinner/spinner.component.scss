@@ -1,0 +1,36 @@
+.spinner {
+  background-color: #232a30;
+  height: 100vh;
+  position: relative;
+
+  &__wrapper {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__cirle {
+    animation: rotate 2s linear infinite;
+    content: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22156%22 height%3D%22156%22 viewBox%3D%220 0 156 156%22%3E    %3Cpath fill%3D%22none%22 fill-rule%3D%22evenodd%22 stroke%3D%22%231296e7%22 stroke-linecap%3D%22round%22 stroke-width%3D%225%22 d%3D%22M134.958 126.796C146.205 113.68 153 96.633 153 78c0-41.421-33.579-75-75-75S3 36.579 3 78s33.579 75 75 75%22%2F%3E%3C%2Fsvg%3E");
+  }
+
+  &__icon {
+    left: 54px;
+    position: absolute;
+    top: 48px;
+  }
+
+  &__text {
+    color: white;
+    font-size: 1.3em;
+    margin-top: 35px;
+    text-align: center;
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
