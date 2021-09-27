@@ -3,12 +3,14 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { NgxAgoraModule, AgoraConfig, NgxAgoraService } from 'ngx-agora';
 import { WebRtcComponent } from './webrtc.component';
 import {
+  ControlsComponent,
   SpinnerComponent,
   TimerComponent,
 } from './components';
 
 @NgModule({
   declarations: [
+    ControlsComponent,
     WebRtcComponent,
     TimerComponent,
     SpinnerComponent,
