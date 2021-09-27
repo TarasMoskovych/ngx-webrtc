@@ -3,3 +3,13 @@
 </ng-container>
 <div [id]="localContainerId" class="local"></div>
 <div *ngFor="let call of remoteCalls" [id]="call" class="remote"></div>
+
+<ngx-controls
+  [cameraEnabled]="cameraEnabled"
+  [microphoneEnabled]="microphoneEnabled"
+  [fullScreenEnabled]="fullScreenEnabled"
+  (toggleCamera)="onToggleCamera($event)"
+  (toggleMicrophone)="onToggleMicrophone($event)"
+  (toggleFullScreen)="onToggleFullScreen($event)"
+  (endCall)="onEndCall()"
+></ngx-controls>
