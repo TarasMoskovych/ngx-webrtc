@@ -10,6 +10,9 @@ export class WebRtcComponent implements OnInit {
   @Input() uid: string;
   @Input() debug = false;
 
+  public cameraEnabled = true;
+  public microphoneEnabled = true;
+  public fullScreenEnabled = false;
   public streamStarted$ = this.webRtcService.streamStarted$;
 
   constructor(private webRtcService: WebRtcService) { }
@@ -24,5 +27,21 @@ export class WebRtcComponent implements OnInit {
 
   get remoteCalls(): string[] {
     return this.webRtcService.remoteCalls;
+  }
+
+  onToggleCamera(state: boolean): void {
+    this.cameraEnabled = state;
+  }
+
+  onToggleMicrophone(state: boolean): void {
+    this.microphoneEnabled = state;
+  }
+
+  onToggleFullScreen(state: boolean): void {
+    this.fullScreenEnabled = state;
+  }
+
+  onEndCall(): void {
+    console.log('end call');
   }
 }
