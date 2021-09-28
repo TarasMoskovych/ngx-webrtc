@@ -1,7 +1,7 @@
 <ng-container *ngIf="streamStarted$ | async as streamStarted">
   <ngx-timer [started]="streamStarted"></ngx-timer>
 </ng-container>
-<div [id]="localContainerId" class="local"></div>
+<div [id]="localContainerId" class="local" [hidden]="!cameraEnabled"></div>
 <div *ngFor="let call of remoteCalls" [id]="call" class="remote"></div>
 
 <ngx-controls
