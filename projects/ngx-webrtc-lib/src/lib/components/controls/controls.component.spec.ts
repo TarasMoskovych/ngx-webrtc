@@ -18,7 +18,7 @@ describe('ControlsComponent', () => {
 
     it('should emit event', () => {
       component.onToggleCamera();
-      expect(component.toggleCamera.emit).toHaveBeenCalledWith(!component.cameraEnabled);
+      expect(component.toggleCamera.emit).toHaveBeenCalledWith(component.cameraEnabled);
     });
   });
 
@@ -29,7 +29,7 @@ describe('ControlsComponent', () => {
 
     it('should emit event', () => {
       component.onToggleMicrophone();
-      expect(component.toggleMicrophone.emit).toHaveBeenCalledWith(!component.microphoneEnabled);
+      expect(component.toggleMicrophone.emit).toHaveBeenCalledWith(component.microphoneEnabled);
     });
   });
 
@@ -40,7 +40,7 @@ describe('ControlsComponent', () => {
 
     it('should emit event', () => {
       component.onToggleFullScreen();
-      expect(component.toggleFullScreen.emit).toHaveBeenCalledWith(!component.fullScreenEnabled);
+      expect(component.toggleFullScreen.emit).toHaveBeenCalledWith(component.fullScreenEnabled);
     });
   });
 

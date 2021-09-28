@@ -16,15 +16,15 @@ export class ControlsComponent {
   @Output() endCall = new EventEmitter<void>();
 
   onToggleCamera(): void {
-    this.toggleCamera.emit(!this.cameraEnabled);
+    this.toggleCamera.emit(this.cameraEnabled);
   }
 
   onToggleMicrophone(): void {
-    this.toggleMicrophone.emit(!this.microphoneEnabled);
+    this.toggleMicrophone.emit(this.microphoneEnabled);
   }
 
   onToggleFullScreen(): void {
-    this.toggleFullScreen.emit(!this.fullScreenEnabled);
+    this.toggleFullScreen.emit(this.fullScreenEnabled);
   }
 
   onEndCall(): void {
