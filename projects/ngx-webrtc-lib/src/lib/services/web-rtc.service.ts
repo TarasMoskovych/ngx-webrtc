@@ -59,16 +59,24 @@ export class WebRtcService {
     });
   }
 
-  mute(enabled: boolean): void {
+  toggleVideo(enabled: boolean): void {
+    enabled ? this.localStream.muteVideo() : this.localStream.unmuteVideo();
+  }
+
+  toggleAudio(enabled: boolean): void {
     enabled ? this.localStream.muteAudio() : this.localStream.unmuteAudio();
   }
 
-  isVideoAllowed(): boolean {
-    return this.ngxAgoraService.videoDevices.length > 0;
+  toggleFullScreen(enabled: boolean): void {
+    enabled ? document.exitFullscreen() : document.documentElement.requestFullscreen();
   }
 
-  isAudioAllowed(): boolean {
-    return this.ngxAgoraService.audioDevices.length > 0;
+  isVideoEnabled(): boolean {
+    return this.localStream.isVideoOn();
+  }
+
+  isAudioEnabled(): boolean {
+    return this.localStream.isAudioOn();
   }
 
   private join(channel: string, onSuccess?: (uid: number | string) => void, onFailure?: (error: Error) => void): void {
