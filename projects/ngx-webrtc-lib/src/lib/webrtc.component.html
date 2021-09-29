@@ -1,15 +1,46 @@
-<ng-container *ngIf="streamStarted$ | async as streamStarted">
-  <ngx-timer [started]="streamStarted"></ngx-timer>
-</ng-container>
-<div [id]="localContainerId" class="local" [hidden]="!cameraEnabled"></div>
-<div *ngFor="let call of remoteCalls" [id]="call" class="remote"></div>
+<div class="container">
+  <ng-container *ngIf="streamStarted$ | async as streamStarted">
+    <ngx-timer [started]="streamStarted"></ngx-timer>
+  </ng-container>
 
-<ngx-controls
-  [cameraEnabled]="cameraEnabled"
-  [microphoneEnabled]="microphoneEnabled"
-  [fullScreenEnabled]="fullScreenEnabled"
-  (toggleCamera)="onToggleCamera($event)"
-  (toggleMicrophone)="onToggleMicrophone($event)"
-  (toggleFullScreen)="onToggleFullScreen($event)"
-  (endCall)="onEndCall()"
-></ngx-controls>
+  <div
+    [id]="localContainerId"
+    [hidden]="!cameraEnabled"
+    class="container__local"
+  ></div>
+
+  <div
+    *ngFor="let call of remoteCalls"
+    [id]="call"
+    [class.hidden]="(remoteStreamVideoToggle$ | async) === false"
+    class="container__remote"
+  ></div>
+
+  <div class="container__user-icon">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="user" clip-path="url(#clip0)">
+        <path id="Vector"
+          d="M31.5439 30.829C35.7793 30.829 39.4468 29.3099 42.4434 26.3129C45.4399 23.3163 46.959 19.6498 46.959 15.414C46.959 11.1796 45.4399 7.51267 42.4429 4.51512C39.4458 1.51904 35.7788 0 31.5439 0C27.3081 0 23.6416 1.51904 20.645 4.51561C17.6484 7.51218 16.1289 11.1792 16.1289 15.414C16.1289 19.6498 17.6484 23.3168 20.6455 26.3134C23.6426 29.3095 27.3096 30.829 31.5439 30.829V30.829Z"
+          fill="#0B73C9" />
+        <path id="Vector_2"
+          d="M58.5161 49.2127C58.4297 47.9656 58.2549 46.6053 57.9976 45.1688C57.7378 43.7215 57.4033 42.3533 57.0029 41.1029C56.5894 39.8104 56.0269 38.534 55.3315 37.3109C54.6099 36.0414 53.7622 34.9359 52.811 34.0262C51.8164 33.0746 50.5986 32.3094 49.1904 31.7513C47.7871 31.1962 46.2319 30.9149 44.5684 30.9149C43.915 30.9149 43.2832 31.183 42.063 31.9774C41.312 32.4672 40.4336 33.0336 39.4531 33.66C38.6147 34.1942 37.479 34.6947 36.0762 35.1478C34.7075 35.5907 33.3179 35.8153 31.9463 35.8153C30.5747 35.8153 29.1855 35.5907 27.8154 35.1478C26.4141 34.6952 25.2783 34.1947 24.4409 33.6605C23.4697 33.0399 22.5908 32.4735 21.8286 31.9769C20.6099 31.1825 19.9775 30.9144 19.3242 30.9144C17.6602 30.9144 16.1055 31.1962 14.7026 31.7518C13.2954 32.309 12.0771 33.0741 11.0815 34.0267C10.1309 34.9369 9.28271 36.0419 8.56201 37.3109C7.86719 38.534 7.30469 39.8099 6.89062 41.1034C6.49072 42.3538 6.15625 43.7215 5.89648 45.1688C5.63916 46.6033 5.46436 47.9642 5.37793 49.2142C5.29297 50.4388 5.25 51.7098 5.25 52.9934C5.25 56.3343 6.31201 59.0388 8.40625 61.0335C10.4746 63.0017 13.2114 64.0002 16.5396 64.0002H47.356C50.6841 64.0002 53.4199 63.0022 55.4888 61.0335C57.5835 59.0403 58.6455 56.3352 58.6455 52.993C58.645 51.7034 58.6016 50.4314 58.5161 49.2127V49.2127Z"
+          fill="#0B73C9" />
+      </g>
+      <defs>
+        <clipPath id="clip0">
+          <rect width="64" height="64" fill="#0B73C9" />
+        </clipPath>
+      </defs>
+    </svg>
+  </div>
+
+  <ngx-controls
+    [cameraEnabled]="cameraEnabled"
+    [microphoneEnabled]="microphoneEnabled"
+    [fullScreenEnabled]="fullScreenEnabled"
+    (toggleCamera)="onToggleCamera($event)"
+    (toggleMicrophone)="onToggleMicrophone($event)"
+    (toggleFullScreen)="onToggleFullScreen($event)"
+    (endCall)="onEndCall()"
+  ></ngx-controls>
+</div>

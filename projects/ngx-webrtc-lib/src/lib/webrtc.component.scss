@@ -1,18 +1,55 @@
-.local {
-  border-radius: 5px;
-  height: 20vh;
-  overflow: hidden;
-  position: fixed;
-  right: 1rem;
-  top: 1rem;
-  width: 20vw;
-  z-index: 1;
+$black: #232a30;
+
+ngx-timer {
+  display: block;
+  padding-top: 25px;
 }
 
-.remote {
+.container {
+  background-color: $black;
   height: 100vh;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100vw;
+
+  &__local {
+    border-radius: 5px;
+    height: 20vh;
+    overflow: hidden;
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    width: 20vw;
+    z-index: 1;
+
+    &:not(:empty) {
+      box-shadow: 0 3px 8px 0 rgb(0 0 0 / 50%);
+    }
+  }
+
+  &__remote {
+    background-color: $black;
+    height: 100vh;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+
+    &.hidden {
+      display: none;
+
+      & + .container__user-icon {
+        display: block;
+      }
+    }
+  }
+
+  &__user-icon {
+    background: rgba(0, 0, 0 , .3);
+    border-radius: 50%;
+    box-shadow: 0 3px 8px 0 rgb(0 0 0 / 50%);
+    display: none;
+    left: 50%;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
