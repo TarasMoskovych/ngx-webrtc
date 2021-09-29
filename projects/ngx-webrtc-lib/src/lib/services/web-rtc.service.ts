@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AgoraClient, ClientConfig, ClientEvent, NgxAgoraService, Stream, StreamSpec } from 'ngx-agora';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -21,16 +21,18 @@ export class WebRtcService {
   private localStream: Stream;
   private uid: string;
   private streamStarted = new Subject<number>();
+  private remoteStreamVideoToggle = new BehaviorSubject<boolean>(true);
 
   public localContainerId = 'local-video';
   public remoteCalls: string[] = [];
   public streamStarted$ = this.streamStarted.asObservable();
+  public remoteStreamVideoToggle$ = this.remoteStreamVideoToggle.asObservable();
 
   constructor(private ngxAgoraService: NgxAgoraService) { }
 
-  init(uid: string, debug = false): void {
-    if (!uid) {
-      throw new Error(`uid must be specified`);
+  init(uid: string, channel: string, debug = false): void {
+    if (!uid || !channel) {
+      throw new Error(`uid or channel must be specified`);
     }
 
     this.uid = uid;
@@ -40,10 +42,10 @@ export class WebRtcService {
     this.assignClientHandlers();
 
     this.localStream = this.ngxAgoraService.createStream({ ...STREAM_SPEC, streamID: this.uid });
-    this.initLocalStream(() => this.join('channel_default', () => this.publish(), error => console.error(error)));
+    this.initLocalStream(() => this.join(channel, () => this.publish(), error => console.error(error)));
   }
 
-  call(channel  = 'channel_default'): void {
+  call(channel: string): void {
     this.initLocalStream(() => this.join(channel, () => this.publish()));
   }
 
@@ -122,6 +124,10 @@ export class WebRtcService {
         setTimeout(() => stream.play(id), 1000);
       }
     });
+
+    this.client.on('mute-video' as ClientEvent, () => this.remoteStreamVideoToggle.next(false));
+
+    this.client.on('unmute-video' as ClientEvent, () => this.remoteStreamVideoToggle.next(true));
 
     this.client.on(ClientEvent.RemoteStreamRemoved, evt => {
       const stream = evt.stream as Stream;

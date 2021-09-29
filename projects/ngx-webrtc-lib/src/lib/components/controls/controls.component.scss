@@ -3,9 +3,11 @@ $disabled: #313A42;
 $danger: #D73B3D;
 
 .controls {
-  bottom: 20px;
+  background: rgba(0, 0, 0 , .3);
+  bottom: 0;
   display: flex;
   justify-content: center;
+  padding: 15px 0 15px;
   position: absolute;
   left: 0;
   width: 100%;
@@ -51,6 +53,7 @@ $danger: #D73B3D;
     }
 
     p {
+      color: #fff;
       margin: 8px 0 0;
     }
   }
