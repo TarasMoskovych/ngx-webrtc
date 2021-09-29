@@ -1,21 +1,24 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { WebRtcService } from './services';
 
 @Component({
   selector: 'ngx-webrtc',
   templateUrl: './webrtc.component.html',
   styleUrls: ['./webrtc.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebRtcComponent implements OnInit {
   @Input() uid: string;
+  @Input() channel: string;
   @Input() debug = false;
 
   public streamStarted$ = this.webRtcService.streamStarted$;
+  public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
 
   constructor(private webRtcService: WebRtcService) { }
 
   ngOnInit(): void {
-    this.webRtcService.init(this.uid, this.debug);
+    this.webRtcService.init(this.uid, this.channel, this.debug);
   }
 
   get localContainerId(): string {
