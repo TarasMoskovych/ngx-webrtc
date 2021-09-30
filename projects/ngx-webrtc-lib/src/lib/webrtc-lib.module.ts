@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { NgxAgoraModule, AgoraConfig, NgxAgoraService } from 'ngx-agora';
+
 import { WebRtcComponent } from './webrtc.component';
 import {
   ControlsComponent,
@@ -8,12 +9,17 @@ import {
   TimerComponent,
 } from './components';
 
+import {
+  ToggleDirective,
+} from './directives';
+
 @NgModule({
   declarations: [
     ControlsComponent,
     WebRtcComponent,
     TimerComponent,
     SpinnerComponent,
+    ToggleDirective,
   ],
   imports: [
     CommonModule,
