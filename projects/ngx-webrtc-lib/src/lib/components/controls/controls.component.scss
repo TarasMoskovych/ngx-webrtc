@@ -2,6 +2,10 @@ $primary: #0b73c9;
 $disabled: #313A42;
 $danger: #D73B3D;
 
+:host {
+  transition: .3s;
+}
+
 .controls {
   background: rgba(0, 0, 0 , .3);
   bottom: 0;

@@ -53,3 +53,9 @@ ngx-timer {
     transform: translate(-50%, -50%);
   }
 }
+
+@media screen and (max-width: 769px) {
+  ngx-controls {
+    opacity: 1 !important;
+  }
+}
