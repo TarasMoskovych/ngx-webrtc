@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AgoraClient, ClientConfig, ClientEvent, NgxAgoraService, Stream, StreamSpec } from 'ngx-agora';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -22,6 +22,7 @@ export class WebRtcService {
   private uid: string;
   private streamStarted = new Subject<number>();
   private remoteStreamVideoToggle = new BehaviorSubject<boolean>(true);
+  private callEnd = new Subject<void>();
 
   public localContainerId = 'local-video';
   public remoteCalls: string[] = [];
@@ -30,11 +31,7 @@ export class WebRtcService {
 
   constructor(private ngxAgoraService: NgxAgoraService) { }
 
-  init(uid: string, channel: string, debug = false): void {
-    if (!uid || !channel) {
-      throw new Error(`uid or channel must be specified`);
-    }
-
+  init(uid: string, channel: string, debug = false): Observable<void> {
     this.uid = uid;
     this.ngxAgoraService.AgoraRTC.Logger.setLogLevel(this.ngxAgoraService.AgoraRTC.Logger[debug ? 'DEBUG' : 'NONE']);
 
@@ -43,6 +40,8 @@ export class WebRtcService {
 
     this.localStream = this.ngxAgoraService.createStream({ ...STREAM_SPEC, streamID: this.uid });
     this.initLocalStream(() => this.join(channel, () => this.publish(), error => console.error(error)));
+
+    return this.callEnd.asObservable();
   }
 
   call(channel: string): void {
@@ -56,17 +55,22 @@ export class WebRtcService {
           this.localStream.stop();
           this.localStream.close();
         }
+        this.callEnd.next();
         resolve();
       });
     });
   }
 
   toggleVideo(enabled: boolean): void {
-    enabled ? this.localStream.muteVideo() : this.localStream.unmuteVideo();
+    if (this.localStream) {
+      enabled ? this.localStream.muteVideo() : this.localStream.unmuteVideo();
+    }
   }
 
   toggleAudio(enabled: boolean): void {
-    enabled ? this.localStream.muteAudio() : this.localStream.unmuteAudio();
+    if (this.localStream) {
+      enabled ? this.localStream.muteAudio() : this.localStream.unmuteAudio();
+    }
   }
 
   toggleFullScreen(enabled: boolean): void {
@@ -74,11 +78,19 @@ export class WebRtcService {
   }
 
   isVideoEnabled(): boolean {
-    return this.localStream.isVideoOn();
+    if (this.localStream) {
+      return this.localStream.isVideoOn();
+    }
+
+    return false;
   }
 
   isAudioEnabled(): boolean {
-    return this.localStream.isAudioOn();
+    if (this.localStream) {
+      return this.localStream.isAudioOn();
+    }
+
+    return false;
   }
 
   private join(channel: string, onSuccess?: (uid: number | string) => void, onFailure?: (error: Error) => void): void {
@@ -140,10 +152,11 @@ export class WebRtcService {
 
     this.client.on(ClientEvent.PeerLeave, evt => {
       const stream = evt.stream as Stream;
+
       if (stream) {
         stream.stop();
         this.remoteCalls = this.remoteCalls.filter(call => call !== `${this.getRemoteId(stream)}`);
-        console.log(`${evt.uid} left from this channel`);
+        this.endCall();
       }
     });
   }
