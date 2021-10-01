@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { take } from 'rxjs/operators';
 import { WebRtcService } from './services';
 
 @Component({
@@ -11,6 +12,7 @@ export class WebRtcComponent implements OnInit {
   @Input() uid: string;
   @Input() channel: string;
   @Input() debug = false;
+  @Output() callEnd = new EventEmitter<void>();
 
   public streamStarted$ = this.webRtcService.streamStarted$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
@@ -18,7 +20,9 @@ export class WebRtcComponent implements OnInit {
   constructor(private webRtcService: WebRtcService) { }
 
   ngOnInit(): void {
-    this.webRtcService.init(this.uid, this.channel, this.debug);
+    this.webRtcService.init(this.uid, this.channel, this.debug)
+      .pipe(take(1))
+      .subscribe(() => this.callEnd.emit());
   }
 
   get localContainerId(): string {
@@ -54,6 +58,6 @@ export class WebRtcComponent implements OnInit {
   }
 
   onEndCall(): void {
-    console.log('end call');
+    this.webRtcService.endCall();
   }
 }
