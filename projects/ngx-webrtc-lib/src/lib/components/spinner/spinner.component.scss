@@ -3,6 +3,22 @@
   height: 100vh;
   position: relative;
 
+  &--connected {
+    .spinner {
+      &__cirle {
+        border-color: #39D627;
+      }
+    }
+  }
+
+  &--ended {
+    .spinner {
+      &__cirle {
+        border-color: transparent;
+      }
+    }
+  }
+
   &__wrapper {
     left: 50%;
     position: absolute;
@@ -11,14 +27,20 @@
   }
 
   &__cirle {
-    animation: rotate 2s linear infinite;
-    content: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22156%22 height%3D%22156%22 viewBox%3D%220 0 156 156%22%3E    %3Cpath fill%3D%22none%22 fill-rule%3D%22evenodd%22 stroke%3D%22%231296e7%22 stroke-linecap%3D%22round%22 stroke-width%3D%225%22 d%3D%22M134.958 126.796C146.205 113.68 153 96.633 153 78c0-41.421-33.579-75-75-75S3 36.579 3 78s33.579 75 75 75%22%2F%3E%3C%2Fsvg%3E");
+    animation: spin 2s linear infinite;
+    border: 5px solid #1296E7;
+    border-radius: 50%;
+    border-top-color: transparent;
+    height: 160px;
+    margin: auto;
+    width: 160px;
   }
 
   &__icon {
-    left: 54px;
+    left: 50%;
     position: absolute;
-    top: 48px;
+    top: 52px;
+    transform: translateX(-40%);
   }
 
   &__text {
@@ -29,7 +51,10 @@
   }
 }
 
-@keyframes rotate {
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
   100% {
     transform: rotate(360deg);
   }

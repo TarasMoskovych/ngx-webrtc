@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AgoraClient, ClientConfig, ClientEvent, NgxAgoraService, Stream, StreamSpec } from 'ngx-agora';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { StreamState, DEFAULT_STREAM_STATE } from '../models';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -20,14 +21,14 @@ export class WebRtcService {
   private client: AgoraClient;
   private localStream: Stream;
   private uid: string;
-  private streamStarted = new Subject<number>();
+  private streamState = new BehaviorSubject<StreamState>(DEFAULT_STREAM_STATE);
   private remoteStreamVideoToggle = new BehaviorSubject<boolean>(true);
   private callEnd = new Subject<void>();
 
   public localContainerId = 'local-video';
   public remoteCalls: string[] = [];
-  public streamStarted$ = this.streamStarted.asObservable();
   public remoteStreamVideoToggle$ = this.remoteStreamVideoToggle.asObservable();
+  public streamState$ = this.streamState.asObservable();
 
   constructor(private ngxAgoraService: NgxAgoraService) { }
 
@@ -39,7 +40,11 @@ export class WebRtcService {
     this.assignClientHandlers();
 
     this.localStream = this.ngxAgoraService.createStream({ ...STREAM_SPEC, streamID: this.uid });
-    this.initLocalStream(() => this.join(channel, () => this.publish(), error => console.error(error)));
+
+    this.initLocalStream(() => {
+      this.streamState.next({ ...this.streamState.value, connected: true, loaderText: 'Waiting others to join' });
+      this.join(channel, () => this.publish(), error => console.error(error));
+    });
 
     return this.callEnd.asObservable();
   }
@@ -56,6 +61,13 @@ export class WebRtcService {
           this.localStream.close();
         }
         this.callEnd.next();
+        this.streamState.next({
+          ...this.streamState.value,
+          started: null,
+          loading: true,
+          loaderText: '',
+          ended: true,
+        });
         resolve();
       });
     });
@@ -107,7 +119,7 @@ export class WebRtcService {
     });
 
     this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
-      this.streamStarted.next(evt.stream.subscribeLTS);
+      this.streamState.next({ ...this.streamState.value, started: evt.stream.subscribeLTS, loading: false });
     });
 
     this.client.on(ClientEvent.Error, error => {
