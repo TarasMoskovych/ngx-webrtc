@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerComponent implements OnInit {
-  @Input() started = Date.now();
+  @Input() started: number = Date.now();
   public time$: Observable<string>;
 
   ngOnInit(): void {
