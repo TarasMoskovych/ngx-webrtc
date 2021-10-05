@@ -14,7 +14,7 @@ export class WebRtcComponent implements OnInit {
   @Input() debug = false;
   @Output() callEnd = new EventEmitter<void>();
 
-  public streamStarted$ = this.webRtcService.streamStarted$;
+  public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
 
   constructor(private webRtcService: WebRtcService) { }
