@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AgoraClient, ClientConfig, ClientEvent, NgxAgoraService, Stream, StreamSpec } from 'ngx-agora';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { StreamState, DEFAULT_STREAM_STATE } from '../models';
 
 const CLIENT_CONFIG: ClientConfig = {
@@ -49,27 +50,26 @@ export class WebRtcService {
     return this.callEnd.asObservable();
   }
 
+  deinit(): void {
+    this.streamState.next(DEFAULT_STREAM_STATE);
+  }
+
   call(channel: string): void {
     this.initLocalStream(() => this.join(channel, () => this.publish()));
   }
 
-  endCall(): Promise<void> {
-    return new Promise(resolve => {
-      this.client.leave(() => {
-        if (this.localStream.isPlaying()) {
-          this.localStream.stop();
-          this.localStream.close();
-        }
-        this.callEnd.next();
-        this.streamState.next({
-          ...this.streamState.value,
-          started: null,
-          loading: true,
-          loaderText: '',
-          ended: true,
-        });
-        resolve();
-      });
+  endCall(): void {
+    this.client.leave(() => {
+      if (this.localStream.isPlaying()) {
+        this.localStream.stop();
+        this.localStream.close();
+      }
+
+      this.streamState.next({ ...this.streamState.value, started: null, loading: true, loaderText: '', ended: true });
+
+      interval(500)
+        .pipe(take(1))
+        .subscribe(() => this.callEnd.next());
     });
   }
 
