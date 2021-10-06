@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { WebRtcService } from './services';
 
@@ -8,7 +8,7 @@ import { WebRtcService } from './services';
   styleUrls: ['./webrtc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WebRtcComponent implements OnInit {
+export class WebRtcComponent implements OnInit, OnDestroy {
   @Input() uid: string;
   @Input() channel: string;
   @Input() debug = false;
@@ -23,6 +23,10 @@ export class WebRtcComponent implements OnInit {
     this.webRtcService.init(this.uid, this.channel, this.debug)
       .pipe(take(1))
       .subscribe(() => this.callEnd.emit());
+  }
+
+  ngOnDestroy(): void {
+    this.webRtcService.deinit();
   }
 
   get localContainerId(): string {
