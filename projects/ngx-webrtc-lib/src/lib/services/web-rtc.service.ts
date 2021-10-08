@@ -44,7 +44,7 @@ export class WebRtcService {
 
     this.initLocalStream(() => {
       this.streamState.next({ ...this.streamState.value, connected: true, loaderText: 'Waiting others to join' });
-      this.join(channel, () => this.publish(), error => console.error(error));
+      this.join(channel, () => this.publish());
     });
 
     return this.callEnd.asObservable();
@@ -52,10 +52,6 @@ export class WebRtcService {
 
   deinit(): void {
     this.streamState.next(DEFAULT_STREAM_STATE);
-  }
-
-  call(channel: string): void {
-    this.initLocalStream(() => this.join(channel, () => this.publish()));
   }
 
   endCall(): void {
@@ -114,10 +110,6 @@ export class WebRtcService {
   }
 
   private assignClientHandlers(): void {
-    this.client.on(ClientEvent.LocalStreamPublished, () => {
-      console.log('Publish local stream successfully');
-    });
-
     this.client.on(ClientEvent.RemoteStreamSubscribed, (evt) => {
       this.streamState.next({ ...this.streamState.value, started: evt.stream.subscribeLTS, loading: false });
     });
@@ -128,7 +120,7 @@ export class WebRtcService {
         this.client.renewChannelKey(
           '',
           () => console.log('Renewed the channel key successfully.'),
-          renewError => console.error('Renew channel key failed: ', renewError)
+          renewError => console.warn('Renew channel key failed: ', renewError)
         );
       }
     });
@@ -182,7 +174,7 @@ export class WebRtcService {
           onSuccess();
         }
       },
-      err => console.error('getUserMedia failed', err)
+      err => console.warn('getUserMedia failed', err)
     );
   }
 
