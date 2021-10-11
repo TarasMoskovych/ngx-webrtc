@@ -1,4 +1,4 @@
-name: Publish to NPM
+name: Deploy and publish
 on:
   push:
     branches:
@@ -12,9 +12,23 @@ jobs:
           fetch-depth: 0
       - name: Install node_modules
         run: npm ci
-      - name: Build
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test:ci
+      - name: Set env
+        run: node set-env ${{ secrets.WEB_RTC_KEY }}
+      - name: Build app
+        run: npm run build
+      - name: Deploy to Github pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/ngx-webrtc
+      - name: Build package
         run: npm run build:lib
-      - name: Publish project
+      - name: Publish to NPM
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
