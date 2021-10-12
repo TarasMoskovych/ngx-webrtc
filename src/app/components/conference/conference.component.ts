@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-conference',
@@ -7,11 +7,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./conference.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConferenceComponent {
-  channel = 'test-channel-ngx-webrtc';
+export class ConferenceComponent implements OnInit {
+  channel: string;
   uid = String(Math.floor(Math.random() * 100));
 
-  constructor(private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.channel = this.route.snapshot.queryParams.channelId || 'test-channel';
+  }
 
   onCallEnd(): void {
     this.router.navigateByUrl('/');
