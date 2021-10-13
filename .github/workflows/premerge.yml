@@ -21,7 +21,7 @@ jobs:
       - name: Run linter
         run: npm run lint
       - name: Run tests
-        run: npm run test:prod
+        run: npm run test:ci
       - name: Test Coverage ngx-webrtc-lib
         uses: AthleticNet/comment-test-coverage@1.1
         with:
