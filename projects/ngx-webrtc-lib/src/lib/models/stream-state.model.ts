@@ -1,7 +1,7 @@
 export interface StreamState {
   connected: boolean;
   loading: boolean;
-  loaderText: string;
+  statusText: string;
   started: number | null;
   ended: boolean;
 }
@@ -9,7 +9,7 @@ export interface StreamState {
 export const DEFAULT_STREAM_STATE: StreamState = {
   connected: false,
   loading: true,
-  loaderText: 'Connecting',
+  statusText: 'Connecting',
   started: null,
   ended: false,
 };
