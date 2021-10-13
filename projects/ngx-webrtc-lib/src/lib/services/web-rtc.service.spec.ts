@@ -74,7 +74,7 @@ describe('WebRtcService', () => {
           expect(state).toEqual({
             connected: true,
             loading: true,
-            loaderText: 'Waiting others to join',
+            statusText: 'Waiting others to join',
             started: null,
             ended: false,
           });
@@ -156,7 +156,7 @@ describe('WebRtcService', () => {
           connected: false,
           started: null,
           loading: true,
-          loaderText: '',
+          statusText: '',
           ended: true,
         });
       });
@@ -486,7 +486,7 @@ describe('WebRtcService', () => {
       service.streamState$.subscribe((state: StreamState) => {
         expect(state).toEqual({
           connected: true,
-          loaderText: 'Waiting others to join',
+          statusText: 'Waiting others to join',
           ended: false,
           started: 12345,
           loading: false,

@@ -43,7 +43,7 @@ export class WebRtcService {
     this.localStream = this.ngxAgoraService.createStream({ ...STREAM_SPEC, streamID: this.uid });
 
     this.initLocalStream(() => {
-      this.streamState.next({ ...this.streamState.value, connected: true, loaderText: 'Waiting others to join' });
+      this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting others to join' });
       this.join(channel, () => this.publish());
     });
 
@@ -61,7 +61,7 @@ export class WebRtcService {
         this.localStream.close();
       }
 
-      this.streamState.next({ ...this.streamState.value, started: null, loading: true, loaderText: '', ended: true });
+      this.streamState.next({ ...this.streamState.value, started: null, loading: true, statusText: '', ended: true });
 
       interval(500)
         .pipe(take(1))

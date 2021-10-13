@@ -1,7 +1,7 @@
 <div *ngIf="streamState$ | async as streamState" class="container">
   <ngx-spinner
     *ngIf="streamState.loading"
-    [text]="streamState.loaderText"
+    [text]="streamState.statusText"
     [connected]="streamState.connected"
     [ended]="streamState.ended"
   ></ngx-spinner>
