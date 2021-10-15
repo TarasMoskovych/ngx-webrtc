@@ -57,6 +57,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "/ngx-webrtc/",
               "outputHashing": "all"
             },
             "development": {
