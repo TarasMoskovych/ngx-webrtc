@@ -57,6 +57,10 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "index": {
+                "input": "src/index.html",
+                "output": "404.html"
+              },
               "baseHref": "/ngx-webrtc/",
               "outputHashing": "all"
             },
