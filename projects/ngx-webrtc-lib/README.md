@@ -1,26 +1,74 @@
-# NgxWebrtcLib
+# ngx-webrtc-lib
+
+[![npm version](https://badge.fury.io/js/ngx-webrtc-lib.svg)](https://badge.fury.io/js/ngx-webrtc-lib)
+
+> Angular microapp/library for Agora WebRTC client from [Agora.io](https://www.agora.io) using [agora-rtc-sdk](https://www.npmjs.com/package/agora-rtc-sdk) and [ngx-agora](https://www.npmjs.com/package/ngx-agora).
 
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
 
-This library is under development.
+## Installation
 
-## Code scaffolding
+##### Angular CLI way
+Use the Angular CLI ng add command for updating your Angular project.
+```bash
+ng add ngx-webrtc-lib
+```
 
-Run `ng generate component component-name --project ngx-webrtc-lib` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-webrtc-lib`.
-> Note: Don't forget to add `--project ngx-webrtc-lib` or else it will be added to the default project in your `angular.json` file.
+##### Manual way
+Install `ngx-web-rtc-lib` from `npm`:
+```bash
+npm install ngx-webrtc-lib --save
+```
 
-## Build
+Add wanted package to NgModule imports:
+```js
+import { WebRtcModule } from 'ngx-webrtc-lib';
 
-Run `ng build ngx-webrtc-lib` to build the project. The build artifacts will be stored in the `dist/` directory.
+@NgModule({
+  ...
+  imports: [
+    WebRtcModule.forRoot({
+      AppID: 'agora AppID',
+    }),
+  ]
+  ...
+})
+```
 
-## Publishing
+You can get started with Agora by following this [guide](https://www.agora.io/en/blog/how-to-get-started-with-agora/?utm_source=medium&utm_medium=blog&utm_campaign=Add_Video_Calling_in_your_Web_App_using_Agora_Web_NG_SDK) and retrieve the Appid.
 
-After building your library with `ng build ngx-webrtc-lib`, go to the dist folder `cd dist/ngx-webrtc-lib` and run `npm publish`.
+Add component to your page:
+```html
+<ngx-webrtc
+  [channel]="channel"
+  [debug]="true"
+  [uid]="uid"
+  (callEnd)="onCallEnd()"
+></ngx-webrtc>
+```
 
-## Running unit tests
+### How to build lib for development
 
-Run `ng test ngx-webrtc-lib` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+git clone https://github.com/TarasMoskovych/ngx-webrtc.git
+cd ngx-webrtc
+npm ci
+npm start
+```
 
-## Further help
+## Compatibility
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+To use this library, please follow the versioning specified in the following table.
+
+| Angular Version | `ngx-webrtc-lib` Version |
+| --------------- | ------------------- |
+| 12.x            | 1.x                 |
+
+## API reference
+
+| Name                                  | Description |
+| ------------------------------------- | --------------------------------------------- |
+| @Input() uid: string                  | User identifier.                              |
+| @Input() channel: string              | Channel identifier.                           |
+| @Input() debug: boolean               | Enable debugging. Default value `false`       |
+| @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended. |

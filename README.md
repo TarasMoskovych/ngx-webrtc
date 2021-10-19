@@ -14,14 +14,85 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+## Build package
+
+Run `npm run build:lib` to build the package. The build artifacts will be stored in the `dist/` directory.
+
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+* * *
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+# ngx-webrtc-lib
 
-## Further help
+[![npm version](https://badge.fury.io/js/ngx-webrtc-lib.svg)](https://badge.fury.io/js/ngx-webrtc-lib)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+> Angular microapp/library for Agora WebRTC client from [Agora.io](https://www.agora.io) using [agora-rtc-sdk](https://www.npmjs.com/package/agora-rtc-sdk) and [ngx-agora](https://www.npmjs.com/package/ngx-agora).
+
+## Installation
+
+##### Angular CLI way
+Use the Angular CLI ng add command for updating your Angular project.
+```bash
+ng add ngx-webrtc-lib
+```
+
+##### Manual way
+Install `ngx-web-rtc-lib` from `npm`:
+```bash
+npm install ngx-webrtc-lib --save
+```
+
+Add wanted package to NgModule imports:
+```js
+import { WebRtcModule } from 'ngx-webrtc-lib';
+
+@NgModule({
+  ...
+  imports: [
+    WebRtcModule.forRoot({
+      AppID: 'agora AppID',
+    }),
+  ]
+  ...
+})
+```
+
+You can get started with Agora by following this [guide](https://www.agora.io/en/blog/how-to-get-started-with-agora/?utm_source=medium&utm_medium=blog&utm_campaign=Add_Video_Calling_in_your_Web_App_using_Agora_Web_NG_SDK) and retrieve the Appid.
+
+Add component to your page:
+```html
+<ngx-webrtc
+  [channel]="channel"
+  [debug]="true"
+  [uid]="uid"
+  (callEnd)="onCallEnd()"
+></ngx-webrtc>
+```
+
+### How to build lib for development
+
+```bash
+git clone https://github.com/TarasMoskovych/ngx-webrtc.git
+cd ngx-webrtc
+npm ci
+npm start
+```
+
+## Compatibility
+
+To use this library, please follow the versioning specified in the following table.
+
+| Angular Version | `ngx-webrtc-lib` Version |
+| --------------- | ------------------- |
+| 12.x            | 1.x                 |
+
+## API reference
+
+| Name                                  | Description |
+| ------------------------------------- | --------------------------------------------- |
+| @Input() uid: string                  | User identifier.                              |
+| @Input() channel: string              | Channel identifier.                           |
+| @Input() debug: boolean               | Enable debugging. Default value `false`       |
+| @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended. |
