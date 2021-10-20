@@ -9,20 +9,29 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-  form: FormGroup;
+  private sessionKey: 'ngx-webrtc:channelId';
+  public form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    ) { }
+    private localStorage: Storage,
+  ) { }
+
+  get channelId(): string {
+    return this.localStorage.getItem(this.sessionKey) || 'test-channel-ngx-webrtc';
+  }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      channelId: ['test-channel-ngx-webrtc', Validators.required],
+      channelId: [this.channelId, Validators.required],
     });
   }
 
   onSubmit(): void {
+    const { channelId } = this.form.value;
+
+    this.localStorage.setItem(this.sessionKey, channelId);
     this.router.navigate(['conference'], { queryParams: { ...this.form.value } });
   }
 }

@@ -41,7 +41,12 @@ const routes: Routes = [
     MatInputModule,
     MatButtonModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: Storage,
+      useValue: window.localStorage,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
