@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-  private sessionKey: 'ngx-webrtc:channelId';
+  private sessionKey = 'ngx-webrtc:channelId';
   public form: FormGroup;
 
   constructor(
