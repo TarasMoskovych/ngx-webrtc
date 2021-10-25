@@ -1,14 +1,27 @@
 {
   "name": "ngx-webrtc-lib",
   "version": "0.0.4",
+  "description": "Angular microapp/library for video conference using agora-rtc-sdk and ngx-agora.",
+  "keywords": [
+    "angular",
+    "library",
+    "microapp",
+    "ngx-agora",
+    "agora-rtc-sdk",
+    "agoraio",
+    "video conference",
+    "typescript"
+  ],
   "author": {
     "email": "moskovych.taras@gmail.com",
     "name": "Taras Moskovych"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TarasMoskovych/ngx-webrtc"
+    "url": "git+https://github.com/TarasMoskovych/ngx-webrtc.git"
   },
+  "homepage": "https://tarasmoskovych.github.io/ngx-webrtc",
+  "publishFolder": "../../dist/ngx-webrtc-lib",
   "peerDependencies": {
     "@angular/common": "^12.2.0",
     "@angular/core": "^12.2.0"
