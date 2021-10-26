@@ -73,6 +73,7 @@ ngx-agora
 MIT
 
 ngx-webrtc-lib
+MIT
 
 rxjs
 Apache-2.0
