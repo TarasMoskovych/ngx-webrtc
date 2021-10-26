@@ -16,6 +16,7 @@ jobs:
         run: npm run lint
       - name: Test
         run: npm run test:ci
+      - run: npx codecov ./coverage/ngx-webrtc-lib/
       - name: Set env
         run: node set-env ${{ secrets.WEB_RTC_KEY }}
       - name: Build app
