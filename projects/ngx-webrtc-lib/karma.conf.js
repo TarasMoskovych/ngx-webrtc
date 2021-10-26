@@ -31,6 +31,7 @@ module.exports = function (config) {
         { type: 'html' },
         { type: 'text-summary' },
         { type: 'json-summary' },
+        { type: 'json' },
       ],
       check: {
         emitWarning: false,

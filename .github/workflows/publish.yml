@@ -16,7 +16,13 @@ jobs:
         run: npm run lint
       - name: Test
         run: npm run test:ci
-      - run: npx codecov -f ./coverage/ngx-webrtc-lib/coverage-summary.json
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/ngx-webrtc-lib/coverage-final.json
+          fail_ci_if_error: true
+          verbose: true
       - name: Set env
         run: node set-env ${{ secrets.WEB_RTC_KEY }}
       - name: Build app
