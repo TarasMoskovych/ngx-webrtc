@@ -32,13 +32,6 @@ Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.gi
 
 ## Installation
 
-##### Angular CLI way
-Use the Angular CLI ng add command for updating your Angular project.
-```bash
-ng add ngx-webrtc-lib
-```
-
-##### Manual way
 Install `ngx-web-rtc-lib` from `npm`:
 ```bash
 npm install ngx-webrtc-lib --save

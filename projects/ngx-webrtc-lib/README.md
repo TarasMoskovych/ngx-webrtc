@@ -8,13 +8,6 @@ This library was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Installation
 
-##### Angular CLI way
-Use the Angular CLI ng add command for updating your Angular project.
-```bash
-ng add ngx-webrtc-lib
-```
-
-##### Manual way
 Install `ngx-web-rtc-lib` from `npm`:
 ```bash
 npm install ngx-webrtc-lib --save
