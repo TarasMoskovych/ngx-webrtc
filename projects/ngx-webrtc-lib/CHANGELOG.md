@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1
+- Fixed build issue.
+
 ## 1.0.0
 - Implemented basic video conference functionality.
 
