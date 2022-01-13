@@ -1,0 +1,31 @@
+<div @fade *ngIf="shown && data" class="video-call" [class.video-call--full-screen]="fullScreen">
+  <div class="video-call-user">
+    <div class="video-call-user__block video-call-user__block--animated">
+      <img class="video-call-user__img" [src]="data.user.photoURL" alt="">
+    </div>
+    <p class="video-call-user__title">
+      <ng-container *ngIf="data.outcome; else income">
+        Calling to {{ data.user.name }}
+      </ng-container>
+      <ng-template #income>
+        {{ data.user.name }} is calling
+      </ng-template>
+    </p>
+  </div>
+  <div class="video-call__actions">
+    <ng-container *ngIf="!data.outcome">
+      <button
+        aria-label="Accept"
+        class="video-call__button video-call__button--accept"
+        (click)="onAcceptCall()"
+      ></button>
+    </ng-container>
+    <span>
+      <button
+        aria-label="Decline"
+        class="video-call__button video-call__button--decline"
+        (click)="onDeclineCall()"
+      ></button>
+    </span>
+  </div>
+</div>

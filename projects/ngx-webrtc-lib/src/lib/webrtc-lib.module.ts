@@ -7,6 +7,7 @@ import {
   ControlsComponent,
   SpinnerComponent,
   TimerComponent,
+  VideoCallComponent,
 } from './components';
 
 import {
@@ -20,6 +21,7 @@ import {
     TimerComponent,
     SpinnerComponent,
     ToggleDirective,
+    VideoCallComponent,
   ],
   imports: [
     CommonModule,
