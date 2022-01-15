@@ -1,5 +1,8 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { take } from 'rxjs/operators';
+
+import { fadeAnimation } from './animations';
+import { DialogComponent } from './components';
 import { WebRtcService } from './services';
 
 @Component({
@@ -7,22 +10,32 @@ import { WebRtcService } from './services';
   templateUrl: './webrtc.component.html',
   styleUrls: ['./webrtc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [fadeAnimation],
 })
-export class WebRtcComponent implements OnInit, OnDestroy {
+export class WebRtcComponent extends DialogComponent implements OnInit, OnDestroy {
   @Input() uid: string;
   @Input() channel: string;
+  @Input() animate = true;
   @Input() debug = false;
   @Output() callEnd = new EventEmitter<void>();
 
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
 
-  constructor(private webRtcService: WebRtcService) { }
+  constructor(
+    private webRtcService: WebRtcService,
+    cdr: ChangeDetectorRef,
+  ) {
+    super(cdr);
+  }
 
   ngOnInit(): void {
     this.webRtcService.init(this.uid, this.channel, this.debug)
       .pipe(take(1))
-      .subscribe(() => this.callEnd.emit());
+      .subscribe(() => {
+        this.callEnd.emit();
+        this.closeDialog();
+      });
   }
 
   ngOnDestroy(): void {

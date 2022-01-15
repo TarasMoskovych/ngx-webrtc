@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, OnDestroy } from '@angular/core';
 import { DialogComponent } from '../abstract-dialog.component';
-import { CallDialogData } from '../../models/call-dialog-data.model';
+import { VideoCallDialogData } from '../../models';
 import { fadeAnimation } from '../../animations';
 
 @Component({
@@ -11,7 +11,7 @@ import { fadeAnimation } from '../../animations';
   animations: [fadeAnimation],
 })
 export class VideoCallComponent extends DialogComponent implements OnInit, OnDestroy {
-  @Input() data: CallDialogData;
+  @Input() data: VideoCallDialogData;
   public fullScreen = false;
   private audio: HTMLAudioElement;
 
@@ -29,6 +29,7 @@ export class VideoCallComponent extends DialogComponent implements OnInit, OnDes
 
   onAcceptCall(): void {
     this.fullScreen = true;
+    this.cdr.markForCheck();
     this.afterClosed.emit(this.data);
   }
 
