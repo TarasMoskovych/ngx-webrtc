@@ -1,8 +1,8 @@
-import { Component, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Subject } from 'rxjs';
 
-@Component({ template: '' })
 export abstract class DialogComponent {
-  @Output() afterClosed = new EventEmitter<any>(); // eslint-disable-line @typescript-eslint/no-explicit-any
+  afterClosed = new Subject<any>(); // eslint-disable-line @typescript-eslint/no-explicit-any
   shown = true;
 
   constructor(protected cdr: ChangeDetectorRef) {}
@@ -14,6 +14,6 @@ export abstract class DialogComponent {
   private onAfterClosed(data?: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
     this.shown = false;
     this.cdr.markForCheck();
-    this.afterClosed.emit(data);
+    this.afterClosed.next(data);
   }
 }

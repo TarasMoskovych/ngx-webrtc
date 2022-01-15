@@ -64,7 +64,7 @@ describe('VideoCallComponent', () => {
 
   describe('onAcceptCall', () => {
     beforeEach(() => {
-      spyOn(component.afterClosed, 'emit');
+      spyOn(component.afterClosed, 'next');
       component.fullScreen = false;
       component.onAcceptCall();
     });
@@ -74,7 +74,7 @@ describe('VideoCallComponent', () => {
     });
 
     it('should emit data outside', () => {
-      expect(component.afterClosed.emit).toHaveBeenCalledWith(component.data);
+      expect(component.afterClosed.next).toHaveBeenCalledWith(component.data);
     });
   });
 
