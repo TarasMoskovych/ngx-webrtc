@@ -11,7 +11,7 @@
     "publish": "cd ./dist/ngx-webrtc-lib && npm publish",
     "test": "ng test",
     "test:lib": "ng test --project ngx-webrtc-lib",
-    "test:ci": "ng test --configuration ci && ng test --project ngx-webrtc-lib --configuration ci",
+    "test:ci": "ng test --configuration ci",
     "lint": "ng lint",
     "postinstall": "npm ci --prefix ./projects/ngx-webrtc-lib"
   },
