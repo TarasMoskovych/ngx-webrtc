@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DialogComponent } from '../components';
 
@@ -10,6 +10,10 @@ import { DialogService } from './dialog.service';
 })
 class TestComponent extends DialogComponent {
   @Input() channel: string;
+
+  constructor(cdr: ChangeDetectorRef) {
+    super(cdr);
+  }
 }
 
 describe('DialogService', () => {
@@ -46,7 +50,7 @@ describe('DialogService', () => {
       const instance = service.open(TestComponent);
 
       spyOn(service['appRef'], 'detachView');
-      instance.afterClosed.emit();
+      instance.afterClosed.next();
       tick(500);
 
       expect(service['appRef'].detachView).toHaveBeenCalled();

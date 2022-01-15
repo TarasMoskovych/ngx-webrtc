@@ -30,7 +30,7 @@ export class VideoCallComponent extends DialogComponent implements OnInit, OnDes
   onAcceptCall(): void {
     this.fullScreen = true;
     this.cdr.markForCheck();
-    this.afterClosed.emit(this.data);
+    this.afterClosed.next(this.data);
   }
 
   onDeclineCall(): void {

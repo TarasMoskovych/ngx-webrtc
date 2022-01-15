@@ -11,7 +11,7 @@ describe('DialogComponent', () => {
     cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
     component = new TestComponent(cdr);
 
-    spyOn(component.afterClosed, 'emit');
+    spyOn(component.afterClosed, 'next');
   });
 
   it('should create', () => {
@@ -24,7 +24,7 @@ describe('DialogComponent', () => {
     });
 
     it('should emit "afterClosed" with some data', () => {
-      expect(component.afterClosed.emit).toHaveBeenCalledOnceWith(true);
+      expect(component.afterClosed.next).toHaveBeenCalledOnceWith(true);
     });
 
     it('should call "markForCheck"', () => {

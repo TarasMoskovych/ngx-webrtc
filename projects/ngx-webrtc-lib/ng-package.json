@@ -5,7 +5,10 @@
     "CHANGELOG.md"
   ],
   "lib": {
-    "entryFile": "src/public-api.ts"
+    "entryFile": "src/public-api.ts",
+    "umdModuleIds": {
+      "ngx-agora": "ngxAgora"
+    }
   },
   "allowedNonPeerDependencies": [
     "agora-rtc-sdk",
