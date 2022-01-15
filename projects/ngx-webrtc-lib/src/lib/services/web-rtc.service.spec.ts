@@ -1,16 +1,12 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { AgoraClient, NgxAgoraService, Stream } from 'ngx-agora';
-import { of } from 'rxjs';
 
-import { VideoCallComponent } from '../components';
-import { DEFAULT_STREAM_STATE, StreamState, VideoCallDialog, VideoCallDialogData } from '../models';
-import { DialogService } from './dialog.service';
+import { DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { WebRtcService } from './web-rtc.service';
 
 describe('WebRtcService', () => {
   let service: WebRtcService;
   let agoraService: jasmine.SpyObj<NgxAgoraService>;
-  let dialogService: jasmine.SpyObj<DialogService>;
 
   beforeEach(() => {
     agoraService = jasmine.createSpyObj('NgxAgoraService', ['createClient', 'createStream'], {
@@ -25,73 +21,11 @@ describe('WebRtcService', () => {
         AppId: '12345',
       },
     });
-    dialogService = jasmine.createSpyObj('DialogService', ['open']);
-    service = new WebRtcService(agoraService, dialogService);
+    service = new WebRtcService(agoraService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  describe('openDialog', () => {
-    let publicAPI: VideoCallDialog;
-    const data: VideoCallDialogData = {
-      channelId: 'channelId_1234',
-      outcome: true,
-      uid: 'uid-12345',
-      user: {
-        name: 'Test',
-        photoURL: 'url',
-      },
-    };
-
-    describe('accept', () => {
-      beforeEach(() => {
-        dialogService.open.and.returnValue({
-          afterClosed: of({ channelId: data.channelId }),
-          onAcceptCall: () => undefined,
-          closeDialog: () => undefined,
-        } as VideoCallComponent);
-
-        publicAPI = service.openDialog(data);
-      });
-
-      it('should open "VideoCallComponent" dialog', () => {
-        expect(dialogService.open).toHaveBeenCalledWith(VideoCallComponent, { data });
-      });
-
-      it('should return public methods for dialog', () => {
-        expect(Object.keys(publicAPI).length).toBe(2);
-      });
-
-      it('should call "open" twice', () => {
-        expect(dialogService.open).toHaveBeenCalledTimes(2);
-      });
-    });
-
-    describe('decline', () => {
-      beforeEach(() => {
-        dialogService.open.and.returnValue({
-          afterClosed: of({}),
-          onAcceptCall: () => undefined,
-          closeDialog: () => undefined,
-        } as VideoCallComponent);
-
-        publicAPI = service.openDialog(data);
-      });
-
-      it('should open "VideoCallComponent" dialog', () => {
-        expect(dialogService.open).toHaveBeenCalledWith(VideoCallComponent, { data });
-      });
-
-      it('should return public methods for dialog', () => {
-        expect(Object.keys(publicAPI).length).toBe(2);
-      });
-
-      it('should call "open" only once', () => {
-        expect(dialogService.open).toHaveBeenCalledTimes(1);
-      });
-    });
   });
 
   describe('init', () => {
