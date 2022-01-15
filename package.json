@@ -9,8 +9,9 @@
     "build:lib": "ng build --project ngx-webrtc-lib",
     "watch": "ng build --watch --configuration development",
     "publish": "cd ./dist/ngx-webrtc-lib && npm publish",
-    "test": "ng test --project ngx-webrtc-lib",
-    "test:ci": "ng test --configuration ci",
+    "test": "ng test",
+    "test:lib": "ng test --project ngx-webrtc-lib",
+    "test:ci": "ng test --configuration ci && ng test --project ngx-webrtc-lib --configuration ci",
     "lint": "ng lint",
     "postinstall": "npm ci --prefix ./projects/ngx-webrtc-lib"
   },

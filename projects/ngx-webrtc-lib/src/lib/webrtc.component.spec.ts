@@ -1,12 +1,16 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { of } from 'rxjs';
+
 import { WebRtcService } from './services';
 import { WebRtcComponent } from './webrtc.component';
 
 describe('WebRtcComponent', () => {
   let component: WebRtcComponent;
+  let cdr: jasmine.SpyObj<ChangeDetectorRef>;
   let webRtcService: jasmine.SpyObj<WebRtcService>;
 
   beforeEach(() => {
+    cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
     webRtcService = jasmine.createSpyObj('WebRtcService', [
       'init',
       'deinit',
@@ -22,7 +26,7 @@ describe('WebRtcComponent', () => {
       localContainerId: 'local',
       remoteCalls: ['1', '2', '3'],
     });
-    component = new WebRtcComponent(webRtcService);
+    component = new WebRtcComponent(webRtcService, cdr);
     component.uid = '1234';
     component.debug = true;
     component.channel = 'test_channel';
@@ -35,6 +39,7 @@ describe('WebRtcComponent', () => {
   describe('ngOnInit', () => {
     beforeEach(() => {
       spyOn(component.callEnd, 'emit');
+      spyOn(component, 'closeDialog');
       webRtcService.init.and.returnValue(of(undefined));
       component.ngOnInit();
     });
@@ -45,6 +50,10 @@ describe('WebRtcComponent', () => {
 
     it('should emit "callEnd" event after end state', () => {
       expect(component.callEnd.emit).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call "closeDialog" after end state', () => {
+      expect(component.closeDialog).toHaveBeenCalled();
     });
   });
 
