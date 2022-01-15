@@ -3,10 +3,7 @@ import { AgoraClient, ClientConfig, ClientEvent, NgxAgoraService, Stream, Stream
 import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { StreamState, DEFAULT_STREAM_STATE, VideoCallDialogData, VideoCallDialog } from '../models';
-import { DialogService } from './dialog.service';
-import { WebRtcComponent } from '../webrtc.component';
-import { VideoCallComponent } from '../components';
+import { StreamState, DEFAULT_STREAM_STATE } from '../models';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -35,26 +32,7 @@ export class WebRtcService {
   public remoteStreamVideoToggle$ = this.remoteStreamVideoToggle.asObservable();
   public streamState$ = this.streamState.asObservable();
 
-  constructor(
-    private ngxAgoraService: NgxAgoraService,
-    private dialog: DialogService,
-  ) { }
-
-  openDialog(data: VideoCallDialogData): VideoCallDialog {
-    const dialog = this.dialog.open(VideoCallComponent, { data }) as VideoCallComponent;
-
-    dialog.afterClosed
-      .pipe(take(1))
-      .subscribe((data: VideoCallDialogData) => {
-        if (data?.channelId) {
-          this.dialog.open(WebRtcComponent, { uid: data.uid, channelId: data.channelId });
-        }
-      });
-
-    return {
-      acceptCall: dialog.onAcceptCall.bind(dialog),
-      close: dialog.closeDialog.bind(dialog),
-    };
+  constructor(private ngxAgoraService: NgxAgoraService) {
   }
 
   init(uid: string, channel: string, debug = false): Observable<void> {

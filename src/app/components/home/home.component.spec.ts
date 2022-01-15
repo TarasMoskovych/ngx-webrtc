@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { WebRtcService } from 'src/app/ngx-webrtc.export';
+import { VideoCallDialogService } from 'src/app/ngx-webrtc.export';
 
 import { HomeComponent } from './home.component';
 
@@ -10,15 +10,15 @@ describe('HomeComponent', () => {
   let formBuilder: jasmine.SpyObj<FormBuilder>;
   let router: jasmine.SpyObj<Router>;
   let localStorage: jasmine.SpyObj<Storage>;
-  let webRtcService: jasmine.SpyObj<WebRtcService>;
+  let videoCallDialogService: jasmine.SpyObj<VideoCallDialogService>;
 
   beforeEach(() => {
     formBuilder = jasmine.createSpyObj('FormBuilder', ['group']);
     router = jasmine.createSpyObj('Router', ['navigate']);
     localStorage = jasmine.createSpyObj('Storage', ['getItem', 'setItem']);
-    webRtcService = jasmine.createSpyObj('WebRtcService', ['openDialog']);
+    videoCallDialogService = jasmine.createSpyObj('VideoCallDialogService', ['open']);
 
-    component = new HomeComponent(formBuilder, router, localStorage, webRtcService);
+    component = new HomeComponent(formBuilder, router, localStorage, videoCallDialogService);
   });
 
   it('should create', () => {
@@ -89,13 +89,13 @@ describe('HomeComponent', () => {
 
     beforeEach(() => {
       spyOn(component, 'saveChannel');
-      webRtcService.openDialog.and.returnValue(spy);
+      videoCallDialogService.open.and.returnValue(spy);
     });
 
-    it('should call "openDialog" with the data', () => {
+    it('should call "open" with the data', () => {
       component.onModalOpen();
 
-      expect(webRtcService.openDialog).toHaveBeenCalledWith({
+      expect(videoCallDialogService.open).toHaveBeenCalledWith({
         uid: '1234567',
         channelId: component.channelId,
         outcome: component.outcome,

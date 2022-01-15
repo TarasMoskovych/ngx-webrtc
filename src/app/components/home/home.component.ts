@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { WebRtcService } from 'src/app/ngx-webrtc.export';
+import { VideoCallDialogService } from 'src/app/ngx-webrtc.export';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private localStorage: Storage,
-    private webRtcService: WebRtcService,
+    private videoCallDialogService: VideoCallDialogService,
   ) { }
 
   get channelId(): string {
@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
 
   onModalOpen(): void {
     this.saveChannel();
-    const dialog = this.webRtcService.openDialog({
+    const dialog = this.videoCallDialogService.open({
       uid: '1234567',
       channelId: this.channelId,
       outcome: this.outcome,
