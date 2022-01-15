@@ -11,8 +11,27 @@
         <mat-label>Channel Id</mat-label>
         <input matInput placeholder="Channel id" formControlName="channelId">
       </mat-form-field>
-      <div class="home__wrapper home__wrapper--center">
-        <button [disabled]="form.invalid" mat-flat-button color="primary">Start / Join call</button>
+      <div class="home__wrapper home__wrapper--center home__wrapper--buttons">
+        <button
+          class="home__btn"
+          [disabled]="form.invalid"
+          mat-flat-button
+          color="primary"
+        >Start / Join call</button>
+        <button
+          class="home__btn"
+          [disabled]="form.invalid"
+          mat-raised-button
+          (click)="onModalOpen()"
+          type="button"
+        >Open Call Dialog
+          <mat-slide-toggle
+            (change)="outcome = $event.checked"
+            (click)="$event.stopPropagation();"
+            [checked]="outcome"
+            [matTooltip]="tooltipText"
+          ></mat-slide-toggle>
+        </button>
       </div>
     </form>
     <div class="home__footer">
