@@ -27,7 +27,7 @@
     "@angular/core": "^12.2.0"
   },
   "dependencies": {
-    "agora-rtc-sdk": "^3.6.4",
+    "agora-rtc-sdk": "^3.6.9",
     "ngx-agora": "^2.0.1",
     "tslib": "^2.3.0"
   },
