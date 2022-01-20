@@ -61,6 +61,7 @@ export class WebRtcService {
       if (this.localStream.isPlaying()) {
         this.localStream.stop();
         this.localStream.close();
+        this.remoteCalls = [];
       }
 
       this.streamState.next({ ...this.streamState.value, started: null, loading: true, statusText: '', ended: true });
@@ -137,6 +138,7 @@ export class WebRtcService {
     this.client.on(ClientEvent.RemoteStreamSubscribed, evt => {
       const stream = evt.stream as Stream;
       const id = this.getRemoteId(stream);
+
       if (!this.remoteCalls.length) {
         this.remoteCalls.push(id);
         setTimeout(() => stream.play(id), 1000);
