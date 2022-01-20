@@ -39,6 +39,10 @@ ngx-timer {
         display: block;
       }
     }
+
+    &:empty {
+      display: none;
+    }
   }
 
   &__user-icon {
