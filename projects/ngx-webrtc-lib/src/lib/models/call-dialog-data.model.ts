@@ -1,13 +1,18 @@
+import { Observable } from 'rxjs';
+
 export interface VideoCallDialogData {
   uid: string;
-  channelId: string;
+  channel: string;
   outcome: boolean;
   user: User;
+  debug?: boolean;
 }
 
 export interface VideoCallDialog {
   acceptCall: () => void,
   close: () => void,
+  afterConfirmation: () => Observable<VideoCallDialogData>;
+  afterCallEnd: () => Observable<boolean>;
 }
 
 interface User {

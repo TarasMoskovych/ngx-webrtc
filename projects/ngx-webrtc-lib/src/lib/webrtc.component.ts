@@ -34,7 +34,7 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
       .pipe(take(1))
       .subscribe(() => {
         this.callEnd.emit();
-        this.closeDialog();
+        this.closeDialog(true);
       });
   }
 

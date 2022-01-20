@@ -35,7 +35,7 @@ export class VideoCallComponent extends DialogComponent implements OnInit, OnDes
 
   onDeclineCall(): void {
     this.play('assets/cancel.mp3');
-    setTimeout(() => this.closeDialog(), 200);
+    setTimeout(() => this.closeDialog(null), 200);
   }
 
   private play(path: string, loop = true): void {

@@ -1,6 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { VideoCallDialogService } from 'src/app/ngx-webrtc.export';
 
 import { HomeComponent } from './home.component';
@@ -85,7 +86,9 @@ describe('HomeComponent', () => {
     const spy = {
       acceptCall: jasmine.createSpy(),
       close: jasmine.createSpy(),
-    };
+      afterConfirmation: () => of(undefined),
+      afterCallEnd: jasmine.createSpy(),
+    } as any;
 
     beforeEach(() => {
       spyOn(component, 'saveChannel');
@@ -94,16 +97,7 @@ describe('HomeComponent', () => {
 
     it('should call "open" with the data', () => {
       component.onModalOpen();
-
-      expect(videoCallDialogService.open).toHaveBeenCalledWith({
-        uid: '1234567',
-        channelId: component.channelId,
-        outcome: component.outcome,
-        user: {
-          name: 'Test User',
-          photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvDtoEwuV9E2kHqNDi6MnBzXlefn8TfyrwgQ&usqp=CAU',
-        },
-      });
+      expect(videoCallDialogService.open).toHaveBeenCalled();
     });
 
     it('should call "close" after 7 seconds', fakeAsync(() => {
