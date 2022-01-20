@@ -17,7 +17,7 @@ describe('VideoCallComponent', () => {
     cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
     component = new VideoCallComponent(cdr);
     component.data = {
-      channelId: '1234',
+      channel: '1234',
       outcome: true,
       uid: '12345',
       user: {

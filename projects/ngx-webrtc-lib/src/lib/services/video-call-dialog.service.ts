@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { VideoCallDialogData, VideoCallDialog } from '../models';
@@ -15,18 +16,23 @@ export class VideoCallDialogService {
 
   open(data: VideoCallDialogData): VideoCallDialog {
     const dialog = this.dialog.open(VideoCallComponent, { data }) as VideoCallComponent;
+    let webRtcDialog: WebRtcComponent;
 
     dialog.afterClosed
       .pipe(take(1))
       .subscribe((data: VideoCallDialogData) => {
-        if (data?.channelId) {
-          this.dialog.open(WebRtcComponent, { uid: data.uid, channelId: data.channelId });
+        if (data?.channel) {
+          webRtcDialog = this.dialog.open(WebRtcComponent, { uid: data.uid, channel: data.channel, debug: !!data.debug }) as WebRtcComponent;
         }
       });
 
     return {
       acceptCall: dialog.onAcceptCall.bind(dialog),
       close: dialog.closeDialog.bind(dialog),
+      afterConfirmation: () => dialog.afterClosed.asObservable().pipe(take(1)),
+      afterCallEnd: () => {
+        return webRtcDialog ? webRtcDialog.afterClosed.asObservable().pipe(take(1)) : of(false);
+      },
     };
   }
 }

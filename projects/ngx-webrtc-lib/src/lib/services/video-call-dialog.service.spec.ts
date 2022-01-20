@@ -1,4 +1,4 @@
-import { of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { DialogService } from './dialog.service';
 import { VideoCallDialogService } from './video-call-dialog.service';
@@ -21,7 +21,7 @@ describe('VideoCallDialogService', () => {
   describe('open', () => {
     let publicAPI: VideoCallDialog;
     const data: VideoCallDialogData = {
-      channelId: 'channelId_1234',
+      channel: 'channelId_1234',
       outcome: true,
       uid: 'uid-12345',
       user: {
@@ -33,10 +33,10 @@ describe('VideoCallDialogService', () => {
     describe('accept', () => {
       beforeEach(() => {
         dialogService.open.and.returnValue({
-          afterClosed: of({ channelId: data.channelId }),
+          afterClosed: new BehaviorSubject({ channel: data.channel }),
           onAcceptCall: () => undefined,
           closeDialog: () => undefined,
-        } as VideoCallComponent);
+        } as any);
 
         publicAPI = service.open(data);
       });
@@ -46,21 +46,33 @@ describe('VideoCallDialogService', () => {
       });
 
       it('should return public methods for dialog', () => {
-        expect(Object.keys(publicAPI).length).toBe(2);
+        expect(Object.keys(publicAPI).length).toBe(4);
       });
 
       it('should call "open" twice', () => {
         expect(dialogService.open).toHaveBeenCalledTimes(2);
+      });
+
+      it('should be truthy on afterConfirmation', () => {
+        publicAPI.afterConfirmation().subscribe((data: VideoCallDialogData) => {
+          expect(data).toBeTruthy();
+        });
+      });
+
+      it('should be truthy on afterCallEnd', () => {
+        publicAPI.afterCallEnd().subscribe((data: boolean) => {
+          expect(data).toBeTruthy();
+        });
       });
     });
 
     describe('decline', () => {
       beforeEach(() => {
         dialogService.open.and.returnValue({
-          afterClosed: of({}),
+          afterClosed: new BehaviorSubject(null),
           onAcceptCall: () => undefined,
           closeDialog: () => undefined,
-        } as VideoCallComponent);
+        } as any);
 
         publicAPI = service.open(data);
       });
@@ -70,11 +82,23 @@ describe('VideoCallDialogService', () => {
       });
 
       it('should return public methods for dialog', () => {
-        expect(Object.keys(publicAPI).length).toBe(2);
+        expect(Object.keys(publicAPI).length).toBe(4);
       });
 
       it('should call "open" only once', () => {
         expect(dialogService.open).toHaveBeenCalledTimes(1);
+      });
+
+      it('should be null on afterConfirmation', () => {
+        publicAPI.afterConfirmation().subscribe((data: VideoCallDialogData) => {
+          expect(data).toBeNull();
+        });
+      });
+
+      it('should be false on afterCallEnd', () => {
+        publicAPI.afterCallEnd().subscribe((data: boolean) => {
+          expect(data).toBeFalse();
+        });
       });
     });
   });
