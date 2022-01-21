@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+- Implemented video-call confirmation functionality.
+- Updated agora-rtc-sdk to 3.6.9 version.
+- Fixed minor issues.
+
 ## 1.0.1
 - Fixed build issue.
 
