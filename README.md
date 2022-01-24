@@ -92,8 +92,20 @@ onDialogOpen(): void {
 }
 ```
 
+Import `assets` in your angular.json file
+
+```json
+"assets": [
+  {
+    "glob": "**/*",
+    "input": "./node_modules/ngx-webrtc-lib/src/assets/",
+    "output": "./assets/"
+  }
+],
+```
+
 For the real-life video call confirmation behavior with multiple clients where one declines the call and it immediately reflects on the second client, you need to implement your own custom solution.
-This is an example of the implementation using [web-sockets](https://github.com/TarasMoskovych/angular-slack/blob/8521ca7604afe9a49ea6fd91840f4f999daceca1/apps/angular-slack/src/app/core/services/video-call.service.ts).
+This is an example of the implementation using [web-sockets](https://github.com/TarasMoskovych/angular-slack/pull/20/files).
 
 ### How to build lib for development
 
