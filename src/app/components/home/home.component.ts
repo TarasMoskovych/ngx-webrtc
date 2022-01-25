@@ -1,7 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { VideoCallDialogService, VideoCallDialogData } from 'src/app/ngx-webrtc.export';
+
+// import { VideoCallDialogService, VideoCallDialogData } from 'projects/ngx-webrtc-lib/src/public-api';
+import { VideoCallDialogService, VideoCallDialogData } from 'ngx-webrtc-lib';
 
 @Component({
   selector: 'app-home',
