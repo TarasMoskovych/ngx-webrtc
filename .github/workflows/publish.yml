@@ -7,9 +7,18 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
         with:
+          node-version: '14.x'
           fetch-depth: 0
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install node_modules
         run: npm ci
       - name: Lint

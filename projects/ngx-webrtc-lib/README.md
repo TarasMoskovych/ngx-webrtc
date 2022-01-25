@@ -96,7 +96,7 @@ To use this library, please follow the versioning specified in the following tab
 
 | Angular Version | `ngx-webrtc-lib` Version |
 | --------------- | ------------------- |
-| 12.x            | 1.x                 |
+| 12.x            | 1.x / 2.x           |
 
 ## API reference
 
