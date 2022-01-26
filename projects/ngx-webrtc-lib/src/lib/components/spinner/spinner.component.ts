@@ -16,6 +16,6 @@ export class SpinnerComponent {
       return '#aaa';
     }
 
-    return this.connected ? '#39D627' : '#1296E7';
+    return this.connected ? '#37D425' : '#1195E6';
   }
 }

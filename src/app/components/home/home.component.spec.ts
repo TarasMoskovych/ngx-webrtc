@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
-// import { VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
-import { VideoCallDialogService } from 'ngx-webrtc-lib';
+import { VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
+// import { VideoCallDialogService } from 'ngx-webrtc-lib';
 
 import { HomeComponent } from './home.component';
 

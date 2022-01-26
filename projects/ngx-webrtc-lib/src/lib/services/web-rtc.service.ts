@@ -178,7 +178,10 @@ export class WebRtcService {
           onSuccess();
         }
       },
-      err => console.warn('getUserMedia failed', err)
+      err => {
+        console.warn('getUserMedia failed', err);
+        this.endCall();
+      }
     );
   }
 

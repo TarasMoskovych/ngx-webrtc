@@ -9,7 +9,7 @@ export interface StreamState {
 export const DEFAULT_STREAM_STATE: StreamState = {
   connected: false,
   loading: true,
-  statusText: 'Connecting',
+  statusText: 'Initializing',
   started: null,
   ended: false,
 };

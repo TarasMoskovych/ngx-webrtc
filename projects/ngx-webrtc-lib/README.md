@@ -100,7 +100,8 @@ To use this library, please follow the versioning specified in the following tab
 
 ## API reference
 
-`WebRtcComponent`
+### WebRtcComponent
+
 | Name                                  | Description |
 | ------------------------------------- | --------------------------------------------- |
 | @Input() uid: string                  | User identifier.                              |
@@ -108,12 +109,14 @@ To use this library, please follow the versioning specified in the following tab
 | @Input() debug: boolean               | Enable debugging. Default value `false`       |
 | @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended. |
 
-`VideoCallDialogService`
+### VideoCallDialogService
+
 | Name                                               | Description                            |
 | -------------------------------------------------- | -------------------------------------- |
 | open: (`VideoCallDialogData`) => `VideoCallDialog` | Renders `WebRtcComponent` in the dialog.  |
 
-`VideoCallDialogData`
+### VideoCallDialogData
+
 | Name                 | Description |
 | ---------------------| ------------------------------------------------ |
 | uid: string          | User identifier.                                 |
@@ -121,7 +124,8 @@ To use this library, please follow the versioning specified in the following tab
 | outcome: boolean     | Defines the UI for income or outcome call mode.  |
 | user: User           | User name and photo URL.                         |
 
-`VideoCallDialogData`
+### VideoCallDialog
+
 | Name                                                              | Description                                                                            |
 | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | acceptCall: () => void                                            | Closes the confirmation dialog and opens `WebRtcComponent` with passed data before.    |
