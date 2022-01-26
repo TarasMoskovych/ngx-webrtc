@@ -5,6 +5,9 @@ import { DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { WebRtcService } from './web-rtc.service';
 
 describe('WebRtcService', () => {
+  const clientSpy = {
+    leave: (cb: () => void) => cb(),
+  } as AgoraClient;
   let service: WebRtcService;
   let agoraService: jasmine.SpyObj<NgxAgoraService>;
 
@@ -21,6 +24,7 @@ describe('WebRtcService', () => {
         AppId: '12345',
       },
     });
+    agoraService.createClient.and.returnValue(clientSpy);
     service = new WebRtcService(agoraService);
   });
 
@@ -396,6 +400,7 @@ describe('WebRtcService', () => {
   describe('join', () => {
     const clientSpy = {
       join: jasmine.createSpy(),
+      leave: jasmine.createSpy(),
     } as any;
 
     const localStream = {

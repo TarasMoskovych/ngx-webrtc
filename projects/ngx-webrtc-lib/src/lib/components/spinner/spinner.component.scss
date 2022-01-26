@@ -1,12 +1,12 @@
 .spinner {
-  background-color: #232a30;
+  background-color: #22292F;
   height: 100vh;
   position: relative;
 
   &--connected {
     .spinner {
       &__cirle {
-        border-color: #39D627;
+        border-color: #37D425;
       }
     }
   }
@@ -28,7 +28,7 @@
 
   &__cirle {
     animation: spin 2s linear infinite;
-    border: 5px solid #1296E7;
+    border: 5px solid #1195E6;
     border-radius: 50%;
     border-top-color: transparent;
     height: 160px;
