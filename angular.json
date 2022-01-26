@@ -32,7 +32,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "./projects/ngx-webrtc-lib/src/assets/",
+                "input": "./node_modules/ngx-webrtc-lib/src/assets/",
                 "output": "./assets/"
               }
             ],
@@ -112,7 +112,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "./projects/ngx-webrtc-lib/src/assets/",
+                "input": "./node_modules/ngx-webrtc-lib/src/assets/",
                 "output": "./assets/"
               }
             ],
