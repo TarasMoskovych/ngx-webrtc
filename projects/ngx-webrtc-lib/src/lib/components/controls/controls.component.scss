@@ -16,6 +16,32 @@ $danger: #D73B3D;
   left: 0;
   width: 100%;
 
+  &--small {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 5px 0 5px;
+
+    .controls {
+      &__icon-wrapper {
+        height: 32px;
+        width: 32px;
+
+        svg {
+          height: 16px;
+          width: 16px;
+        }
+      }
+
+      &__item {
+        margin: 0;
+      }
+
+      &__button p {
+        display: none;
+      }
+    }
+  }
+
   &__item {
     margin: 0 5px;
     text-align: center;
@@ -41,6 +67,10 @@ $danger: #D73B3D;
         .controls__icon-wrapper {
           background-color: lighten($primary, 10);
         }
+      }
+
+      &.controls__button--rotate svg {
+        transform: translate(-50%, -50%) rotate(-180deg);
       }
     }
 
@@ -73,10 +103,13 @@ $danger: #D73B3D;
     width: 60px;
 
     svg {
+      height: 32px;
       left: 50%;
       position: absolute;
       top: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) rotate(0);
+      transition: .3s;
+      width: 32px;
     }
   }
 

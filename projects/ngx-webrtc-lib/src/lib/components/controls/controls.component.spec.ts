@@ -44,6 +44,17 @@ describe('ControlsComponent', () => {
     });
   });
 
+  describe('onToggleSmallScreen', () => {
+    beforeEach(() => {
+      spyOn(component.toggleSmallScreen, 'emit');
+    });
+
+    it('should emit event', () => {
+      component.onToggleSmallScreen();
+      expect(component.toggleSmallScreen.emit).toHaveBeenCalledWith(component.smallScreenEnabled);
+    });
+  });
+
   describe('onEndCall', () => {
     beforeEach(() => {
       spyOn(component.endCall, 'emit');
