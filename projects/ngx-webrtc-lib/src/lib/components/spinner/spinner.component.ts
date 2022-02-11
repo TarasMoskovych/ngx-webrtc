@@ -10,6 +10,7 @@ export class SpinnerComponent {
   @Input() text: string;
   @Input() connected = true;
   @Input() ended = false;
+  @Input() small = false;
 
   get color(): string {
     if (this.ended) {

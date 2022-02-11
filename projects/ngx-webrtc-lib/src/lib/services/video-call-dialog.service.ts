@@ -22,7 +22,12 @@ export class VideoCallDialogService {
       .pipe(take(1))
       .subscribe((data: VideoCallDialogData) => {
         if (data?.channel) {
-          webRtcDialog = this.dialog.open(WebRtcComponent, { uid: data.uid, channel: data.channel, debug: !!data.debug }) as WebRtcComponent;
+          webRtcDialog = this.dialog.open(WebRtcComponent, {
+            uid: data.uid,
+            channel: data.channel,
+            debug: !!data.debug,
+            displaySmallScreen: true,
+          }) as WebRtcComponent;
         }
       });
 

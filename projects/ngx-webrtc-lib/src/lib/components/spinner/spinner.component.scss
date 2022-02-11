@@ -2,6 +2,7 @@
   background-color: #22292F;
   height: 100vh;
   position: relative;
+  transition: .3s;
 
   &--connected {
     .spinner {
@@ -15,6 +16,29 @@
     .spinner {
       &__cirle {
         border-color: transparent;
+      }
+    }
+  }
+
+  &--small {
+    border-radius: 10px;
+    height: 200px;
+
+    .spinner {
+      &__cirle {
+        border-width: 4px;
+        height: 80px;
+        width: 80px;
+      }
+
+      &__icon {
+        top: 26px;
+        transform: translateX(-35%);
+
+        svg {
+          height: 32px;
+          width: 32px;
+        }
       }
     }
   }
@@ -42,6 +66,13 @@
     position: absolute;
     top: 52px;
     transform: translateX(-40%);
+    transition: 0.3s;
+
+    svg {
+      height: 64px;
+      transition: 0.3s;
+      width: 64px;
+    }
   }
 
   &__text {
