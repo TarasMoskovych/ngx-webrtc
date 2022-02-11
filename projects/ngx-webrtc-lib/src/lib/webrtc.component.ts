@@ -1,4 +1,14 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  ChangeDetectorRef,
+  HostBinding,
+} from '@angular/core';
 import { take } from 'rxjs/operators';
 
 import { fadeAnimation } from './animations';
@@ -16,8 +26,11 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
   @Input() uid: string;
   @Input() channel: string;
   @Input() animate = true;
+  @Input() displaySmallScreen = false;
   @Input() debug = false;
   @Output() callEnd = new EventEmitter<void>();
+  @HostBinding('class.small-screen') smallScreenEnabled = false;
+  @HostBinding('class.active') active = false;
 
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
@@ -33,6 +46,7 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
     this.webRtcService.init(this.uid, this.channel, this.debug)
       .pipe(take(1))
       .subscribe(() => {
+        this.active = this.smallScreenEnabled;
         this.callEnd.emit();
         this.closeDialog(true);
       });
@@ -72,6 +86,11 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
 
   onToggleFullScreen(state: boolean): void {
     this.webRtcService.toggleFullScreen(state);
+  }
+
+  onToggleSmallScreen(state: boolean): void {
+    this.smallScreenEnabled = !state;
+    this.active = true;
   }
 
   onEndCall(): void {

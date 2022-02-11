@@ -1,19 +1,68 @@
 $black: #22292F;
+$small-size: 200px;
+$small-size-offset: 10px;
 
 ngx-timer {
   display: block;
   padding-top: 25px;
 }
 
+:host {
+  width: 100%;
+  bottom: 0;
+
+  &.active {
+    position: fixed;
+  }
+
+  &.small-screen {
+    ngx-timer {
+      padding-top: 10px;
+    }
+
+    .container {
+      border-radius: $small-size-offset;
+      box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+      height: $small-size;
+      max-width: $small-size;
+      margin-right: $small-size-offset;
+      margin-bottom: $small-size-offset;
+
+      &__remote {
+        border-radius: $small-size-offset;
+        height: $small-size;
+        width: $small-size;
+
+        ::ng-deep {
+          & > div {
+            border-radius: $small-size-offset;
+          }
+        }
+      }
+
+      &__user-icon {
+        svg {
+          height: 32px;
+          width: 32px;
+        }
+      }
+    }
+  }
+}
+
 .container {
   background-color: $black;
   height: 100vh;
+  max-width: 100%;
+  margin-left: auto;
+  position: relative;
+  transition: 0.3s;
 
   &__local {
     border-radius: 5px;
     height: 20vh;
     overflow: hidden;
-    position: fixed;
+    position: absolute;
     right: 1rem;
     top: 1rem;
     width: 20vw;
@@ -28,9 +77,16 @@ ngx-timer {
     background-color: $black;
     height: 100vh;
     left: 0;
-    position: fixed;
+    position: absolute;
     top: 0;
+    transition: 0.3s;
     width: 100vw;
+
+    ::ng-deep {
+      & > div {
+        transition: 0.3s;
+      }
+    }
 
     &.hidden {
       display: none;
@@ -55,6 +111,11 @@ ngx-timer {
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    svg {
+      height: 64px;
+      width: 64px;
+    }
   }
 }
 
