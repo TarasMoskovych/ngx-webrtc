@@ -14,13 +14,13 @@
       <div class="home__wrapper home__wrapper--center home__wrapper--buttons">
         <button
           class="home__btn"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || !!dialog"
           mat-flat-button
           color="primary"
         >Start / Join call</button>
         <button
           class="home__btn"
-          [disabled]="form.invalid"
+          [disabled]="form.invalid || !!dialog"
           mat-raised-button
           (click)="onModalOpen()"
           type="button"
@@ -29,6 +29,7 @@
             (change)="outcome = $event.checked"
             (click)="$event.stopPropagation();"
             [checked]="outcome"
+            [disabled]="!!dialog"
             [matTooltip]="tooltipText"
           ></mat-slide-toggle>
         </button>
