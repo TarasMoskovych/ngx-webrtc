@@ -110,6 +110,22 @@ describe('WebRtcComponent', () => {
     });
   });
 
+  describe('onToggleSmallScreen', () => {
+    beforeEach(() => {
+      component.active = false;
+      component.smallScreenEnabled = false;
+      component.onToggleSmallScreen(true);
+    });
+
+    it('should invert "smallScreenEnabled" value', () => {
+      expect(component.smallScreenEnabled).toBeFalse();
+    });
+
+    it('should set "active" to true', () => {
+      expect(component.active).toBeTrue();
+    });
+  });
+
   describe('onEndCall', () => {
     it('should call "endCall" method', () => {
       component.onEndCall();

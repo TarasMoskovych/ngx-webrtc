@@ -16,11 +16,11 @@ export class DialogService {
     private injector: Injector,
   ) { }
 
-  open(component: Type<any>, data: any = {}): DialogComponent { // eslint-disable-line @typescript-eslint/no-explicit-any
+  open(component: Type<any>, data: any = {}): DialogComponent {
     return this.appendComponent(component, data);
   }
 
-  private appendComponent(component: Type<any>, data: any): DialogComponent { // eslint-disable-line @typescript-eslint/no-explicit-any
+  private appendComponent(component: Type<any>, data: any): DialogComponent {
     // 1. Create a component reference from the component
     const componentRef = this.componentFactoryResolver
       .resolveComponentFactory(component)
@@ -35,7 +35,7 @@ export class DialogService {
     this.appRef.attachView(componentRef.hostView);
 
     // 3. Get DOM element from component
-    const domElem = (componentRef.hostView as EmbeddedViewRef<any>) // eslint-disable-line @typescript-eslint/no-explicit-any
+    const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
 
     // 4. Append DOM element to the container
@@ -61,7 +61,7 @@ export class DialogService {
     if (!container) {
       container = this.document.createElement('div');
       container.setAttribute('class', this.wrapperSelector);
-      container.setAttribute('style', 'position: fixed; top: 0; width: 100vw;');
+      container.setAttribute('style', 'position: fixed; top: 0; width: 100%;');
       this.document.body.appendChild(container);
     }
 

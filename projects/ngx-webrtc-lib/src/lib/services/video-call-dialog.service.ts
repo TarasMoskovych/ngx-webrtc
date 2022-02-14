@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
 
 import { VideoCallDialogData, VideoCallDialog } from '../models';
 import { DialogService } from './dialog.service';
@@ -15,29 +15,31 @@ export class VideoCallDialogService {
   constructor(private dialog: DialogService) { }
 
   open(data: VideoCallDialogData): VideoCallDialog {
+    const callEnded = new Subject<boolean>();
     const dialog = this.dialog.open(VideoCallComponent, { data }) as VideoCallComponent;
-    let webRtcDialog: WebRtcComponent;
 
-    dialog.afterClosed
-      .pipe(take(1))
-      .subscribe((data: VideoCallDialogData) => {
+    dialog.afterClosed.asObservable().pipe(
+      switchMap((data: VideoCallDialogData) => {
         if (data?.channel) {
-          webRtcDialog = this.dialog.open(WebRtcComponent, {
+          return this.dialog.open(WebRtcComponent, {
             uid: data.uid,
             channel: data.channel,
             debug: !!data.debug,
             displaySmallScreen: true,
-          }) as WebRtcComponent;
+          }).afterClosed.asObservable();
         }
-      });
+
+        return of(false);
+      }),
+      take(1),
+      tap(() => callEnded.next(true)),
+    ).subscribe();
 
     return {
       acceptCall: dialog.onAcceptCall.bind(dialog),
       close: dialog.closeDialog.bind(dialog),
       afterConfirmation: () => dialog.afterClosed.asObservable().pipe(take(1)),
-      afterCallEnd: () => {
-        return webRtcDialog ? webRtcDialog.afterClosed.asObservable().pipe(take(1)) : of(false);
-      },
+      afterCallEnd: () => callEnded.asObservable().pipe(take(1)),
     };
   }
 }
