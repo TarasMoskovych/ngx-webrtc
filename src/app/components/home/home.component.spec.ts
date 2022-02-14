@@ -1,7 +1,9 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { ChangeDetectorRef } from '@angular/core';
+import { discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 // import { VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
 import { VideoCallDialogService } from 'ngx-webrtc-lib';
@@ -14,14 +16,16 @@ describe('HomeComponent', () => {
   let router: jasmine.SpyObj<Router>;
   let localStorage: jasmine.SpyObj<Storage>;
   let videoCallDialogService: jasmine.SpyObj<VideoCallDialogService>;
+  let cdr: jasmine.SpyObj<ChangeDetectorRef>;
 
   beforeEach(() => {
     formBuilder = jasmine.createSpyObj('FormBuilder', ['group']);
     router = jasmine.createSpyObj('Router', ['navigate']);
     localStorage = jasmine.createSpyObj('Storage', ['getItem', 'setItem']);
     videoCallDialogService = jasmine.createSpyObj('VideoCallDialogService', ['open']);
+    cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
 
-    component = new HomeComponent(formBuilder, router, localStorage, videoCallDialogService);
+    component = new HomeComponent(formBuilder, router, localStorage, videoCallDialogService, cdr);
   });
 
   it('should create', () => {
@@ -85,28 +89,42 @@ describe('HomeComponent', () => {
   });
 
   describe('onModalOpen', () => {
-    const spy = {
-      acceptCall: jasmine.createSpy(),
-      close: jasmine.createSpy(),
-      afterConfirmation: () => of(undefined),
-      afterCallEnd: jasmine.createSpy(),
-    } as any;
+    const getDialogData = (ms: number) => {
+      return {
+        acceptCall: jasmine.createSpy(),
+        close: jasmine.createSpy(),
+        afterConfirmation: () => of({}).pipe(delay(ms)),
+        afterCallEnd: () => of(undefined).pipe(delay(ms)),
+      } as any;
+    };
 
     beforeEach(() => {
       spyOn(component, 'saveChannel');
-      videoCallDialogService.open.and.returnValue(spy);
-    });
-
-    it('should call "open" with the data', () => {
-      component.onModalOpen();
-      expect(videoCallDialogService.open).toHaveBeenCalled();
     });
 
     it('should call "close" after 7 seconds', fakeAsync(() => {
+      const ms = 7000;
+      const spy = getDialogData(ms);
+
+      videoCallDialogService.open.and.returnValue(spy);
       component.onModalOpen();
 
-      tick(7000);
+      tick(ms);
       expect(spy.close).toHaveBeenCalled();
+      discardPeriodicTasks();
+    }));
+
+    it('should destroy the dialog after 5 seconds', fakeAsync(() => {
+      const ms = 5000;
+      const spy = getDialogData(ms);
+
+      videoCallDialogService.open.and.returnValue(spy);
+      component.onModalOpen();
+
+      tick(ms);
+      expect(spy.close).not.toHaveBeenCalled();
+      expect(cdr.markForCheck).toHaveBeenCalled();
+      expect(component.dialog).toBeNull();
     }));
   });
 });

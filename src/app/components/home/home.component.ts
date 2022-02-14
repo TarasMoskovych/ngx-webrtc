@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { filter, tap } from 'rxjs/operators';
 
-// import { VideoCallDialogService, VideoCallDialogData } from 'projects/ngx-webrtc-lib/src/public-api';
-import { VideoCallDialogService, VideoCallDialogData } from 'ngx-webrtc-lib';
+// import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'projects/ngx-webrtc-lib/src/public-api';
+import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'ngx-webrtc-lib';
 
 @Component({
   selector: 'app-home',
@@ -15,12 +16,14 @@ export class HomeComponent implements OnInit {
   private sessionKey = 'ngx-webrtc:channelId';
   public form: FormGroup;
   public outcome = false;
+  public dialog: VideoCallDialog | null;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private localStorage: Storage,
     private videoCallDialogService: VideoCallDialogService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   get channelId(): string {
@@ -44,7 +47,7 @@ export class HomeComponent implements OnInit {
 
   onModalOpen(): void {
     this.saveChannel();
-    const dialog = this.videoCallDialogService.open({
+    this.dialog = this.videoCallDialogService.open({
       uid: String(Math.floor(Math.random() * 100)),
       channel: this.channelId,
       outcome: this.outcome,
@@ -55,8 +58,19 @@ export class HomeComponent implements OnInit {
       debug: true,
     });
 
-    setTimeout(() => dialog.close(), 7000);
-    dialog.afterConfirmation().subscribe((data: VideoCallDialogData) => console.log(data));
+    const timeout = setTimeout(() => this.dialog?.close(), 7000);
+
+    this.dialog.afterConfirmation().pipe(
+      filter((data: VideoCallDialogData) => !!data),
+      tap(() => clearTimeout(timeout)),
+    ).subscribe();
+
+    this.dialog.afterCallEnd().subscribe(() => {
+      clearTimeout(timeout);
+
+      this.dialog = null;
+      this.cdr.markForCheck();
+    });
   }
 
   saveChannel(): void {
