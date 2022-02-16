@@ -1,6 +1,6 @@
 <div class="home">
   <div class="home__welcome">
-    <form class="home__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form class="home__form" [formGroup]="form" (ngSubmit)="!dialog && onSubmit()">
       <div class="home__wrapper home__wrapper--center">
         <img class="user" src="assets/user.svg" alt="User">
       </div>
@@ -22,7 +22,7 @@
           class="home__btn"
           [disabled]="form.invalid || !!dialog"
           mat-raised-button
-          (click)="onModalOpen()"
+          (click)="!dialog && onModalOpen()"
           type="button"
         >Open Call Dialog
           <mat-slide-toggle
