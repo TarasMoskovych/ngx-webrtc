@@ -1,3 +1,5 @@
+@import "variables";
+
 .timer {
   color: #fff;
   position: relative;
@@ -6,7 +8,7 @@
 
   span {
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
+    border-radius: $border-radius-small;
     padding: 5px 10px;
   }
 }

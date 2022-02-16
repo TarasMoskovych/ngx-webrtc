@@ -1,3 +1,5 @@
+@import "variables";
+
 .home {
   align-items: center;
   background-color: #f2f2f2;
@@ -9,8 +11,8 @@
 
   &__welcome {
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%);
+    border-radius: $border-radius-medium;
+    box-shadow: $box-shadow-primary;
     overflow: hidden;
     padding: 10px 40px;
     width: 390px;
@@ -55,8 +57,8 @@
       cursor: pointer;
       height: 24px;
       margin: 0 5px;
-      transition: .3s;
       width: 24px;
+      transition: .3s;
 
       &:hover {
         fill: #aaa;

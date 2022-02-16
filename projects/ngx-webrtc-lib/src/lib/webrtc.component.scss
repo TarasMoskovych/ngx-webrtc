@@ -1,6 +1,4 @@
-$black: #22292F;
-$small-size: 200px;
-$small-size-offset: 10px;
+@import "variables";
 
 ngx-timer {
   display: block;
@@ -21,29 +19,28 @@ ngx-timer {
     }
 
     .container {
-      border-radius: $small-size-offset;
-      box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
-      height: $small-size;
-      max-width: $small-size;
-      margin-right: $small-size-offset;
-      margin-bottom: $small-size-offset;
+      border-radius: $border-radius-medium;
+      box-shadow: $box-shadow-tertiary;
+      height: $small-window-size;
+      max-width: $small-window-size;
+      margin-right: $border-radius-medium;
+      margin-bottom: $border-radius-medium;
 
       &__remote {
-        border-radius: $small-size-offset;
-        height: $small-size;
-        width: $small-size;
+        border-radius: $border-radius-medium;
+        height: $small-window-size;
+        width: $small-window-size;
 
         ::ng-deep {
           & > div {
-            border-radius: $small-size-offset;
+            border-radius: $border-radius-medium;
           }
         }
       }
 
       &__user-icon {
         svg {
-          height: 32px;
-          width: 32px;
+          @include medium-icon;
         }
       }
     }
@@ -51,15 +48,15 @@ ngx-timer {
 }
 
 .container {
-  background-color: $black;
+  background-color: $color-dark;
   height: 100vh;
   max-width: 100%;
   margin-left: auto;
   position: relative;
-  transition: 0.3s;
+  @include transition;
 
   &__local {
-    border-radius: 5px;
+    border-radius: $border-radius-small;
     height: 20vh;
     overflow: hidden;
     position: absolute;
@@ -69,22 +66,22 @@ ngx-timer {
     z-index: 1;
 
     &:not(:empty) {
-      box-shadow: 0 3px 8px 0 rgb(0 0 0 / 50%);
+      box-shadow: $box-shadow-secondary;
     }
   }
 
   &__remote {
-    background-color: $black;
+    background-color: $color-dark;
     height: 100vh;
     left: 0;
     position: absolute;
     top: 0;
-    transition: 0.3s;
     width: 100vw;
+    @include transition;
 
     ::ng-deep {
       & > div {
-        transition: 0.3s;
+        @include transition;
       }
     }
 
@@ -102,9 +99,9 @@ ngx-timer {
   }
 
   &__user-icon {
-    background: rgba(0, 0, 0 , .3);
-    border-radius: 50%;
-    box-shadow: 0 3px 8px 0 rgb(0 0 0 / 50%);
+    background: $color-dark-transparent;
+    border-radius: $border-radius-rounded;
+    box-shadow: $box-shadow-secondary;
     display: none;
     left: 50%;
     padding: 20px;
@@ -113,8 +110,7 @@ ngx-timer {
     transform: translate(-50%, -50%);
 
     svg {
-      height: 64px;
-      width: 64px;
+      @include large-icon;
     }
   }
 }

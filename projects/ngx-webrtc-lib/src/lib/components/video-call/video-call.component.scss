@@ -1,5 +1,4 @@
-$primary: #3F51B5;
-$danger: #d73b3d;
+@import "variables";
 
 :host {
   display: block;
@@ -8,10 +7,10 @@ $danger: #d73b3d;
 }
 
 .video-call {
-  background-image: linear-gradient($primary, #393e46);
+  background-image: linear-gradient($color-blue3, $color-dark2);
   background-size: cover;
-  border-radius: 10px;
-  box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%);
+  border-radius: $border-radius-medium;
+  box-shadow: $box-shadow-primary;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -25,12 +24,12 @@ $danger: #d73b3d;
   top: 0;
   top: 50%;
   transform: translate(-50%, -50%);
-  transition: .3s;
   width: 100%;
   z-index: 5;
+  @include transition;
 
   &--full-screen {
-    background-image: linear-gradient(#22292F);
+    background-image: linear-gradient($color-dark);
     border-radius: 0;
     max-height: 100%;
     max-width: 100%;
@@ -46,7 +45,7 @@ $danger: #d73b3d;
 
     &__block {
       background: #fff;
-      border-radius: 100%;
+      border-radius: $border-radius-rounded;
       border: solid 5px #fff;
       height: 180px;
       margin: 0 auto;
@@ -60,7 +59,7 @@ $danger: #d73b3d;
     }
 
     &__img {
-      border-radius: 100%;
+      border-radius: $border-radius-rounded;
       height: 100%;
       left: 0px;
       object-fit: cover;
@@ -84,8 +83,8 @@ $danger: #d73b3d;
   }
 
   &__button {
-    border-radius: 0.5em;
-    box-shadow: 0 0 0 0em rgba($primary, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
+    border-radius: $border-radius-rounded;
+    box-shadow: 0 0 0 0em rgba($color-blue3, 0), 0em 0.05em 0.1em rgba(#000, 0.2);
     border: 0;
     cursor: pointer;
     display: block;
@@ -94,8 +93,8 @@ $danger: #d73b3d;
     margin: 0 5px;
     position: relative;
     transform: translate3d(0, 0, 0) scale(1);
-    transition: .3s;
     width: 1em;
+    @include transition;
 
     &::before,
     &:after {
@@ -105,7 +104,7 @@ $danger: #d73b3d;
 
     &::before {
       background-color: rgba(#fff, 0.1);
-      border-radius: 100%;
+      border-radius: $border-radius-rounded;
       height: 1em;
       left: 0;
       opacity: 1;
@@ -123,13 +122,13 @@ $danger: #d73b3d;
       left: 0.25em;
       top: 0.25em;
       transform: translate3d(0, 0, 0);
-      transition: .3s;
       width: 0.5em;
+      @include transition;
     }
 
     &--accept {
       animation: phone-outer 3000ms infinite;
-      background-color: $primary;
+      background-color: $color-blue3;
 
       &::before {
         animation: phone-inner 3000ms infinite;
@@ -141,10 +140,10 @@ $danger: #d73b3d;
     }
 
     &--decline {
-      background-color: $danger;
+      background-color: $color-red;
 
       &:hover {
-        background-color: darken($danger, 5);
+        background-color: darken($color-red, 5);
       }
 
       &::after {
@@ -172,19 +171,19 @@ $danger: #d73b3d;
 
 @keyframes phone-outer {
   0% {
-    box-shadow: 0 0 0 0em rgba($primary, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
+    box-shadow: 0 0 0 0em rgba($color-blue3, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
     transform: translate3d(0, 0, 0) scale(1);
   }
   33.3333% {
-    box-shadow: 0 0 0 0em rgba($primary, 0.1), 0em 0.05em 0.1em rgba(#000000, 0.5);
+    box-shadow: 0 0 0 0em rgba($color-blue3, 0.1), 0em 0.05em 0.1em rgba(#000000, 0.5);
     transform: translate3d(0, 0, 0) scale(1.1);
   }
   66.6666% {
-    box-shadow: 0 0 0 0.5em rgba($primary, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
+    box-shadow: 0 0 0 0.5em rgba($color-blue3, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
     transform: translate3d(0, 0, 0) scale(1);
   }
   100% {
-    box-shadow: 0 0 0 0em rgba($primary, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
+    box-shadow: 0 0 0 0em rgba($color-blue3, 0), 0em 0.05em 0.1em rgba(#000000, 0.2);
     transform: translate3d(0, 0, 0) scale(1);
   }
 }
