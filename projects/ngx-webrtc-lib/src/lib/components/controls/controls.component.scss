@@ -1,13 +1,11 @@
-$primary: #0b73c9;
-$disabled: #313A42;
-$danger: #D73B3D;
+@import "variables";
 
 :host {
-  transition: .3s;
+  @include transition;
 }
 
 .controls {
-  background: rgba(0, 0, 0 , .3);
+  background: $color-dark-transparent;
   bottom: 0;
   display: flex;
   justify-content: center;
@@ -17,18 +15,16 @@ $danger: #D73B3D;
   width: 100%;
 
   &--small {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: $border-radius-medium;
+    border-bottom-right-radius: $border-radius-medium;
     padding: 5px 0 5px;
 
     .controls {
       &__icon-wrapper {
-        height: 32px;
-        width: 32px;
+        @include medium-icon;
 
         svg {
-          height: 16px;
-          width: 16px;
+          @include small-icon;
         }
       }
 
@@ -54,18 +50,18 @@ $danger: #D73B3D;
 
     &:hover {
       .controls__icon-wrapper {
-        background-color: darken($disabled, 15);
+        background-color: darken($color-dark2, 15);
       }
     }
 
     &--active {
       .controls__icon-wrapper {
-        background-color: $primary;
+        background-color: $color-blue;
       }
 
       &:hover {
         .controls__icon-wrapper {
-          background-color: lighten($primary, 10);
+          background-color: lighten($color-blue, 10);
         }
       }
 
@@ -76,12 +72,12 @@ $danger: #D73B3D;
 
     &--danger {
       .controls__icon-wrapper {
-        background-color: $danger;
+        background-color: $color-red;
       }
 
       &:hover {
         .controls__icon-wrapper {
-          background-color: lighten($danger, 10);
+          background-color: lighten($color-red, 10);
         }
       }
     }
@@ -93,29 +89,28 @@ $danger: #D73B3D;
   }
 
   &__icon-wrapper {
-    background-color: $disabled;
-    border-radius: 50%;
-    box-shadow: 0 3px 8px 0 rgb(0 0 0 / 50%);
+    background-color: $color-dark2;
+    border-radius: $border-radius-rounded;
+    box-shadow: $box-shadow-secondary;
     margin: auto;
     position: relative;
     height: 60px;
-    transition: .3s;
     width: 60px;
+    @include transition;
 
     svg {
-      height: 32px;
       left: 50%;
       position: absolute;
       top: 50%;
       transform: translate(-50%, -50%) rotate(0);
-      transition: .3s;
-      width: 32px;
+      @include medium-icon;
+      @include transition;
     }
   }
 
   &__icon {
     opacity: 0;
-    transition: .3s;
+    @include transition;
 
     &--shown {
       opacity: 1;

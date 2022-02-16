@@ -1,0 +1,42 @@
+// shadows
+$box-shadow-primary: 0 5px 10px 0 rgb(0 0 0 / 10%);
+$box-shadow-secondary: 0 3px 8px 0 rgb(0 0 0 / 50%);
+$box-shadow-tertiary: rgb(0 0 0 / 35%) 0px 5px 15px;
+
+// colors
+$color-dark: #22292F;
+$color-dark2: #313A42;
+$color-dark-transparent: rgba(0, 0, 0 , .3);
+$color-blue: #0b73c9;
+$color-blue2: #1195E6;
+$color-blue3: #3F51B5;
+$color-green: #37D425;
+$color-red: #d73b3d;
+
+// borders
+$border-radius-small: 5px;
+$border-radius-medium: 10px;
+$border-radius-rounded: 50%;
+
+// sizes
+$small-window-size: 200px;
+
+// mixins
+@mixin transition {
+  transition: 0.3s;
+}
+
+@mixin small-icon {
+  height: 16px;
+  width: 16px;
+}
+
+@mixin medium-icon {
+  height: 32px;
+  width: 32px;
+}
+
+@mixin large-icon {
+  height: 64px;
+  width: 64px;
+}

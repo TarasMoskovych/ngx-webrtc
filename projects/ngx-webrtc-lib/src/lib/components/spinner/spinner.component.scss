@@ -1,13 +1,15 @@
+@import "variables";
+
 .spinner {
-  background-color: #22292F;
+  background-color: $color-dark;
   height: 100vh;
   position: relative;
-  transition: .3s;
+  @include transition;
 
   &--connected {
     .spinner {
       &__cirle {
-        border-color: #37D425;
+        border-color: $color-green;
       }
     }
   }
@@ -21,8 +23,8 @@
   }
 
   &--small {
-    border-radius: 10px;
-    height: 200px;
+    border-radius: $border-radius-medium;
+    height: $small-window-size;
 
     .spinner {
       &__cirle {
@@ -36,8 +38,7 @@
         transform: translateX(-35%);
 
         svg {
-          height: 32px;
-          width: 32px;
+          @include medium-icon;
         }
       }
     }
@@ -52,13 +53,13 @@
 
   &__cirle {
     animation: spin 2s linear infinite;
-    border: 5px solid #1195E6;
-    border-radius: 50%;
+    border: 5px solid $color-blue2;
+    border-radius: $border-radius-rounded;
     border-top-color: transparent;
     height: 160px;
     margin: auto;
-    transition: .3s;
     width: 160px;
+    @include transition;
   }
 
   &__icon {
@@ -66,12 +67,11 @@
     position: absolute;
     top: 52px;
     transform: translateX(-40%);
-    transition: 0.3s;
+    @include transition;
 
     svg {
-      height: 64px;
-      transition: 0.3s;
-      width: 64px;
+      @include large-icon;
+      @include transition;
     }
   }
 
