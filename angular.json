@@ -179,7 +179,10 @@
             "codeCoverage": true,
             "main": "projects/ngx-webrtc-lib/src/test.ts",
             "tsConfig": "projects/ngx-webrtc-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js"
+            "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js",
+            "stylePreprocessorOptions": {
+              "includePaths": ["src"]
+            }
           },
           "configurations": {
             "ci": {
