@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.0
+ - Added ability to minimize the window.
+ - Improved video-call dialog events.
+
 ## 2.1.0
  - Fixed minor issues.
 

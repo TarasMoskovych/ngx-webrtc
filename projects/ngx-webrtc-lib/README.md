@@ -37,6 +37,7 @@ Add `WebRtcComponent` to your component template:
 ```html
 <ngx-webrtc
   [channel]="channel"
+  [displaySmallScreen]="true"
   [debug]="true"
   [uid]="uid"
   (callEnd)="onCallEnd()"
@@ -103,17 +104,18 @@ To use this library, please follow the versioning specified in the following tab
 ### WebRtcComponent
 
 | Name                                  | Description |
-| ------------------------------------- | --------------------------------------------- |
-| @Input() uid: string                  | User identifier.                              |
-| @Input() channel: string              | Channel identifier.                           |
-| @Input() debug: boolean               | Enable debugging. Default value `false`       |
-| @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended. |
+| ------------------------------------- | ---------------------------------------------------- |
+| @Input() uid: string                  | User identifier.                                     |
+| @Input() channel: string              | Channel identifier.                                  |
+| @Input() debug: boolean               | Enable debugging. Default value `false`              |
+| @Input() displaySmallScreen: boolean  | Display small screen toggle. Default value `false`   |
+| @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended.        |
 
 ### VideoCallDialogService
 
-| Name                                               | Description                            |
-| -------------------------------------------------- | -------------------------------------- |
-| open: (`VideoCallDialogData`) => `VideoCallDialog` | Renders `WebRtcComponent` in the dialog.  |
+| Name                                               | Description                                  |
+| -------------------------------------------------- | -------------------------------------------- |
+| open: (`VideoCallDialogData`) => `VideoCallDialog` | Renders `VideoCallComponent` in the dialog.  |
 
 ### VideoCallDialogData
 
@@ -131,4 +133,4 @@ To use this library, please follow the versioning specified in the following tab
 | acceptCall: () => void                                            | Closes the confirmation dialog and opens `WebRtcComponent` with passed data before.    |
 | close: () => void                                                 | Closes the dialog with video-call confirmation component.                              |
 | afterConfirmation: () => Observable<VideoCallDialogData \| null>; | Returns Observable with the data depends on accepting or declining the call.           |
-| afterCallEnd: () => Observable<boolean>;                          | Returns Observable with the value depends on the call ending.                          |
+| afterCallEnd: () => Observable<boolean>;                          | Returns Observable with the value when the call is ended.                              |
