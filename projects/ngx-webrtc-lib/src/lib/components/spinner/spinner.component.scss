@@ -22,6 +22,14 @@
     }
   }
 
+  &--error {
+    .spinner {
+      &__cirle {
+        border-color: $color-red;
+      }
+    }
+  }
+
   &--small {
     border-radius: $border-radius-medium;
     height: $small-window-size;

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0
+- Migrate to agora-rtc-sdk-ng 4.19
+
 ## 2.2.0
  - Added ability to minimize the window.
  - Improved video-call dialog events.

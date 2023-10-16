@@ -17,6 +17,11 @@ describe('SpinnerComponent', () => {
       expect(component.color).toBe('#aaa');
     });
 
+    it('should return correct color for "error" state', () => {
+      component.error = true;
+      expect(component.color).toBe('#d73b3d');
+    });
+
     it('should return correct color for "connected" state', () => {
       component.connected = true;
       expect(component.color).toBe('#37D425');

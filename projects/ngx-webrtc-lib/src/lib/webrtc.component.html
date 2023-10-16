@@ -2,6 +2,7 @@
   <div *ngIf="streamState$ | async as streamState" class="container">
     <ngx-spinner
       *ngIf="streamState.loading"
+      [error]="streamState.error"
       [text]="streamState.statusText"
       [connected]="streamState.connected"
       [ended]="streamState.ended"

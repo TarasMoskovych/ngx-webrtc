@@ -1,13 +1,13 @@
 import {
-  Component,
-  OnInit,
-  Input,
   ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  OnDestroy,
   ChangeDetectorRef,
+  Component,
+  EventEmitter,
   HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 

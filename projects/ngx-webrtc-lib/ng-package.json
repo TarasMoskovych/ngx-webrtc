@@ -7,15 +7,11 @@
   ],
   "lib": {
     "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "ngx-agora": "ngxAgora"
-    },
     "styleIncludePaths": [
       "../../src"
     ]
   },
   "allowedNonPeerDependencies": [
-    "agora-rtc-sdk",
-    "ngx-agora"
+    "agora-rtc-sdk-ng"
   ]
 }
