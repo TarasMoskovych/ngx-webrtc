@@ -1,0 +1,48 @@
+{
+  "css.lint.ieHack": "warning",
+  "editor.wordWrapColumn": 160,
+  "diffEditor.ignoreTrimWhitespace": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.roundedSelection": true,
+  "files.associations": {
+    "*.json.example": "json",
+    "*.ts.example": "typescript",
+    "*.yml.example": "yaml"
+  },
+  "window.zoomLevel": 0,
+  "editor.minimap.enabled": false,
+  "editor.dragAndDrop": true,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "git.enableSmartCommit": true,
+  "extensions.ignoreRecommendations": false,
+  "typescript.preferences.quoteStyle": "single",
+  "html.format.wrapAttributes": "force-aligned",
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": false
+  },
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative"
+}

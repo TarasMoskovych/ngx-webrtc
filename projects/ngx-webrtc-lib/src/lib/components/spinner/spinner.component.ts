@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'ngx-spinner',
@@ -8,6 +8,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class SpinnerComponent {
   @Input() text: string;
+  @Input() error = false;
   @Input() connected = true;
   @Input() ended = false;
   @Input() small = false;
@@ -15,6 +16,10 @@ export class SpinnerComponent {
   get color(): string {
     if (this.ended) {
       return '#aaa';
+    }
+
+    if (this.error) {
+      return '#d73b3d';
     }
 
     return this.connected ? '#37D425' : '#1195E6';

@@ -4,6 +4,7 @@ export interface StreamState {
   statusText: string;
   started: number | null;
   ended: boolean;
+  error: boolean;
 }
 
 export const DEFAULT_STREAM_STATE: StreamState = {
@@ -12,4 +13,5 @@ export const DEFAULT_STREAM_STATE: StreamState = {
   statusText: 'Initializing',
   started: null,
   ended: false,
+  error: false,
 };
