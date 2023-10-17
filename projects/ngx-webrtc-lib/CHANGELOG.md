@@ -1,5 +1,8 @@
 # Changelog
 
+## 15.0.0
+- Update to Angular 15
+
 ## 14.0.0
 - Update to Angular 14
 
