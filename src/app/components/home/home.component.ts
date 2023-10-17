@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 
-// import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'projects/ngx-webrtc-lib/src/public-api';
-import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'ngx-webrtc-lib';
+import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
+// import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'ngx-webrtc-lib';
 
 @Component({
   selector: 'app-home',
