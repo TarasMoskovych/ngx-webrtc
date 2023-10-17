@@ -14,7 +14,7 @@
     border-radius: $border-radius-medium;
     box-shadow: $box-shadow-primary;
     overflow: hidden;
-    padding: 10px 40px;
+    padding: 10px 35px;
     width: 390px;
 
     .user {
@@ -45,7 +45,15 @@
   }
 
   &__btn {
-    margin: 0 5px;
+    letter-spacing: normal;
+
+    &:first-of-type {
+      margin-right: 5px;
+    }
+
+    &:last-of-type {
+      margin-left: 5px;
+    }
   }
 
   &__footer {

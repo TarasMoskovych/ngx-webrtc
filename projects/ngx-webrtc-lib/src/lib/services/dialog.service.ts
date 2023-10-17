@@ -61,7 +61,7 @@ export class DialogService {
     if (!container) {
       container = this.document.createElement('div');
       container.setAttribute('class', this.wrapperSelector);
-      container.setAttribute('style', 'position: fixed; top: 0; width: 100%;');
+      container.setAttribute('style', 'position: fixed; top: 0; width: 100%; z-index: 1;');
       this.document.body.appendChild(container);
     }
 
