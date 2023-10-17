@@ -121,9 +121,12 @@ npm start
 
 To use this library, please follow the versioning specified in the following table.
 
-| Angular Version | `ngx-webrtc-lib` Version |
-| --------------- | ------------------------ |
-| 12.x            | 1.x / 2.x / 3.x          |
+| `ngx-webrtc-lib`| Angular     | NodeJS
+| --------------- | ------------| --------------------------------------|
+|  ~~1.x~~        | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
+| ~~2.x~~         | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
+| 3.x             | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
+| 13.x            | ~13.4.0     | ^12.20.0 \|\| ^14.15.0 \|\| ^16.10.0  |
 
 ## API reference
 

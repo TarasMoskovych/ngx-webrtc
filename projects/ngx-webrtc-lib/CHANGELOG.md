@@ -1,5 +1,8 @@
 # Changelog
 
+## 13.0.0
+- Update to Angular 13
+
 ## 3.0.0
 - Migrate to agora-rtc-sdk-ng 4.19
 
