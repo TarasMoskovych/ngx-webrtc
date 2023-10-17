@@ -1,6 +1,6 @@
 {
   "name": "ngx-webrtc-lib",
-  "version": "3.0.0",
+  "version": "13.0.0",
   "description": "Angular microapp/library for video conference using agora-rtc-sdk-ng.",
   "license": "MIT",
   "keywords": [
@@ -22,8 +22,8 @@
   },
   "homepage": "https://tarasmoskovych.github.io/ngx-webrtc",
   "peerDependencies": {
-    "@angular/common": "^12.2.0",
-    "@angular/core": "^12.2.0"
+    "@angular/common": "~13.4.0",
+    "@angular/core": "~13.4.0"
   },
   "dependencies": {
     "agora-rtc-sdk-ng": "^4.19.1",
