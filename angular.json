@@ -21,6 +21,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "agora-rtc-sdk-ng"
+            ],
             "outputPath": "dist/ngx-webrtc",
             "index": "src/index.html",
             "main": "src/main.ts",
