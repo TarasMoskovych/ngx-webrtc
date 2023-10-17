@@ -1,6 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
-  let formBuilder: jasmine.SpyObj<FormBuilder>;
+  let formBuilder: jasmine.SpyObj<UntypedFormBuilder>;
   let router: jasmine.SpyObj<Router>;
   let localStorage: jasmine.SpyObj<Storage>;
   let videoCallDialogService: jasmine.SpyObj<VideoCallDialogService>;
@@ -71,7 +71,7 @@ describe('HomeComponent', () => {
     };
 
     beforeEach(() => {
-      formBuilder.group.and.returnValue({ value: formData } as FormGroup);
+      formBuilder.group.and.returnValue({ value: formData } as UntypedFormGroup);
       component.ngOnInit();
       component.onSubmit();
     });

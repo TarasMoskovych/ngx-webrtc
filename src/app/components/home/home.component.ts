@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 
@@ -14,12 +14,12 @@ import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'ng
 })
 export class HomeComponent implements OnInit {
   private sessionKey = 'ngx-webrtc:channelId';
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public outcome = false;
   public dialog: VideoCallDialog | null;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private localStorage: Storage,
     private videoCallDialogService: VideoCallDialogService,
