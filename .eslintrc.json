@@ -36,7 +36,9 @@
             "style": "kebab-case"
           }
         ],
-        "@typescript-eslint/semi": ["error"],
+        "@typescript-eslint/semi": [
+          "error"
+        ],
         "@typescript-eslint/no-explicit-any": "off"
       }
     },
