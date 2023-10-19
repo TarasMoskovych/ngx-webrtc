@@ -103,6 +103,7 @@ To use this library, please follow the versioning specified in the following tab
 | 13.x            | ~13.4.0     | ^12.20.0 \|\| ^14.15.0 \|\| ^16.10.0  |
 | 14.x            | ^14.3.0     | ^14.15.0 \|\| ^16.10.0                |
 | 15.x            | ^15.2.10    | ^14.20.0 \|\| ^16.13.0 \|\| ^18.10.0  |
+| 16.x            | ^16.2.10    | ^16.14.0 \|\| ^18.10.0                |
 
 ## API reference
 
