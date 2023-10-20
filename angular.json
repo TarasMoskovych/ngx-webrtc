@@ -27,7 +27,9 @@
             "outputPath": "dist/ngx-webrtc",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -110,8 +112,10 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
@@ -184,14 +188,17 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/ngx-webrtc-lib/src/test.ts",
             "tsConfig": "projects/ngx-webrtc-lib/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js",
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src"
               ]
-            }
+            },
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
           },
           "configurations": {
             "ci": {

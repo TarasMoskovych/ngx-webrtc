@@ -84,7 +84,7 @@ describe('WebRtcComponent', () => {
     });
 
     it('should get fullScreenEnabled', () => {
-      spyOnProperty(document, 'fullscreenElement').and.returnValue({});
+      spyOnProperty(document, 'fullscreenElement').and.returnValue({} as Element);
       expect(component.fullScreenEnabled).toBeTrue();
     });
   });

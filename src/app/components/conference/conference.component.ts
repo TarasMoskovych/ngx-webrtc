@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -17,7 +17,7 @@ export class ConferenceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.channel = this.route.snapshot.queryParams.channelId || 'test-channel';
+    this.channel = this.route.snapshot.queryParams['channelId'] || 'test-channel';
   }
 
   onCallEnd(): void {
