@@ -40,11 +40,13 @@ export class WebRtcService {
     this.assignClientHandlers();
 
     this.initLocalStream().then(() => {
-      this.client.join(this.config.AppID, channel, null, this.uid).then(() => {
-        this.localTracks.videoTrack.play(this.localContainerId);
-        this.client.publish(Object.values(this.localTracks));
-        this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting others to join' });
-      });
+      this.client.join(this.config.AppID, channel, null, this.uid)
+        .then(() => {
+          this.localTracks.videoTrack.play(this.localContainerId);
+          this.client.publish(Object.values(this.localTracks));
+          this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting others to join' });
+        })
+        .catch((err: Error) => this.handleError(err));
     });
 
     return this.callEnd.asObservable();
@@ -56,11 +58,7 @@ export class WebRtcService {
 
   endCall(): void {
     this.client.leave().then(() => {
-      Object.values(this.localTracks).forEach((track: ICameraVideoTrack | IMicrophoneAudioTrack) => {
-        track.stop();
-        track.close();
-      });
-
+      this.stopLocalStream();
       this.streamState.next({ ...this.streamState.value, started: null, loading: true, statusText: '', ended: true });
       this.remoteCalls = [];
 
@@ -152,11 +150,21 @@ export class WebRtcService {
 
   private handleError(error: Error): void {
     this.streamState.next({ ...this.streamState.value, statusText: error.message, error: true });
+    this.stopLocalStream();
 
     interval(5000)
       .pipe(take(1))
       .subscribe(() => this.callEnd.next());
 
     throw new Error(error.message);
+  }
+
+  private stopLocalStream(): void {
+    if (this.localTracks) {
+      Object.values(this.localTracks).forEach((track: ICameraVideoTrack | IMicrophoneAudioTrack) => {
+        track.stop();
+        track.close();
+      });
+    }
   }
 }

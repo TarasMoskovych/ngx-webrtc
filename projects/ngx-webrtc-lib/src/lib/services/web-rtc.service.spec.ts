@@ -3,6 +3,10 @@ import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IMic
 import { DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { WebRtcService } from './web-rtc.service';
 
+const AppID = 'app-id_12345';
+const channel = 'test-channel';
+const uid = 'user_54321';
+
 describe('WebRtcService', () => {
   const clientSpy: jasmine.SpyObj<IAgoraRTCClient> = jasmine.createSpyObj('AgoraRTCClient', [], {
     join: () => Promise.resolve(),
@@ -15,7 +19,7 @@ describe('WebRtcService', () => {
         return cb({ uid: '1234' } as IAgoraRTCRemoteUser, msg);
       }
 
-      cb({ uid: '1234' } as IAgoraRTCRemoteUser);
+      cb({ uid } as IAgoraRTCRemoteUser);
     },
   });
 
@@ -31,7 +35,7 @@ describe('WebRtcService', () => {
   describe('browser supports WebRTC', () => {
     beforeEach(() => {
       spyOn(AgoraRTC, 'checkSystemRequirements').and.returnValue(true);
-      service = new WebRtcService({ AppID: '12345' });
+      service = new WebRtcService({ AppID });
     });
 
     it('should be created', () => {
@@ -49,19 +53,19 @@ describe('WebRtcService', () => {
 
       describe('debug', () => {
         it('should start without debug', () => {
-          service.init('1234', 'test_channel');
+          service.init(uid, channel);
           expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
         });
 
         it('should start with debug', () => {
-          service.init('1234', 'test_channel', true);
+          service.init(uid, channel, true);
           expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
         });
       });
 
       describe('agora init', () => {
         it('should call "createClient" method with configs', () => {
-          service.init('1234', 'test_channel');
+          service.init(uid, channel);
 
           expect(AgoraRTC.createClient).toHaveBeenCalledOnceWith({
             mode: 'rtc',
@@ -70,7 +74,7 @@ describe('WebRtcService', () => {
         });
 
         it('should be connected to stream after "initLocalStream"', fakeAsync(() => {
-          service.init('1234', 'test_channel');
+          service.init(uid, channel);
           tick(500);
 
           service.streamState$.subscribe((state: StreamState) => {
@@ -355,7 +359,7 @@ describe('WebRtcService', () => {
   describe('browser does not support WebRTC', () => {
     it('should handle an error', () => {
       spyOn(AgoraRTC, 'checkSystemRequirements').and.returnValue(false);
-      expect(() => new WebRtcService({ AppID: '12345' })).toThrow(new Error('Web RTC is not supported in this browser'));
+      expect(() => new WebRtcService({ AppID })).toThrow(new Error('Web RTC is not supported in this browser'));
     });
   });
 });
