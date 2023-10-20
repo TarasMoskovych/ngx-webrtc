@@ -12,8 +12,8 @@ import { environment } from 'src/environments/environment';
 import { AppComponent } from './app.component';
 import { ConferenceComponent, HomeComponent } from './components';
 
-import { WebRtcModule } from 'projects/ngx-webrtc-lib/src/public-api';
-// import { WebRtcModule } from 'ngx-webrtc-lib';
+// import { WebRtcModule } from 'projects/ngx-webrtc-lib/src/public-api';
+import { WebRtcModule } from 'ngx-webrtc-lib';
 
 const routes: Routes = [
   {
