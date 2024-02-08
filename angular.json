@@ -94,10 +94,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ngx-webrtc:build:production"
+              "buildTarget": "ngx-webrtc:build:production"
             },
             "development": {
-              "browserTarget": "ngx-webrtc:build:development"
+              "buildTarget": "ngx-webrtc:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -105,7 +105,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-webrtc:build"
+            "buildTarget": "ngx-webrtc:build"
           }
         },
         "test": {
