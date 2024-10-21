@@ -53,19 +53,20 @@ describe('WebRtcService', () => {
 
       describe('debug', () => {
         it('should start without debug', () => {
-          service.init(uid, channel);
+          service.init(uid, channel, null);
           expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
         });
 
         it('should start with debug', () => {
-          service.init(uid, channel, true);
+          service.init(uid, channel, null, true);
           expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
         });
       });
 
       describe('agora init', () => {
-        it('should call "createClient" method with configs', () => {
-          service.init(uid, channel);
+        it('should call "createClient" method with configs and token', () => {
+          const token = 'token_12345';
+          service.init(uid, channel, token);
 
           expect(AgoraRTC.createClient).toHaveBeenCalledOnceWith({
             mode: 'rtc',
@@ -74,7 +75,7 @@ describe('WebRtcService', () => {
         });
 
         it('should be connected to stream after "initLocalStream"', fakeAsync(() => {
-          service.init(uid, channel);
+          service.init(uid, channel, null);
           tick(500);
 
           service.streamState$.subscribe((state: StreamState) => {

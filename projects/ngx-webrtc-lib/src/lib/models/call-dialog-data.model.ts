@@ -5,6 +5,7 @@ export interface VideoCallDialogData {
   channel: string;
   outcome: boolean;
   user: User;
+  token?: string;
   debug?: boolean;
 }
 

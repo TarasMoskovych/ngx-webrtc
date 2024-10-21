@@ -45,7 +45,7 @@ describe('WebRtcComponent', () => {
     });
 
     it('should call "init" method with parameters', () => {
-      expect(webRtcService.init).toHaveBeenCalledOnceWith(component.uid, component.channel, component.debug);
+      expect(webRtcService.init).toHaveBeenCalledOnceWith(component.uid, component.channel, component.token, component.debug);
     });
 
     it('should emit "callEnd" event after end state', () => {
