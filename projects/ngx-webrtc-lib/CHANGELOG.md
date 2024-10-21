@@ -1,5 +1,8 @@
 # Changelog
 
+## 17.1.0
+- Support Agora token
+
 ## 17.0.0
 - Update to Angular 17
 

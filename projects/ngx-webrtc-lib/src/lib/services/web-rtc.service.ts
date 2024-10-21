@@ -32,7 +32,7 @@ export class WebRtcService {
     }
   }
 
-  init(uid: string, channel: string, debug = false): Observable<void> {
+  init(uid: string, channel: string, token: string | null, debug = false): Observable<void> {
     this.uid = uid;
     this.agoraRTC.setLogLevel(debug ? 0 : 4);
 
@@ -40,7 +40,7 @@ export class WebRtcService {
     this.assignClientHandlers();
 
     this.initLocalStream().then(() => {
-      this.client.join(this.config.AppID, channel, null, this.uid)
+      this.client.join(this.config.AppID, channel, token || null, this.uid)
         .then(() => {
           this.localTracks.videoTrack.play(this.localContainerId);
           this.client.publish(Object.values(this.localTracks));

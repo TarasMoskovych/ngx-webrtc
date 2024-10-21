@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 
-import { VideoCallDialogData, VideoCallDialog } from '../models';
-import { DialogService } from './dialog.service';
-import { WebRtcComponent } from '../webrtc.component';
 import { VideoCallComponent } from '../components';
+import { VideoCallDialog, VideoCallDialogData } from '../models';
+import { WebRtcComponent } from '../webrtc.component';
+import { DialogService } from './dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,7 @@ export class VideoCallDialogService {
         if (data?.channel) {
           return this.dialog.open(WebRtcComponent, {
             uid: data.uid,
+            token: data.token,
             channel: data.channel,
             debug: !!data.debug,
             displaySmallScreen: true,
