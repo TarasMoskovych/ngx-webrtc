@@ -66,6 +66,7 @@ Add `WebRtcComponent` to your component template:
   [displaySmallScreen]="true"
   [debug]="true"
   [uid]="uid"
+  [token]="token"
   (callEnd)="onCallEnd()"
 ></ngx-webrtc>
 ```
@@ -83,6 +84,7 @@ constructor(private dialogService: VideoCallDialogService) { }
 onDialogOpen(): void {
   const dialog = this.dialogService.open({
     uid: this.uid,
+    token: this.token,
     channel: this.channelId,
     outcome: this.outcome,
     user: this.user,
@@ -130,12 +132,13 @@ To use this library, please follow the versioning specified in the following tab
 ### WebRtcComponent
 
 | Name                                  | Description |
-| ------------------------------------- | ---------------------------------------------------- |
-| @Input() uid: string                  | User identifier.                                     |
-| @Input() channel: string              | Channel identifier.                                  |
-| @Input() debug: boolean               | Enable debugging. Default value `false`              |
-| @Input() displaySmallScreen: boolean  | Display small screen toggle. Default value `false`   |
-| @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended.        |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| @Input() uid: string                  | User identifier.                                                                                                                          |
+| @Input() token: string                | Agora token for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow). Default value `null` |
+| @Input() channel: string              | Channel identifier.                                                                                                                       |
+| @Input() debug: boolean               | Enable debugging. Default value `false`                                                                                                   |
+| @Input() displaySmallScreen: boolean  | Display small screen toggle. Default value `false`                                                                                        |
+| @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended.                                                                                             |
 
 ### VideoCallDialogService
 
@@ -146,11 +149,12 @@ To use this library, please follow the versioning specified in the following tab
 ### VideoCallDialogData
 
 | Name                 | Description |
-| ---------------------| ------------------------------------------------ |
-| uid: string          | User identifier.                                 |
-| channel: string      | Channel identifier.                              |
-| outcome: boolean     | Defines the UI for income or outcome call mode.  |
-| user: User           | User name and photo URL.                         |
+| ---------------------| ----------------------------------------------------------------------------------------------------------------------------------------- |
+| uid: string          | User identifier.                                                                                                                          |
+| channel: string      | Channel identifier.                                                                                                                       |
+| token: string        | Agora token for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow). Default value `null` |
+| outcome: boolean     | Defines the UI for income or outcome call mode.                                                                                           |
+| user: User           | User name and photo URL.                                                                                                                  |
 
 ### VideoCallDialog
 

@@ -24,6 +24,7 @@ import { WebRtcService } from './services';
 })
 export class WebRtcComponent extends DialogComponent implements OnInit, OnDestroy {
   @Input() uid: string;
+  @Input() token: string;
   @Input() channel: string;
   @Input() animate = true;
   @Input() displaySmallScreen = false;
@@ -43,7 +44,7 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.webRtcService.init(this.uid, this.channel, this.debug)
+    this.webRtcService.init(this.uid, this.channel, this.token, this.debug)
       .pipe(take(1))
       .subscribe(() => {
         this.active = this.smallScreenEnabled;
