@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.0
+- Support Agora token
+
 ## 3.0.0
 - Migrate to agora-rtc-sdk-ng 4.19
 
