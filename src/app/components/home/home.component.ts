@@ -3,8 +3,8 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Router } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 
-// import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
-import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'ngx-webrtc-lib';
+// import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'ngx-webrtc-lib';
+import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
 
 @Component({
   selector: 'app-home',

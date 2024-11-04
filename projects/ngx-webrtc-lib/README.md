@@ -107,6 +107,7 @@ To use this library, please follow the versioning specified in the following tab
 | 15.x            | ^15.2.10    | ^14.20.0 \|\| ^16.13.0 \|\| ^18.10.0  |
 | 16.x            | ^16.2.10    | ^16.14.0 \|\| ^18.10.0                |
 | 17.x            | ^17.1.2     | ^18.13.0 \|\| ^20.9.0                 |
+| 18.x            | ^18.2.10    | ^18.19.1 \|\| ^20.11.1 \|\| ^22.0.0   |
 
 ## API reference
 
