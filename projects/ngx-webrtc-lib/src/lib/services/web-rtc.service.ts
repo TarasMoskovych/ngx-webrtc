@@ -9,9 +9,7 @@ const CLIENT_CONFIG: ClientConfig = {
   codec: 'h264',
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WebRtcService {
   private agoraRTC = AgoraRTC;
   private client: IAgoraRTCClient;

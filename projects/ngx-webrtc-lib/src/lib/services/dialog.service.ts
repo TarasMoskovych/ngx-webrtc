@@ -3,9 +3,7 @@ import { ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Inject, Inje
 import { delay, take } from 'rxjs/operators';
 import { DialogComponent } from '../models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DialogService {
   private wrapperSelector = 'ngx-webrtc-wrapper';
 

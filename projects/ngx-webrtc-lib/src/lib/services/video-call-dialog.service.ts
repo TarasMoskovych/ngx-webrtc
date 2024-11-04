@@ -7,9 +7,7 @@ import { VideoCallDialog, VideoCallDialogData } from '../models';
 import { WebRtcComponent } from '../webrtc.component';
 import { DialogService } from './dialog.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class VideoCallDialogService {
 
   constructor(private dialog: DialogService) { }

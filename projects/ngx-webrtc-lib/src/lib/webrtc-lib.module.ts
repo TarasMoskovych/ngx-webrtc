@@ -14,7 +14,7 @@ import {
 } from './directives';
 
 import { AgoraConfig } from './models';
-import { WebRtcService } from './services';
+import { DialogService, VideoCallDialogService, WebRtcService } from './services';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,10 @@ export class WebRtcModule {
     return {
       ngModule: WebRtcModule,
       providers: [
-        WebRtcService, {
+        DialogService,
+        VideoCallDialogService,
+        WebRtcService,
+        {
           provide: 'AgoraConfig',
           useValue: config,
         },

@@ -2,6 +2,7 @@
 
 ## 18.0.0
 - Update to Angular 18
+- Register services in the module instead of root
 
 ## 17.1.0
 - Support Agora token
