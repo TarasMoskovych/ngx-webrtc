@@ -1,16 +1,26 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from '@app/ngx-webrtc-lib';
 import { filter, tap } from 'rxjs/operators';
-
-// import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'ngx-webrtc-lib';
-import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatButtonModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
+  ],
+  standalone: true,
 })
 export class HomeComponent implements OnInit {
   private sessionKey = 'ngx-webrtc:channelId';

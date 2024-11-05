@@ -11,6 +11,9 @@
       </svg>
     </div>
     <div class="spinner__cirle"></div>
-    <div *ngIf="!small" class="spinner__text">{{ text }}</div>
+
+    @if (!small) {
+      <div class="spinner__text">{{ text }}</div>
+    }
   </div>
 </div>

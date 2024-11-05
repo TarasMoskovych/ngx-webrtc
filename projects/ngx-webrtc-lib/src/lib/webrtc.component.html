@@ -20,12 +20,13 @@
       class="container__local"
     ></div>
 
-    <div
-      *ngFor="let call of remoteCalls"
-      [id]="call"
-      [class.hidden]="(remoteStreamVideoToggle$ | async) === false"
-      class="container__remote"
-    ></div>
+    @for (call of remoteCalls; track call) {
+      <div
+        [id]="call"
+        [class.hidden]="(remoteStreamVideoToggle$ | async) === false"
+        class="container__remote"
+      ></div>
+    }
 
     <div class="container__user-icon">
       <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">

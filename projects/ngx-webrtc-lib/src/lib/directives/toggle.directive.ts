@@ -3,7 +3,8 @@ import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Directive({
-  selector: '[ngxToggle]'
+  selector: '[ngxToggle]',
+  standalone: true,
 })
 export class ToggleDirective implements OnInit {
   private subscription: Subscription = new Subscription();

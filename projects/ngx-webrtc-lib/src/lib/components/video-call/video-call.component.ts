@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, OnDestroy } from '@angular/core';
-import { DialogComponent } from '../abstract-dialog.component';
-import { VideoCallDialogData } from '../../models';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { fadeAnimation } from '../../animations';
+import { VideoCallDialogData } from '../../models';
+import { DialogComponent } from '../abstract-dialog.component';
 
 @Component({
   selector: 'ngx-video-call',
@@ -9,6 +10,8 @@ import { fadeAnimation } from '../../animations';
   styleUrls: ['./video-call.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeAnimation],
+  imports: [NgIf],
+  standalone: true,
 })
 export class VideoCallComponent extends DialogComponent implements OnInit, OnDestroy {
   @Input() data: VideoCallDialogData;

@@ -17,10 +17,12 @@
       "@angular/*": [
         "./node_modules/@angular/*"
       ],
-      "ngx-webrtc-lib": [
-        "dist/ngx-webrtc-lib/ngx-webrtc-lib",
-        "dist/ngx-webrtc-lib"
-      ]
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@projects/*": [
+        "projects/*"
+      ],
     },
     "experimentalDecorators": true,
     "moduleResolution": "node",
