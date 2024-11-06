@@ -1,32 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
-import {
-  ControlsComponent,
-  SpinnerComponent,
-  TimerComponent,
-  VideoCallComponent,
-} from './components';
-import { WebRtcComponent } from './webrtc.component';
-
-import {
-  ToggleDirective,
-} from './directives';
-
 import { AgoraConfig } from './models';
 import { WebRtcService } from './services';
+import { WebRtcComponent } from './webrtc.component';
 
 @NgModule({
   declarations: [
-    ControlsComponent,
-    WebRtcComponent,
-    TimerComponent,
-    SpinnerComponent,
-    ToggleDirective,
-    VideoCallComponent,
   ],
   imports: [
     CommonModule,
+    WebRtcComponent,
   ],
   exports: [
     WebRtcComponent,
@@ -37,7 +21,8 @@ export class WebRtcModule {
     return {
       ngModule: WebRtcModule,
       providers: [
-        WebRtcService, {
+        WebRtcService,
+        {
           provide: 'AgoraConfig',
           useValue: config,
         },

@@ -11,8 +11,10 @@ import {
 } from '@angular/core';
 import { take } from 'rxjs/operators';
 
+import { AsyncPipe, NgIf } from '@angular/common';
 import { fadeAnimation } from './animations';
-import { DialogComponent } from './components';
+import { ControlsComponent, DialogComponent, SpinnerComponent, TimerComponent } from './components';
+import { ToggleDirective } from './directives';
 import { WebRtcService } from './services';
 
 @Component({
@@ -21,6 +23,15 @@ import { WebRtcService } from './services';
   styleUrls: ['./webrtc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeAnimation],
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    NgIf,
+    ControlsComponent,
+    SpinnerComponent,
+    TimerComponent,
+    ToggleDirective,
+  ],
 })
 export class WebRtcComponent extends DialogComponent implements OnInit, OnDestroy {
   @Input() uid: string;

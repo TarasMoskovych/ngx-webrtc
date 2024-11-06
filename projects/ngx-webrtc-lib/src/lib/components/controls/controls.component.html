@@ -57,77 +57,84 @@
       <p>Mic</p>
     </button>
   </div>
-  <div *ngIf="!smallScreenEnabled" class="controls__item">
-    <button (click)="onToggleFullScreen()" class="controls__button" [class.controls__button--active]="fullScreenEnabled">
-      <div class="controls__icon-wrapper">
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g id="fullscreen" class="controls__icon" [class.controls__icon--shown]="!fullScreenEnabled">
-            <g id="Group">
-              <g id="Group_2">
-                <g id="Group_3">
-                  <path id="Vector"
-                    d="M57.8018 53.4382L44.3964 40.0328L40.0328 44.3964L53.4382 57.8018H43.0205V64H64V43.0205H57.8018V53.4382Z"
-                    fill="white" />
-                  <path id="Vector_2"
-                    d="M44.3964 23.9803L57.8018 10.5618V20.9795H64V0H43.0205V6.1982H53.4382L40.0328 19.6036L44.3964 23.9803Z"
-                    fill="white" />
-                  <path id="Vector_3"
-                    d="M19.6036 40.0328L6.1982 53.4382V43.0205H0V64H20.9795V57.8018H10.5618L23.9803 44.3964L19.6036 40.0328Z"
-                    fill="white" />
-                  <path id="Vector_4"
-                    d="M20.9795 6.1982V0H0V20.9795H6.1982V10.5618L19.6036 23.9803L23.9803 19.6036L10.5618 6.1982H20.9795Z"
-                    fill="white" />
-                </g>
-              </g>
-            </g>
-          </g>
-          <g id="exit-full-screen" class="controls__icon" [class.controls__icon--shown]="fullScreenEnabled">
-            <g id="Group">
-              <g id="fullscreen_x5F_exit">
+
+  @if (!smallScreenEnabled) {
+    <div class="controls__item">
+      <button (click)="onToggleFullScreen()" class="controls__button" [class.controls__button--active]="fullScreenEnabled">
+        <div class="controls__icon-wrapper">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="fullscreen" class="controls__icon" [class.controls__icon--shown]="!fullScreenEnabled">
+              <g id="Group">
                 <g id="Group_2">
-                  <path id="Vector" d="M49.172 54.828L58.344 64L64 58.344L54.828 49.172L64 40H40V64L49.172 54.828Z"
-                    fill="white" />
-                  <path id="Vector_2" d="M0 24H24V0L14.828 9.172L5.75 0.086L0.094 5.742L9.172 14.828L0 24Z"
-                    fill="white" />
-                  <path id="Vector_3" d="M0 58.344L5.656 64L14.828 54.828L24 64V40H0L9.172 49.172L0 58.344Z"
-                    fill="white" />
-                  <path id="Vector_4" d="M40 24H64L54.828 14.828L63.922 5.742L58.266 0.086L49.172 9.172L40 0V24Z"
-                    fill="white" />
+                  <g id="Group_3">
+                    <path id="Vector"
+                      d="M57.8018 53.4382L44.3964 40.0328L40.0328 44.3964L53.4382 57.8018H43.0205V64H64V43.0205H57.8018V53.4382Z"
+                      fill="white" />
+                    <path id="Vector_2"
+                      d="M44.3964 23.9803L57.8018 10.5618V20.9795H64V0H43.0205V6.1982H53.4382L40.0328 19.6036L44.3964 23.9803Z"
+                      fill="white" />
+                    <path id="Vector_3"
+                      d="M19.6036 40.0328L6.1982 53.4382V43.0205H0V64H20.9795V57.8018H10.5618L23.9803 44.3964L19.6036 40.0328Z"
+                      fill="white" />
+                    <path id="Vector_4"
+                      d="M20.9795 6.1982V0H0V20.9795H6.1982V10.5618L19.6036 23.9803L23.9803 19.6036L10.5618 6.1982H20.9795Z"
+                      fill="white" />
+                  </g>
                 </g>
               </g>
             </g>
-          </g>
-        </svg>
-      </div>
-      <p>{{ fullScreenEnabled ? 'Exit fullscreen' : 'Fullscreen' }}</p>
-    </button>
-  </div>
-  <div *ngIf="displaySmallScreen" class="controls__item">
-    <button (click)="onToggleSmallScreen()" class="controls__button controls__button--rotate" [class.controls__button--active]="smallScreenEnabled">
-      <div class="controls__icon-wrapper">
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g filter="url(#filter0_d_0_4)">
-            <path
-              d="M-4.81762e-07 34.7678V57.0215C-4.81762e-07 60.8696 3.13284 64 6.98275 64H57.016C60.8672 64 64 60.8696 64 57.0215V7.05508C64 3.20697 60.8672 0.0757321 57.016 0.0757321H34.6959C35.8972 1.3077 36.6961 2.93443 36.871 4.74067H57.0168C58.2942 4.74067 59.3335 5.77899 59.3335 7.05508V57.0216C59.3335 58.2969 58.2942 59.3352 57.0168 59.3352H6.98342C5.7062 59.3352 4.66761 58.2969 4.66761 57.0216V36.9389C2.90982 36.7703 1.27948 36.0149 -4.81762e-07 34.7678ZM10.7807 30.6654H26.0384L1.34093 5.97437C-0.02533 4.60686 -0.02533 2.39174 1.34093 1.02583C2.70813 -0.341677 4.92462 -0.341677 6.29089 1.02423L30.9883 25.7159V10.4614C30.9883 8.52907 32.5556 6.96139 34.4888 6.96139C35.4553 6.96139 36.3305 7.35214 36.9642 7.98612C37.5976 8.62116 37.9897 9.49543 37.9897 10.4613V34.1643C37.9897 36.0966 36.4228 37.6635 34.4896 37.6635H10.7807C8.84705 37.6635 7.28056 36.0974 7.28056 34.1643C7.28056 32.2312 8.84705 30.6654 10.7807 30.6654Z"
-              fill="white" />
-          </g>
-          <defs>
-            <filter id="filter0_d_0_4" x="-4" y="0" width="72" height="72" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-              <feFlood flood-opacity="0" result="BackgroundImageFix" />
-              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-              <feOffset dy="4" />
-              <feGaussianBlur stdDeviation="2" />
-              <feComposite in2="hardAlpha" operator="out" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_4" />
-              <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_4" result="shape" />
-            </filter>
-          </defs>
-        </svg>
-      </div>
-      <p>Minimize</p>
-    </button>
-  </div>
+            <g id="exit-full-screen" class="controls__icon" [class.controls__icon--shown]="fullScreenEnabled">
+              <g id="Group">
+                <g id="fullscreen_x5F_exit">
+                  <g id="Group_2">
+                    <path id="Vector" d="M49.172 54.828L58.344 64L64 58.344L54.828 49.172L64 40H40V64L49.172 54.828Z"
+                      fill="white" />
+                    <path id="Vector_2" d="M0 24H24V0L14.828 9.172L5.75 0.086L0.094 5.742L9.172 14.828L0 24Z"
+                      fill="white" />
+                    <path id="Vector_3" d="M0 58.344L5.656 64L14.828 54.828L24 64V40H0L9.172 49.172L0 58.344Z"
+                      fill="white" />
+                    <path id="Vector_4" d="M40 24H64L54.828 14.828L63.922 5.742L58.266 0.086L49.172 9.172L40 0V24Z"
+                      fill="white" />
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <p>{{ fullScreenEnabled ? 'Exit fullscreen' : 'Fullscreen' }}</p>
+      </button>
+    </div>
+  }
+
+  @if (displaySmallScreen) {
+    <div class="controls__item">
+      <button (click)="onToggleSmallScreen()" class="controls__button controls__button--rotate" [class.controls__button--active]="smallScreenEnabled">
+        <div class="controls__icon-wrapper">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#filter0_d_0_4)">
+              <path
+                d="M-4.81762e-07 34.7678V57.0215C-4.81762e-07 60.8696 3.13284 64 6.98275 64H57.016C60.8672 64 64 60.8696 64 57.0215V7.05508C64 3.20697 60.8672 0.0757321 57.016 0.0757321H34.6959C35.8972 1.3077 36.6961 2.93443 36.871 4.74067H57.0168C58.2942 4.74067 59.3335 5.77899 59.3335 7.05508V57.0216C59.3335 58.2969 58.2942 59.3352 57.0168 59.3352H6.98342C5.7062 59.3352 4.66761 58.2969 4.66761 57.0216V36.9389C2.90982 36.7703 1.27948 36.0149 -4.81762e-07 34.7678ZM10.7807 30.6654H26.0384L1.34093 5.97437C-0.02533 4.60686 -0.02533 2.39174 1.34093 1.02583C2.70813 -0.341677 4.92462 -0.341677 6.29089 1.02423L30.9883 25.7159V10.4614C30.9883 8.52907 32.5556 6.96139 34.4888 6.96139C35.4553 6.96139 36.3305 7.35214 36.9642 7.98612C37.5976 8.62116 37.9897 9.49543 37.9897 10.4613V34.1643C37.9897 36.0966 36.4228 37.6635 34.4896 37.6635H10.7807C8.84705 37.6635 7.28056 36.0974 7.28056 34.1643C7.28056 32.2312 8.84705 30.6654 10.7807 30.6654Z"
+                fill="white" />
+            </g>
+            <defs>
+              <filter id="filter0_d_0_4" x="-4" y="0" width="72" height="72" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                <feOffset dy="4" />
+                <feGaussianBlur stdDeviation="2" />
+                <feComposite in2="hardAlpha" operator="out" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_4" />
+                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_4" result="shape" />
+              </filter>
+            </defs>
+          </svg>
+        </div>
+        <p>Minimize</p>
+      </button>
+    </div>
+  }
+
   <div class="controls__item">
     <button (click)="onEndCall()" class="controls__button controls__button--danger">
       <div class="controls__icon-wrapper">

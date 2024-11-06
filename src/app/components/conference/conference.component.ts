@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WebRtcComponent } from '@app/ngx-webrtc-lib';
 
 @Component({
   selector: 'app-conference',
   templateUrl: './conference.component.html',
   styleUrls: ['./conference.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebRtcComponent],
+  standalone: true,
 })
 export class ConferenceComponent implements OnInit {
   channel: string;

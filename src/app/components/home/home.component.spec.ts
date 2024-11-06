@@ -2,11 +2,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { VideoCallDialogService } from '@app/ngx-webrtc-lib';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-
-// import { VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
-import { VideoCallDialogService } from 'ngx-webrtc-lib';
 
 import { HomeComponent } from './home.component';
 

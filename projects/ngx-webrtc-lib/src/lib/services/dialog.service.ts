@@ -4,7 +4,7 @@ import { delay, take } from 'rxjs/operators';
 import { DialogComponent } from '../models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DialogService {
   private wrapperSelector = 'ngx-webrtc-wrapper';

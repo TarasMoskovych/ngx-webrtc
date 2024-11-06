@@ -34,6 +34,9 @@ Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.gi
 
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
 
+## Prerequisites
+To get started with Agora, follow this [guide](https://www.agora.io/en/blog/how-to-get-started-with-agora/?utm_source=medium&utm_medium=blog&utm_campaign=Add_Video_Calling_in_your_Web_App_using_Agora_Web_NG_SDK) to retrieve the `AppID`.
+
 ## Installation
 
 Install `ngx-webrtc-lib` from `npm`:
@@ -41,7 +44,44 @@ Install `ngx-webrtc-lib` from `npm`:
 npm install ngx-webrtc-lib --save
 ```
 
-Add wanted package to NgModule imports:
+### Standalone Component support
+To use the library in standalone mode, follow these steps:
+
+Provide `WebRtc` configuration in `app.configs.ts` file
+```ts
+import { provideWebRtc } from 'ngx-webrtc-lib';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideWebRtc({
+      AppID: 'Agora AppID',
+    }),
+    // Other providers
+  ],
+};
+```
+
+Import `WebRtcComponent` into the host component's imports:
+
+```ts
+import { WebRtcComponent } from 'ngx-webrtc-lib';
+
+@Component({
+  standalone: true,
+  imports: [
+    WebRtcComponent,
+  ],
+  ...
+})
+export class HostComponent {
+  // Host component logic
+}
+```
+
+### NgModule support
+
+To use the library with NgModules, import `WebRtcModule` into your module's imports:
+
 ```js
 import { WebRtcModule } from 'ngx-webrtc-lib';
 
@@ -56,7 +96,6 @@ import { WebRtcModule } from 'ngx-webrtc-lib';
 })
 ```
 
-You can get started with Agora by following this [guide](https://www.agora.io/en/blog/how-to-get-started-with-agora/?utm_source=medium&utm_medium=blog&utm_campaign=Add_Video_Calling_in_your_Web_App_using_Agora_Web_NG_SDK) and retrieve the AppID.
 
 ### Basic usage
 Add `WebRtcComponent` to your component template:
@@ -72,9 +111,14 @@ Add `WebRtcComponent` to your component template:
 ```
 
 ### Advanced usage
-The library allows you to display a video call confirmation dialog.
-Inject `VideoCallDialogService` into your component/service and call `open` method by passing the required data.
-It will return a dialog object `VideoCallDialog` with an API where you can programmatically close the dialog, accept the call (it will open `WebRtcComponent`) and subscribe to the dialog state.
+The library allows you to display a video call confirmation dialog. To use the dialog service:
+1. Inject `VideoCallDialogService` into your component or service.
+2. Call the `open` method with the required data.
+
+This returns `VideoCallDialog` object with an API that allows you to:
+- Programmatically close the dialog
+- Accept the call, which will open WebRtcComponent
+- Subscribe to the dialog state
 
 ```ts
 import { VideoCallDialogService, VideoCallDialogData } from 'ngx-webrtc-lib';
@@ -107,7 +151,7 @@ Import `assets` in your angular.json file
 ],
 ```
 
-For the real-life video call confirmation behavior with multiple clients where one declines the call and it immediately reflects on the second client, you need to implement your own custom solution.
+For real-life video call confirmation behavior with multiple clients, where one client declines the call, and the result immediately reflects on the other clients, you need to implement your own custom solution.
 This is an example of the implementation using [web-sockets](https://github.com/TarasMoskovych/angular-slack/pull/20/files).
 
 ### How to build lib for development
@@ -125,7 +169,7 @@ To use this library, please follow the versioning specified in the following tab
 
 | `ngx-webrtc-lib`| Angular     | NodeJS
 | --------------- | ------------| --------------------------------------|
-|  ~~1.x~~        | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
+| ~~1.x~~         | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
 | ~~2.x~~         | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
 | 3.x             | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
 | 13.x            | ~13.4.0     | ^12.20.0 \|\| ^14.15.0 \|\| ^16.10.0  |
@@ -133,6 +177,7 @@ To use this library, please follow the versioning specified in the following tab
 | 15.x            | ^15.2.10    | ^14.20.0 \|\| ^16.13.0 \|\| ^18.10.0  |
 | 16.x            | ^16.2.10    | ^16.14.0 \|\| ^18.10.0                |
 | 17.x            | ^17.1.2     | ^18.13.0 \|\| ^20.9.0                 |
+| 18.x            | ^18.2.10    | ^18.19.1 \|\| ^20.11.1 \|\| ^22.0.0   |
 
 ## API reference
 
@@ -160,7 +205,7 @@ To use this library, please follow the versioning specified in the following tab
 | uid: string          | User identifier.                                                                                                                          |
 | channel: string      | Channel identifier.                                                                                                                       |
 | token: string        | Agora token for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow). Default value `null` |
-| outcome: boolean     | Defines the UI for income or outcome call mode.                                                                                           |
+| outcome: boolean     | Defines the UI for incoming or outgoing call modes.                                                                                           |
 | user: User           | User name and photo URL.                                                                                                                  |
 
 ### VideoCallDialog

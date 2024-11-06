@@ -8,7 +8,7 @@ import { WebRtcComponent } from '../webrtc.component';
 import { DialogService } from './dialog.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VideoCallDialogService {
 
