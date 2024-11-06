@@ -1,5 +1,8 @@
 # Changelog
 
+## 18.1.0
+- Lazy loading of Agora SDK
+
 ## 18.0.0
 - Update to Angular 18
 - Support standalone components

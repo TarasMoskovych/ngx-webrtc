@@ -1,4 +1,5 @@
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, PLATFORM_ID } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { WebRtcService } from './services';
@@ -6,10 +7,11 @@ import { WebRtcComponent } from './webrtc.component';
 
 describe('WebRtcComponent', () => {
   let component: WebRtcComponent;
+  let fixture: ComponentFixture<WebRtcComponent>;
   let cdr: jasmine.SpyObj<ChangeDetectorRef>;
   let webRtcService: jasmine.SpyObj<WebRtcService>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
     webRtcService = jasmine.createSpyObj('WebRtcService', [
       'init',
@@ -26,7 +28,28 @@ describe('WebRtcComponent', () => {
       localContainerId: 'local',
       remoteCalls: ['1', '2', '3'],
     });
-    component = new WebRtcComponent(webRtcService, cdr);
+
+    await TestBed.configureTestingModule({
+      imports: [WebRtcComponent],
+      providers: [
+        {
+          provide: PLATFORM_ID,
+          useValue: 'browser',
+        },
+        {
+          provide: ChangeDetectorRef,
+          useValue: cdr,
+        },
+        {
+          provide: WebRtcService,
+          useValue: webRtcService,
+        },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(WebRtcComponent);
+    component = fixture.componentInstance;
     component.uid = '1234';
     component.debug = true;
     component.channel = 'test_channel';
@@ -36,12 +59,12 @@ describe('WebRtcComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
+  describe('onInitWebRtc', () => {
     beforeEach(() => {
       spyOn(component.callEnd, 'emit');
       spyOn(component, 'closeDialog');
       webRtcService.init.and.returnValue(of(undefined));
-      component.ngOnInit();
+      component.onInitWebRtc();
     });
 
     it('should call "init" method with parameters', () => {
