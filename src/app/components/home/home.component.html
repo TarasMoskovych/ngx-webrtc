@@ -17,22 +17,24 @@
           [disabled]="form.invalid || !!dialog"
           mat-flat-button
           color="primary"
-        >Start / Join call</button>
+        >
+          Start / Join call
+        </button>
         <button
           class="home__btn"
           [disabled]="form.invalid || !!dialog"
           mat-raised-button
           (click)="!dialog && onModalOpen()"
           type="button"
-        >Open Call Dialog
-          <mat-slide-toggle
-            (change)="outcome = $event.checked"
-            (click)="$event.stopPropagation();"
-            [checked]="outcome"
-            [disabled]="!!dialog"
-            [matTooltip]="tooltipText"
-          ></mat-slide-toggle>
+        >
+          Open Call Dialog
         </button>
+        <mat-slide-toggle
+          (change)="outcome = $event.checked"
+          [checked]="outcome"
+          [disabled]="!!dialog"
+          [matTooltip]="tooltipText"
+        />
       </div>
     </form>
     <div class="home__footer">

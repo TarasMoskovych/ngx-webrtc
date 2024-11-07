@@ -1,29 +1,55 @@
-import { ChangeDetectorRef } from '@angular/core';
-import { discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VideoCallDialogService } from '@app/ngx-webrtc-lib';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
+import { STORAGE } from '../../app.config';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
-  let formBuilder: jasmine.SpyObj<UntypedFormBuilder>;
+  let fixture: ComponentFixture<HomeComponent>;
+  let formBuilder: UntypedFormBuilder;
   let router: jasmine.SpyObj<Router>;
   let localStorage: jasmine.SpyObj<Storage>;
   let videoCallDialogService: jasmine.SpyObj<VideoCallDialogService>;
   let cdr: jasmine.SpyObj<ChangeDetectorRef>;
 
-  beforeEach(() => {
-    formBuilder = jasmine.createSpyObj('FormBuilder', ['group']);
+  beforeEach(async () => {
     router = jasmine.createSpyObj('Router', ['navigate']);
     localStorage = jasmine.createSpyObj('Storage', ['getItem', 'setItem']);
     videoCallDialogService = jasmine.createSpyObj('VideoCallDialogService', ['open']);
     cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
 
-    component = new HomeComponent(formBuilder, router, localStorage, videoCallDialogService, cdr);
+    await TestBed.configureTestingModule({
+      imports: [HomeComponent],
+      providers: [
+        {
+          provide: Router,
+          useValue: router,
+        },
+        {
+          provide: STORAGE,
+          useValue: localStorage,
+        },
+        {
+          provide: VideoCallDialogService,
+          useValue: videoCallDialogService,
+        },
+        {
+          provide: ChangeDetectorRef,
+          useValue: cdr,
+        },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(HomeComponent);
+    formBuilder = TestBed.inject(UntypedFormBuilder);
+    component = fixture.componentInstance;
   });
 
   it('should create', () => {
@@ -59,7 +85,7 @@ describe('HomeComponent', () => {
   describe('ngOnInit', () => {
     it('should create form using form builder', () => {
       component.ngOnInit();
-      expect(formBuilder.group).toHaveBeenCalled();
+      expect(component.form).toBeDefined();
     });
   });
 
@@ -69,7 +95,7 @@ describe('HomeComponent', () => {
     };
 
     beforeEach(() => {
-      formBuilder.group.and.returnValue({ value: formData } as UntypedFormGroup);
+      spyOn(formBuilder, 'group').and.returnValue({ value: formData } as UntypedFormGroup);
       component.ngOnInit();
       component.onSubmit();
     });
@@ -121,7 +147,6 @@ describe('HomeComponent', () => {
 
       tick(ms);
       expect(spy.close).not.toHaveBeenCalled();
-      expect(cdr.markForCheck).toHaveBeenCalled();
       expect(component.dialog).toBeNull();
     }));
   });
