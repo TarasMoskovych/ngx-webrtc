@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -6,7 +6,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from '@app/ngx-webrtc-lib';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs';
+import { STORAGE } from '../../app.config';
 
 @Component({
   selector: 'app-home',
@@ -29,12 +30,16 @@ export class HomeComponent implements OnInit {
   public dialog: VideoCallDialog | null;
 
   constructor(
+    @Inject(STORAGE) private localStorage: Storage,
     private formBuilder: UntypedFormBuilder,
     private router: Router,
-    private localStorage: Storage,
     private videoCallDialogService: VideoCallDialogService,
     private cdr: ChangeDetectorRef,
-  ) { }
+  ) {
+    afterNextRender(() => {
+      this.form?.patchValue({ channelId: this.channelId });
+    });
+  }
 
   get channelId(): string {
     return this.localStorage.getItem(this.sessionKey) || 'test-channel-ngx-webrtc';
@@ -46,7 +51,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      channelId: [this.channelId, Validators.required],
+      channelId: ['', Validators.required],
     });
   }
 
