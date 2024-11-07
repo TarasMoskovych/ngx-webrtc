@@ -4,18 +4,24 @@ import {
   Component,
   EventEmitter,
   HostBinding,
+  inject,
   Input,
   OnDestroy,
-  OnInit,
   Output,
+  PLATFORM_ID,
 } from '@angular/core';
-import { take } from 'rxjs/operators';
 
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser, NgIf } from '@angular/common';
+import { take } from 'rxjs/operators';
 import { fadeAnimation } from './animations';
 import { ControlsComponent, DialogComponent, SpinnerComponent, TimerComponent } from './components';
 import { ToggleDirective } from './directives';
 import { WebRtcService } from './services';
+
+interface OnInitWebRtc {
+  onInitWebRtc(): void;
+  canInitWebRtc(): boolean;
+}
 
 @Component({
   selector: 'ngx-webrtc',
@@ -33,7 +39,7 @@ import { WebRtcService } from './services';
     ToggleDirective,
   ],
 })
-export class WebRtcComponent extends DialogComponent implements OnInit, OnDestroy {
+export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, OnDestroy {
   @Input() uid: string;
   @Input() token: string;
   @Input() channel: string;
@@ -44,8 +50,10 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
   @HostBinding('class.small-screen') smallScreenEnabled = false;
   @HostBinding('class.active') active = false;
 
+  private readonly platformId = inject(PLATFORM_ID);
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
+  public webRtcInitialized = false;
 
   constructor(
     private webRtcService: WebRtcService,
@@ -54,14 +62,17 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
     super(cdr);
   }
 
-  ngOnInit(): void {
-    this.webRtcService.init(this.uid, this.channel, this.token, this.debug)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.active = this.smallScreenEnabled;
-        this.callEnd.emit();
-        this.closeDialog(true);
-      });
+  onInitWebRtc(): void {
+    if (this.canInitWebRtc()) {
+      this.webRtcInitialized = true;
+      this.webRtcService.init(this.uid, this.channel, this.token, this.debug)
+        .pipe(take(1))
+        .subscribe(() => {
+          this.active = this.smallScreenEnabled;
+          this.callEnd.emit();
+          this.closeDialog(true);
+        });
+    }
   }
 
   ngOnDestroy(): void {
@@ -107,5 +118,9 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
 
   onEndCall(): void {
     this.webRtcService.endCall();
+  }
+
+  canInitWebRtc(): boolean {
+    return !this.webRtcInitialized && isPlatformBrowser(this.platformId);
   }
 }
