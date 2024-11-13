@@ -36,12 +36,12 @@ describe('WebRtcComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
+  describe('onInitWebRtc', () => {
     beforeEach(() => {
       spyOn(component.callEnd, 'emit');
       spyOn(component, 'closeDialog');
       webRtcService.init.and.returnValue(of(undefined));
-      component.ngOnInit();
+      component.onInitWebRtc();
     });
 
     it('should call "init" method with parameters', () => {
@@ -54,6 +54,11 @@ describe('WebRtcComponent', () => {
 
     it('should call "closeDialog" after end state', () => {
       expect(component.closeDialog).toHaveBeenCalled();
+    });
+
+    it('should be initialized only once', () => {
+      component.onInitWebRtc();
+      expect(webRtcService.init).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -1,7 +1,17 @@
 import { Inject, Injectable } from '@angular/core';
-import AgoraRTC, { ClientConfig, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IMicrophoneAudioTrack, IRemoteDataChannel, IRemoteTrack, UID } from 'agora-rtc-sdk-ng';
-import { BehaviorSubject, Observable, Subject, interval } from 'rxjs';
-import { take } from 'rxjs/operators';
+import {
+  ClientConfig,
+  IAgoraRTC,
+  IAgoraRTCClient,
+  IAgoraRTCRemoteUser,
+  ICameraVideoTrack,
+  IMicrophoneAudioTrack,
+  IRemoteDataChannel,
+  IRemoteTrack,
+  UID,
+} from 'agora-rtc-sdk-ng';
+import { BehaviorSubject, Observable, Subject, from, interval } from 'rxjs';
+import { concatMap, take } from 'rxjs/operators';
 import { AgoraConfig, DEFAULT_STREAM_STATE, StreamState } from '../models';
 
 const CLIENT_CONFIG: ClientConfig = {
@@ -9,11 +19,9 @@ const CLIENT_CONFIG: ClientConfig = {
   codec: 'h264',
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WebRtcService {
-  private agoraRTC = AgoraRTC;
+  private agoraRTC: IAgoraRTC;
   private client: IAgoraRTCClient;
   private localTracks: { videoTrack: ICameraVideoTrack, audioTrack: IMicrophoneAudioTrack };
   private uid: string;
@@ -27,29 +35,30 @@ export class WebRtcService {
   public streamState$ = this.streamState.asObservable();
 
   constructor(@Inject('AgoraConfig') private config: AgoraConfig) {
-    if (!this.agoraRTC.checkSystemRequirements()) {
-      this.handleError(new Error('Web RTC is not supported in this browser'));
-    }
   }
 
   init(uid: string, channel: string, token: string | null, debug = false): Observable<void> {
-    this.uid = uid;
-    this.agoraRTC.setLogLevel(debug ? 0 : 4);
+    return from(this.loadSDK()).pipe(
+      concatMap(() => {
+        this.uid = uid;
+        this.agoraRTC.setLogLevel(debug ? 0 : 4);
 
-    this.client = this.agoraRTC.createClient(CLIENT_CONFIG);
-    this.assignClientHandlers();
+        this.client = this.agoraRTC.createClient(CLIENT_CONFIG);
+        this.assignClientHandlers();
 
-    this.initLocalStream().then(() => {
-      this.client.join(this.config.AppID, channel, token || null, this.uid)
-        .then(() => {
-          this.localTracks.videoTrack.play(this.localContainerId);
-          this.client.publish(Object.values(this.localTracks));
-          this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting others to join' });
-        })
-        .catch((err: Error) => this.handleError(err));
-    });
+        this.initLocalStream().then(() => {
+          this.client.join(this.config.AppID, channel, token || null, this.uid)
+            .then(() => {
+              this.localTracks.videoTrack.play(this.localContainerId);
+              this.client.publish(Object.values(this.localTracks));
+              this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting others to join' });
+            })
+            .catch((err: Error) => this.handleError(err));
+        });
 
-    return this.callEnd.asObservable();
+        return this.callEnd.asObservable();
+      }),
+    );
   }
 
   deinit(): void {
@@ -165,6 +174,17 @@ export class WebRtcService {
         track.stop();
         track.close();
       });
+    }
+  }
+
+  private async loadSDK(): Promise<void> {
+    if (!this.agoraRTC) {
+      const { default: AgoraRTC } = await import('agora-rtc-sdk-ng');
+      this.agoraRTC = AgoraRTC;
+    }
+
+    if (!this.agoraRTC.checkSystemRequirements()) {
+      this.handleError(new Error('Web RTC is not supported in this browser'));
     }
   }
 }

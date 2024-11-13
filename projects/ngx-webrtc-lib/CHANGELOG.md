@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.0
+- Lazy loading of Agora SDK
+
 ## 3.1.0
 - Support Agora token
 
