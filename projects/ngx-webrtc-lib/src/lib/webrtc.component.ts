@@ -6,14 +6,18 @@ import {
   HostBinding,
   Input,
   OnDestroy,
-  OnInit,
-  Output,
+  Output
 } from '@angular/core';
-import { take } from 'rxjs/operators';
 
+import { take } from 'rxjs/operators';
 import { fadeAnimation } from './animations';
 import { DialogComponent } from './components';
 import { WebRtcService } from './services';
+
+interface OnInitWebRtc {
+  onInitWebRtc(): void;
+  canInitWebRtc(): boolean;
+}
 
 @Component({
   selector: 'ngx-webrtc',
@@ -22,7 +26,7 @@ import { WebRtcService } from './services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeAnimation],
 })
-export class WebRtcComponent extends DialogComponent implements OnInit, OnDestroy {
+export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, OnDestroy {
   @Input() uid: string;
   @Input() token: string;
   @Input() channel: string;
@@ -35,6 +39,7 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
 
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
+  public webRtcInitialized = false;
 
   constructor(
     private webRtcService: WebRtcService,
@@ -43,14 +48,17 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
     super(cdr);
   }
 
-  ngOnInit(): void {
-    this.webRtcService.init(this.uid, this.channel, this.token, this.debug)
-      .pipe(take(1))
-      .subscribe(() => {
-        this.active = this.smallScreenEnabled;
-        this.callEnd.emit();
-        this.closeDialog(true);
-      });
+  onInitWebRtc(): void {
+    if (this.canInitWebRtc()) {
+      this.webRtcInitialized = true;
+      this.webRtcService.init(this.uid, this.channel, this.token, this.debug)
+        .pipe(take(1))
+        .subscribe(() => {
+          this.active = this.smallScreenEnabled;
+          this.callEnd.emit();
+          this.closeDialog(true);
+        });
+    }
   }
 
   ngOnDestroy(): void {
@@ -96,5 +104,9 @@ export class WebRtcComponent extends DialogComponent implements OnInit, OnDestro
 
   onEndCall(): void {
     this.webRtcService.endCall();
+  }
+
+  canInitWebRtc(): boolean {
+    return !this.webRtcInitialized;
   }
 }

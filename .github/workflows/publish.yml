@@ -1,47 +1,19 @@
-name: Deploy and publish
+name: Publish
 on:
   push:
     branches:
-      - 'main'
+      - 'release/3.x.x'
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '14.x'
-          fetch-depth: 0
-      - uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: 14
       - name: Install node_modules
         run: npm ci
-      - name: Lint
-        run: npm run lint
-      - name: Test
-        run: npm run test:ci
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/ngx-webrtc-lib/coverage-final.json
-          fail_ci_if_error: true
-          verbose: true
-      - name: Set env
-        run: node set-env ${{ secrets.WEB_RTC_KEY }}
-      - name: Build app
-        run: npm run build
-      - name: Deploy to Github pages
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist/ngx-webrtc
       - name: Build package
         run: npm run build:lib
       - name: Publish to NPM
@@ -49,3 +21,4 @@ jobs:
         with:
           token: ${{ secrets.NODE_AUTH_TOKEN }}
           package: dist/ngx-webrtc-lib/package.json
+          tag: v3-lts

@@ -32,10 +32,14 @@ describe('WebRtcService', () => {
 
   let service: WebRtcService;
 
+  beforeEach(() => {
+    service = new WebRtcService({ AppID });
+    service['agoraRTC'] = AgoraRTC;
+  });
+
   describe('browser supports WebRTC', () => {
     beforeEach(() => {
       spyOn(AgoraRTC, 'checkSystemRequirements').and.returnValue(true);
-      service = new WebRtcService({ AppID });
     });
 
     it('should be created', () => {
@@ -49,33 +53,39 @@ describe('WebRtcService', () => {
         spyOn<any>(AgoraRTC, 'createCameraVideoTrack').and.returnValue(Promise.resolve({ play: jasmine.createSpy() }));
         spyOn<any>(AgoraRTC, 'createMicrophoneAudioTrack').and.returnValue(Promise.resolve({ play: jasmine.createSpy() }));
         spyOn<any>(service, 'assignClientHandlers');
+        spyOn<any>(service, 'loadSDK').and.resolveTo();
       });
 
       describe('debug', () => {
-        it('should start without debug', () => {
-          service.init(uid, channel, null);
-          expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
-        });
+        it('should start without debug', fakeAsync(() => {
+          service.init(uid, channel, null).subscribe();
+          tick();
 
-        it('should start with debug', () => {
-          service.init(uid, channel, null, true);
+          expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
+        }));
+
+        it('should start with debug', fakeAsync(() => {
+          service.init(uid, channel, null, true).subscribe();
+          tick();
+
           expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
-        });
+        }));
       });
 
       describe('agora init', () => {
-        it('should call "createClient" method with configs and token', () => {
+        it('should call "createClient" method with configs and token', fakeAsync(() => {
           const token = 'token_12345';
-          service.init(uid, channel, token);
+          service.init(uid, channel, token).subscribe();
+          tick();
 
           expect(AgoraRTC.createClient).toHaveBeenCalledOnceWith({
             mode: 'rtc',
             codec: 'h264',
           });
-        });
+        }));
 
         it('should be connected to stream after "initLocalStream"', fakeAsync(() => {
-          service.init(uid, channel, null);
+          service.init(uid, channel, null).subscribe();
           tick(500);
 
           service.streamState$.subscribe((state: StreamState) => {
@@ -358,9 +368,13 @@ describe('WebRtcService', () => {
   });
 
   describe('browser does not support WebRTC', () => {
-    it('should handle an error', () => {
+    it('should handle an error', (done: DoneFn) => {
       spyOn(AgoraRTC, 'checkSystemRequirements').and.returnValue(false);
-      expect(() => new WebRtcService({ AppID })).toThrow(new Error('Web RTC is not supported in this browser'));
+
+      service['loadSDK']().catch((err: Error) => {
+        expect(err.message).toBe('Web RTC is not supported in this browser');
+        done();
+      });
     });
   });
 });

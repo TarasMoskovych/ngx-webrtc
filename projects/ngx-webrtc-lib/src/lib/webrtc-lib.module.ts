@@ -37,7 +37,8 @@ export class WebRtcModule {
     return {
       ngModule: WebRtcModule,
       providers: [
-        WebRtcService, {
+        WebRtcService,
+        {
           provide: 'AgoraConfig',
           useValue: config,
         },
