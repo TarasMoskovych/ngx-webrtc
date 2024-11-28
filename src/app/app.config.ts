@@ -14,7 +14,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
-    provideWebRtc(environment.configs),
+    provideWebRtc({
+      ...environment.configs,
+      debug: true,
+      useVirtualBackground: true,
+    }),
     provideClientHydration(),
     {
       provide: STORAGE,

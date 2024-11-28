@@ -1,22 +1,79 @@
 import { Observable } from 'rxjs';
 
+/**
+ * Data structure used for initializing a video call dialog.
+ * @publicApi
+ */
 export interface VideoCallDialogData {
+  /**
+   * User identifier.
+   */
   uid: string;
+
+  /**
+   * Channel identifier.
+   */
   channel: string;
+
+  /**
+   * Determines the call mode.
+   * Set to `true` for outgoing calls and `false` for incoming calls.
+   */
   outcome: boolean;
+
+  /**
+   * Information about the user, including name and photo URL.
+   */
   user: User;
+
+  /**
+   * Agora token used for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow).
+   * Optional. Defaults to `null`.
+   */
   token?: string;
-  debug?: boolean;
 }
 
+/**
+ * Interface for the video call dialog.
+ * @publicApi
+ */
 export interface VideoCallDialog {
-  acceptCall: () => void,
-  close: () => void,
+  /**
+   * Closes the confirmation dialog and opens the `WebRtcComponent`
+   * with the passed data from the dialog.
+   */
+  acceptCall: () => void;
+
+  /**
+   * Closes the dialog containing the video-call confirmation component.
+   */
+  close: () => void;
+
+  /**
+   * Returns an `Observable` with the data depending on whether the call was accepted or declined.
+   * If the call is accepted, the data will be provided; otherwise, it may be `null`.
+   */
   afterConfirmation: () => Observable<VideoCallDialogData>;
+
+  /**
+   * Returns an `Observable` that emits a value when the call ends.
+   * Emits `true` if the call ended successfully or `false` if there was an issue.
+   */
   afterCallEnd: () => Observable<boolean>;
 }
 
-interface User {
+/**
+ * Represents a user with basic profile information.
+ * @publicApi
+ */
+export interface User {
+  /**
+   * The name of the user.
+   */
   name: string;
+
+  /**
+   * The URL of the user's profile photo.
+   */
   photoURL: string;
 }
