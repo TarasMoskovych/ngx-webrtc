@@ -1,0 +1,100 @@
+@import "variables";
+
+.local-stream-view {
+  height: 20vh;
+  opacity: 1;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 20%;
+  z-index: 1;
+  @include transition;
+
+  &__video {
+    height: 100%;
+    width: 100%;
+
+    &:not(:empty) {
+      box-shadow: $box-shadow-secondary;
+
+      & + .local-stream-view__info {
+        display: flex;
+      }
+    }
+  }
+
+  &__info {
+    align-items: center;
+    background-color: rgba($color-dark2, 0.9);
+    border-radius: $border-radius-small;
+    bottom: 5px;
+    color: white;
+    display: none;
+    left: 5px;
+    padding: 5px 10px;
+    position: absolute;
+    opacity: 0.8;
+    z-index: 2;
+
+    svg {
+      margin-left: 5px;
+      @include small-icon;
+    }
+  }
+
+  &__actions {
+    align-items: flex-end;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    color: white;
+    left: 0;
+    justify-content: flex-end;
+    height: 100%;
+    padding: 5px;
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    @include transition;
+
+    svg {
+      fill: white;
+      opacity: 0.8;
+      @include medium-icon;
+    }
+  }
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+
+    .local-stream-view__info {
+      display: none;
+    }
+  }
+
+  &:hover {
+    .local-stream-view__actions {
+      opacity: 1;
+    }
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .local-stream-view {
+    width: 30%;
+
+    &__info {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    &__actions {
+      padding: 0;
+    }
+  }
+}

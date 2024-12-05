@@ -1,5 +1,8 @@
 # Changelog
 
+## 18.2.0
+- Virtual background feature support
+
 ## 18.1.0
 - Lazy loading of Agora SDK
 

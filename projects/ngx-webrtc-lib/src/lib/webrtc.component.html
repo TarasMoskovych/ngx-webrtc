@@ -12,18 +12,21 @@
       [connected]="streamState.connected"
       [ended]="streamState.ended"
       [small]="smallScreenEnabled"
-    ></ngx-spinner>
+    />
 
     <ngx-timer
       *ngIf="streamState.started"
       [started]="streamState.started"
-    ></ngx-timer>
+    />
 
-    <div
-      [id]="localContainerId"
-      [class.hidden]="!cameraEnabled || smallScreenEnabled"
-      class="container__local"
-    ></div>
+    <ngx-local-stream-view
+      [blurEnabled]="blurEnabled"
+      [hidden]="!cameraEnabled || smallScreenEnabled"
+      [localContainerId]="localContainerId"
+      [microphoneEnabled]="microphoneEnabled"
+      [useVirtualBackground]="useVirtualBackground"
+      (toggleBlur)="onToggleBlur($event)"
+    />
 
     @for (call of remoteCalls; track call) {
       <div
@@ -64,6 +67,6 @@
       (toggleFullScreen)="onToggleFullScreen($event)"
       (toggleSmallScreen)="onToggleSmallScreen($event)"
       (endCall)="onEndCall()"
-    ></ngx-controls>
+    />
   </div>
 </div>
