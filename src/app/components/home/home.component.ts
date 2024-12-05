@@ -70,7 +70,6 @@ export class HomeComponent implements OnInit {
         name: 'Test User',
         photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvDtoEwuV9E2kHqNDi6MnBzXlefn8TfyrwgQ&usqp=CAU',
       },
-      debug: true,
     });
 
     const timeout = setTimeout(() => this.dialog?.close(), 7000);

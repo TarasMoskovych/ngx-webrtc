@@ -18,9 +18,12 @@ describe('WebRtcComponent', () => {
       'deinit',
       'isVideoEnabled',
       'isAudioEnabled',
+      'isBlurEnabled',
       'toggleVideo',
       'toggleAudio',
       'toggleFullScreen',
+      'toggleBlur',
+      'useVirtualBackground',
       'endCall',
     ], {
       streamState$: of(null),
@@ -51,7 +54,6 @@ describe('WebRtcComponent', () => {
     fixture = TestBed.createComponent(WebRtcComponent);
     component = fixture.componentInstance;
     component.uid = '1234';
-    component.debug = true;
     component.channel = 'test_channel';
   });
 
@@ -68,7 +70,7 @@ describe('WebRtcComponent', () => {
     });
 
     it('should call "init" method with parameters', () => {
-      expect(webRtcService.init).toHaveBeenCalledOnceWith(component.uid, component.channel, component.token, component.debug);
+      expect(webRtcService.init).toHaveBeenCalledOnceWith(component.uid, component.channel, component.token);
     });
 
     it('should emit "callEnd" event after end state', () => {
@@ -110,6 +112,16 @@ describe('WebRtcComponent', () => {
       spyOnProperty(document, 'fullscreenElement').and.returnValue({} as Element);
       expect(component.fullScreenEnabled).toBeTrue();
     });
+
+    it('should get blurEnabled', () => {
+      webRtcService.isBlurEnabled.and.returnValue(true);
+      expect(component.blurEnabled).toBeTrue();
+    });
+
+    it('should get useVirtualBackground', () => {
+      webRtcService.useVirtualBackground.and.returnValue(true);
+      expect(component.useVirtualBackground).toBeTrue();
+    });
   });
 
   describe('onToggleCamera', () => {
@@ -130,6 +142,13 @@ describe('WebRtcComponent', () => {
     it('should call "toggleFullScreen" method with correct value', () => {
       component.onToggleFullScreen(false);
       expect(webRtcService.toggleFullScreen).toHaveBeenCalledOnceWith(false);
+    });
+  });
+
+  describe('onToggleBlur', () => {
+    it('should call "toggleBlur" method with correct value', () => {
+      component.onToggleBlur(true);
+      expect(webRtcService.toggleBlur).toHaveBeenCalledOnceWith(true);
     });
   });
 

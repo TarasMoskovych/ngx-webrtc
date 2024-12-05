@@ -12,6 +12,7 @@
     ]
   },
   "allowedNonPeerDependencies": [
-    "agora-rtc-sdk-ng"
+    "agora-rtc-sdk-ng",
+    "agora-extension-virtual-background"
   ]
 }

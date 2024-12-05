@@ -61,28 +61,6 @@ ngx-timer {
   position: relative;
   @include transition;
 
-  &__local {
-    border-radius: $border-radius-small;
-    height: 20vh;
-    opacity: 1;
-    overflow: hidden;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    width: 20vw;
-    z-index: 1;
-    @include transition;
-
-    &.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    &:not(:empty) {
-      box-shadow: $box-shadow-secondary;
-    }
-  }
-
   &__remote {
     background-color: $color-dark;
     height: 100vh;

@@ -22,7 +22,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "agora-rtc-sdk-ng"
+              "agora-rtc-sdk-ng",
+              "agora-extension-virtual-background"
             ],
             "outputPath": "dist/ngx-webrtc/browser",
             "index": "src/index.html",
