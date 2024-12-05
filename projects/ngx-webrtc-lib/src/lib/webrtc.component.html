@@ -19,11 +19,14 @@
       [started]="streamState.started"
     ></ngx-timer>
 
-    <div
-      [id]="localContainerId"
-      [class.hidden]="!cameraEnabled || smallScreenEnabled"
-      class="container__local"
-    ></div>
+    <ngx-local-stream-view
+      [blurEnabled]="blurEnabled"
+      [hidden]="!cameraEnabled || smallScreenEnabled"
+      [localContainerId]="localContainerId"
+      [microphoneEnabled]="microphoneEnabled"
+      [useVirtualBackground]="useVirtualBackground"
+      (toggleBlur)="onToggleBlur($event)"
+    ></ngx-local-stream-view>
 
     <div
       *ngFor="let call of remoteCalls"

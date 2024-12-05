@@ -38,7 +38,6 @@ Add `WebRtcComponent` to your component template:
 <ngx-webrtc
   [channel]="channel"
   [displaySmallScreen]="true"
-  [debug]="true"
   [uid]="uid"
   [token]="token"
   (callEnd)="onCallEnd()"
@@ -103,6 +102,14 @@ To use this library, please follow the versioning specified in the following tab
 
 ## API reference
 
+### AgoraConfig
+
+| Name                 | Description                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------- |
+| AppID                | The App ID provided by Agora to initialize the Agora SDK.                                               |
+| debug                | Enable debugging for Agora SDK. Default value `false`                                                   |
+| useVirtualBackground | Enable Agora Virtual Background feature (only the "blur" is currently supported). Default value `false` |
+
 ### WebRtcComponent
 
 | Name                                  | Description |
@@ -110,7 +117,6 @@ To use this library, please follow the versioning specified in the following tab
 | @Input() uid: string                  | User identifier.                                                                                                                          |
 | @Input() token: string                | Agora token for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow). Default value `null` |
 | @Input() channel: string              | Channel identifier.                                                                                                                       |
-| @Input() debug: boolean               | Enable debugging. Default value `false`                                                                                                   |
 | @Input() displaySmallScreen: boolean  | Display small screen toggle. Default value `false`                                                                                        |
 | @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended.                                                                                             |
 

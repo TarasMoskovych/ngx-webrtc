@@ -19,6 +19,13 @@ interface OnInitWebRtc {
   canInitWebRtc(): boolean;
 }
 
+/**
+ * The `WebRtcComponent` handles WebRTC-based video calling functionality.
+ * It initializes the WebRTC service and manages the stream and call states.
+ * It also provides control over video and audio settings.
+ *
+ * @publicApi
+ */
 @Component({
   selector: 'ngx-webrtc',
   templateUrl: './webrtc.component.html',
@@ -27,12 +34,37 @@ interface OnInitWebRtc {
   animations: [fadeAnimation],
 })
 export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, OnDestroy {
+
+  /**
+   * User identifier for the WebRTC session.
+   */
   @Input() uid: string;
+
+  /**
+   * Authentication token for the WebRTC session (optional).
+   */
   @Input() token: string;
+
+  /**
+   * Channel identifier for the WebRTC session.
+   */
   @Input() channel: string;
+
+  /**
+   * Flag to enable/disable animation in the WebRTC component.
+   * Default is true.
+   */
   @Input() animate = true;
+
+  /**
+   * Flag to enable/disable small screen mode.
+   * Default is false.
+   */
   @Input() displaySmallScreen = false;
-  @Input() debug = false;
+
+  /**
+   * Event emitter that emits when the call ends.
+   */
   @Output() callEnd = new EventEmitter<void>();
   @HostBinding('class.small-screen') smallScreenEnabled = false;
   @HostBinding('class.active') active = false;
@@ -51,7 +83,7 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   onInitWebRtc(): void {
     if (this.canInitWebRtc()) {
       this.webRtcInitialized = true;
-      this.webRtcService.init(this.uid, this.channel, this.token, this.debug)
+      this.webRtcService.init(this.uid, this.channel, this.token)
         .pipe(take(1))
         .subscribe(() => {
           this.active = this.smallScreenEnabled;
@@ -85,6 +117,14 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
     return !!document.fullscreenElement;
   }
 
+  get blurEnabled(): boolean {
+    return this.webRtcService.isBlurEnabled();
+  }
+
+  get useVirtualBackground(): boolean {
+    return this.webRtcService.useVirtualBackground();
+  }
+
   onToggleCamera(state: boolean): void {
     this.webRtcService.toggleVideo(state);
   }
@@ -100,6 +140,10 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   onToggleSmallScreen(state: boolean): void {
     this.smallScreenEnabled = !state;
     this.active = true;
+  }
+
+  onToggleBlur(state: boolean): void {
+    this.webRtcService.toggleBlur(state);
   }
 
   onEndCall(): void {
