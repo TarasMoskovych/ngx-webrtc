@@ -1,6 +1,7 @@
 # Changelog
 
 ## 3.2.0
+- Virtual background feature support
 - Lazy loading of Agora SDK
 
 ## 3.1.0

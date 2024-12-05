@@ -22,6 +22,10 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/ngx-webrtc",
+            "allowedCommonJsDependencies": [
+              "agora-rtc-sdk-ng",
+              "agora-extension-virtual-background"
+            ],
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",

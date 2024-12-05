@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 
-// import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'projects/ngx-webrtc-lib/src/public-api';
-import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'ngx-webrtc-lib';
+import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
+// import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'ngx-webrtc-lib';
 
 @Component({
   selector: 'app-home',
@@ -55,7 +55,6 @@ export class HomeComponent implements OnInit {
         name: 'Test User',
         photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvDtoEwuV9E2kHqNDi6MnBzXlefn8TfyrwgQ&usqp=CAU',
       },
-      debug: true,
     });
 
     const timeout = setTimeout(() => this.dialog?.close(), 7000);

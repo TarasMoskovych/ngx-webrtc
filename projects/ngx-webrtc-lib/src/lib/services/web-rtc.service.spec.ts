@@ -23,6 +23,19 @@ describe('WebRtcService', () => {
     },
   });
 
+  const virtualBackgroundProcessor = jasmine.createSpyObj('VirtualBackgroundProcessor', [
+    'init',
+    'enable',
+    'disable',
+    'setOptions',
+  ], {
+    enabled: true,
+  });
+
+  const virtualBackgroundExtenstion = jasmine.createSpyObj('VirtualBackgroundExtension', [], {
+    createProcessor: () => virtualBackgroundProcessor,
+  });
+
   const mockStreamTracks = () => {
     return {
       audioTrack: jasmine.createSpyObj('IMicrophoneAudioTrack', ['setMuted', 'stop', 'close'], { muted: false }),
@@ -33,7 +46,7 @@ describe('WebRtcService', () => {
   let service: WebRtcService;
 
   beforeEach(() => {
-    service = new WebRtcService({ AppID });
+    service = new WebRtcService({ AppID, useVirtualBackground: true });
     service['agoraRTC'] = AgoraRTC;
   });
 
@@ -58,6 +71,7 @@ describe('WebRtcService', () => {
 
       describe('debug', () => {
         it('should start without debug', fakeAsync(() => {
+          service['config'].debug = false;
           service.init(uid, channel, null).subscribe();
           tick();
 
@@ -65,7 +79,8 @@ describe('WebRtcService', () => {
         }));
 
         it('should start with debug', fakeAsync(() => {
-          service.init(uid, channel, null, true).subscribe();
+          service['config'].debug = true;
+          service.init(uid, channel, null).subscribe();
           tick();
 
           expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
@@ -243,6 +258,22 @@ describe('WebRtcService', () => {
       });
     });
 
+    describe('toggleBlur', () => {
+      beforeEach(() => {
+        service['virtualBackgroundProcessor'] = jasmine.createSpyObj('VirtualBackgroundProcessor', ['enable', 'disable']);
+      });
+
+      it('should call "enable" method when blur is disabled', () => {
+        service.toggleBlur(false);
+        expect(service['virtualBackgroundProcessor'].enable).toHaveBeenCalled();
+      });
+
+      it('should call "disable" method when blur is enabled', () => {
+        service.toggleBlur(true);
+        expect(service['virtualBackgroundProcessor'].disable).toHaveBeenCalled();
+      });
+    });
+
     describe('isVideoEnabled', () => {
       let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
       let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
@@ -297,6 +328,25 @@ describe('WebRtcService', () => {
       });
     });
 
+    describe('isBlurEnabled', () => {
+      it('should return true when blur is enabled', () => {
+        service['virtualBackgroundProcessor'] = jasmine.createSpyObj('VirtualBackgroundProcessor', [], { enabled: true });
+        expect(service.isBlurEnabled()).toBeTrue();
+      });
+    });
+
+    describe('useVirtualBackground', () => {
+      it('should return true when virtual background is enabled', () => {
+        service['config'].useVirtualBackground = true;
+        expect(service.useVirtualBackground()).toBeTrue();
+      });
+
+      it('should return false when virtual background is disabled', () => {
+        service['config'].useVirtualBackground = false;
+        expect(service.useVirtualBackground()).toBeFalse();
+      });
+    });
+
     describe('assignClientHandlers', () => {
       beforeEach(() => {
         spyOn(service, 'endCall');
@@ -332,16 +382,17 @@ describe('WebRtcService', () => {
     });
 
     describe('initLocalStream', () => {
-      it('should create local stream', () => {
+      it('should create local stream', fakeAsync(() => {
         const { audioTrack, videoTrack } = mockStreamTracks();
 
         spyOn(AgoraRTC, 'createCameraVideoTrack').and.resolveTo(videoTrack);
         spyOn(AgoraRTC, 'createMicrophoneAudioTrack').and.resolveTo(audioTrack);
 
         service['initLocalStream']().then(() => {
+          tick();
           expect(service['localTracks']).toEqual({ audioTrack, videoTrack });
         });
-      });
+      }));
 
       it('should handle an error', fakeAsync(() => {
         const { audioTrack } = mockStreamTracks();
@@ -364,6 +415,43 @@ describe('WebRtcService', () => {
           });
         });
       }));
+    });
+
+    describe('loadSDK', () => {
+      it('should load all SDKs', fakeAsync(() => {
+        const webRtcService = new WebRtcService({ AppID, useVirtualBackground: true });
+        webRtcService['loadSDK']();
+
+        tick();
+
+        expect(webRtcService['agoraRTC']).toBeDefined();
+        expect(webRtcService['virtualBackgroundExtension']).toBeDefined();
+      }));
+
+      it('should load only Agora SDK', fakeAsync(() => {
+        const webRtcService = new WebRtcService({ AppID });
+        webRtcService['loadSDK']();
+
+        tick();
+
+        expect(webRtcService['agoraRTC']).toBeDefined();
+        expect(webRtcService['virtualBackgroundExtension']).toBeUndefined();
+      }));
+    });
+
+    describe('initVirtualBackgroundProcessor', () => {
+      it('should initialize virtual background processor', async () => {
+        service['localTracks'] = mockStreamTracks();
+        service['localTracks'].videoTrack.pipe = jasmine.createSpy().and.returnValue({ pipe: () => undefined });
+        service['virtualBackgroundExtension'] = virtualBackgroundExtenstion;
+
+        await service['initVirtualBackgroundProcessor']();
+
+        expect(virtualBackgroundProcessor.setOptions).toHaveBeenCalledWith({
+          blurDegree: 2,
+          type: 'blur',
+        });
+      });
     });
   });
 
