@@ -1,26 +1,22 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import AgoraRTC, { IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { DEFAULT_STREAM_STATE, StreamState } from '../models';
-import { WebRtcService } from './web-rtc.service';
+import { ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
 const AppID = 'app-id_12345';
 const channel = 'test-channel';
 const uid = 'user_54321';
 
 describe('WebRtcService', () => {
+  const eventHandlers: Record<string, (...args: any[]) => void> = {};
   const clientSpy: jasmine.SpyObj<IAgoraRTCClient> = jasmine.createSpyObj('AgoraRTCClient', [], {
     join: () => Promise.resolve(),
     publish: () => Promise.resolve(),
     leave: () => Promise.resolve(),
     subscribe: jasmine.createSpy().and.resolveTo({ play: () => undefined }),
-    on(eventName: string, cb: (user: IAgoraRTCRemoteUser, data?: any) => void) {
-      if (eventName === 'user-info-updated') {
-        const msg = service.remoteCalls.includes('1234') ? 'mute-video' : 'unmute-video';
-        return cb({ uid: '1234' } as IAgoraRTCRemoteUser, msg);
-      }
-
-      cb({ uid } as IAgoraRTCRemoteUser);
-    },
+    on: jasmine.createSpy().and.callFake((eventName: string, cb: (...args: any[]) => void) => {
+      eventHandlers[eventName] = cb;
+    }),
   });
 
   const virtualBackgroundProcessor = jasmine.createSpyObj('VirtualBackgroundProcessor', [
@@ -107,7 +103,7 @@ describe('WebRtcService', () => {
             expect(state).toEqual({
               connected: true,
               loading: true,
-              statusText: 'Waiting others to join',
+              statusText: 'Waiting remote to join',
               started: null,
               ended: false,
               error: false,
@@ -350,11 +346,25 @@ describe('WebRtcService', () => {
     describe('assignClientHandlers', () => {
       beforeEach(() => {
         spyOn(service, 'endCall');
+
         service['client'] = clientSpy;
+        service['assignClientHandlers']();
       });
 
-      it('should call "subscribe" method when new user publishes the stream', () => {
-        service['assignClientHandlers']();
+      it('should update stream state and save remote when he joins the call', () => {
+        eventHandlers[ClientEvents.UserJoined]?.({ uid });
+
+        service.streamState$.subscribe(({ started }: StreamState) => {
+          expect(started).toBeDefined();
+        });
+
+        expect(service['remoteCalls']).toEqual([`remote_call-${uid}`]);
+      });
+
+      it('should play remote stream when it is published', () => {
+        service['remoteCalls'] = [`remote_call-${uid}`];
+        eventHandlers[ClientEvents.UserPublished]?.({ uid }, 'video');
+
         expect(clientSpy.subscribe).toHaveBeenCalled();
       });
 
@@ -367,16 +377,39 @@ describe('WebRtcService', () => {
       });
 
       it('should set remoteStreamVideoToggle to false when remote hides a video', () => {
-        service.remoteCalls.push('1234');
-        service['assignClientHandlers']();
+        eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.MuteVideo);
 
         service.remoteStreamVideoToggle$.subscribe((state: boolean) => {
           expect(state).toBeFalse();
         });
       });
 
+      it('should set remoteStreamVideoToggle to true when remote enables a video', () => {
+        eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.UnmuteVideo);
+
+        service.remoteStreamVideoToggle$.subscribe((state: boolean) => {
+          expect(state).toBeTrue();
+        });
+      });
+
+      it('should set remoteStreamAudioToggle to false when remote mutes an audio', () => {
+        eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.MuteAudio);
+
+        service.remoteStreamAudioToggle$.subscribe((state: boolean) => {
+          expect(state).toBeFalse();
+        });
+      });
+
+      it('should set remoteStreamAudioToggle to true when remote enables an audio', () => {
+        eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.UnmuteAudio);
+
+        service.remoteStreamAudioToggle$.subscribe((state: boolean) => {
+          expect(state).toBeTrue();
+        });
+      });
+
       it('should call "endCall" method when client is disconnected', () => {
-        service['assignClientHandlers']();
+        eventHandlers[ClientEvents.UserLeft]?.();
         expect(service.endCall).toHaveBeenCalled();
       });
     });

@@ -20,7 +20,7 @@ describe('VideoCallComponent', () => {
       channel: '1234',
       outcome: true,
       uid: '12345',
-      user: {
+      remoteUser: {
         name: 'Test',
         photoURL: '',
       },
@@ -32,6 +32,18 @@ describe('VideoCallComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('get remoteUserName', () => {
+    it('should return remote user name', () => {
+      expect(component.remoteUserName).toBe('Test');
+    });
+  });
+
+  describe('get remoteUserPhotoURL', () => {
+    it('should return remote user photo URL', () => {
+      expect(component.remoteUserPhotoURL).toBe('');
+    });
   });
 
   describe('ngOnInit', () => {

@@ -30,24 +30,6 @@ ngx-timer {
       max-width: $small-window-size;
       margin-right: $border-radius-medium;
       margin-bottom: $border-radius-medium;
-
-      &__remote {
-        border-radius: $border-radius-medium;
-        height: $small-window-size;
-        width: $small-window-size;
-
-        ::ng-deep {
-          & > div {
-            border-radius: $border-radius-medium;
-          }
-        }
-      }
-
-      &__user-icon {
-        svg {
-          @include medium-icon;
-        }
-      }
     }
   }
 }
@@ -60,50 +42,6 @@ ngx-timer {
   overflow: hidden;
   position: relative;
   @include transition;
-
-  &__remote {
-    background-color: $color-dark;
-    height: 100vh;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100vw;
-    @include transition;
-
-    ::ng-deep {
-      & > div {
-        @include transition;
-      }
-    }
-
-    &.hidden {
-      display: none;
-
-      & + .container__user-icon {
-        display: block;
-      }
-    }
-
-    &:empty {
-      display: none;
-    }
-  }
-
-  &__user-icon {
-    background: $color-dark-transparent;
-    border-radius: $border-radius-rounded;
-    box-shadow: $box-shadow-secondary;
-    display: none;
-    left: 50%;
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-
-    svg {
-      @include large-icon;
-    }
-  }
 }
 
 @media screen and (max-width: 769px) {

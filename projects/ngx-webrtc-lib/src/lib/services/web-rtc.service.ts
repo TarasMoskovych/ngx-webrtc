@@ -33,11 +33,13 @@ export class WebRtcService {
   private uid: string;
   private streamState = new BehaviorSubject<StreamState>(DEFAULT_STREAM_STATE);
   private remoteStreamVideoToggle = new BehaviorSubject<boolean>(true);
+  private remoteStreamAudioToggle = new BehaviorSubject<boolean>(true);
   private callEnd = new Subject<void>();
 
   public localContainerId = 'local-video';
   public remoteCalls: string[] = [];
   public remoteStreamVideoToggle$ = this.remoteStreamVideoToggle.asObservable();
+  public remoteStreamAudioToggle$ = this.remoteStreamAudioToggle.asObservable();
   public streamState$ = this.streamState.asObservable();
 
   constructor(@Inject('AgoraConfig') private config: AgoraConfig) {
@@ -57,7 +59,7 @@ export class WebRtcService {
             .then(() => {
               this.localTracks.videoTrack.play(this.localContainerId);
               this.client.publish(Object.values(this.localTracks));
-              this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting others to join' });
+              this.streamState.next({ ...this.streamState.value, connected: true, statusText: 'Waiting remote to join' });
             })
             .catch((err: Error) => this.handleError(err));
         });
@@ -128,15 +130,15 @@ export class WebRtcService {
   }
 
   private assignClientHandlers(): void {
-    this.client.on('user-joined', (user: IAgoraRTCRemoteUser) => {
-      this.streamState.next({ ...this.streamState.value, started: Date.now(), loading: false }); // @TODO - check subscribeLTS
+    this.client.on(ClientEvents.UserJoined, (user: IAgoraRTCRemoteUser) => {
+      this.streamState.next({ ...this.streamState.value, started: Date.now(), loading: false });
 
       if (!this.remoteCalls.length) {
         this.remoteCalls.push(this.getRemoteId(user));
       }
     });
 
-    this.client.on('user-published', (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
+    this.client.on(ClientEvents.UserPublished, (user: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => {
       const remoteCall = this.getRemoteId(user);
       this.client.subscribe(user, mediaType).then((track: IRemoteTrack | IRemoteDataChannel) => {
         if (this.remoteCalls.includes(remoteCall)) {
@@ -145,17 +147,24 @@ export class WebRtcService {
       });
     });
 
-    this.client.on('user-info-updated', (uid: UID, msg: 'mute-video' | 'unmute-video') => {
-      if (msg === 'mute-video') {
-        this.remoteStreamVideoToggle.next(false);
-      }
-
-      if (msg === 'unmute-video') {
-        this.remoteStreamVideoToggle.next(true);
+    this.client.on(ClientEvents.UserInfoUpdated, (uid: UID, msg: UserInfoUpdatedMessages) => {
+      switch (msg) {
+        case UserInfoUpdatedMessages.MuteAudio:
+          this.remoteStreamAudioToggle.next(false);
+          break;
+        case UserInfoUpdatedMessages.UnmuteAudio:
+          this.remoteStreamAudioToggle.next(true);
+          break;
+        case UserInfoUpdatedMessages.MuteVideo:
+          this.remoteStreamVideoToggle.next(false);
+          break;
+        case UserInfoUpdatedMessages.UnmuteVideo:
+          this.remoteStreamVideoToggle.next(true);
+          break;
       }
     });
 
-    this.client.on('user-left', () => {
+    this.client.on(ClientEvents.UserLeft, () => {
       this.endCall();
     });
   }
@@ -227,4 +236,18 @@ export class WebRtcService {
     this.localTracks.videoTrack.pipe(this.virtualBackgroundProcessor).pipe(this.localTracks.videoTrack.processorDestination);
     this.virtualBackgroundProcessor.setOptions({ type: 'blur', blurDegree: 2 });
   }
+}
+
+export enum ClientEvents {
+  UserJoined = 'user-joined',
+  UserPublished = 'user-published',
+  UserInfoUpdated = 'user-info-updated',
+  UserLeft = 'user-left',
+}
+
+export enum UserInfoUpdatedMessages {
+  MuteAudio = 'mute-audio',
+  UnmuteAudio = 'unmute-audio',
+  MuteVideo = 'mute-video',
+  UnmuteVideo = 'unmute-video',
 }

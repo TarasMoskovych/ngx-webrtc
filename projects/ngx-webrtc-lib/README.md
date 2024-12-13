@@ -1,7 +1,5 @@
 # ngx-webrtc-lib
 
-[![https://nodei.co/npm/ngx-webrtc-lib.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/ngx-webrtc-lib.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/ngx-webrtc-lib)
-
 [![npm version](https://badge.fury.io/js/ngx-webrtc-lib.svg)](https://badge.fury.io/js/ngx-webrtc-lib) ![npm downloads](https://img.shields.io/npm/dm/ngx-webrtc-lib) [![Build Status](https://github.com/TarasMoskovych/ngx-webrtc/workflows/premerge/badge.svg)](https://github.com/TarasMoskovych/ngx-webrtc/actions) [![codecov](https://codecov.io/gh/TarasMoskovych/ngx-webrtc/branch/main/graph/badge.svg)](https://codecov.io/gh/TarasMoskovych/ngx-webrtc)
 
 > Angular microapp/library for Agora WebRTC client from [Agora.io](https://www.agora.io) using [agora-rtc-sdk-ng](https://www.npmjs.com/package/agora-rtc-sdk-ng).
@@ -15,7 +13,7 @@ To get started with Agora, follow this [guide](https://www.agora.io/en/blog/how-
 
 Install `ngx-webrtc-lib` from `npm`:
 ```bash
-npm install ngx-webrtc-lib --save
+npm install ngx-webrtc-lib
 ```
 
 ### Standalone Component support
@@ -35,13 +33,14 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-Import `WebRtcComponent` into the host component's imports:
+Include `WebRtcComponent` in the imports of your standalone host component:
 
 ```ts
 import { WebRtcComponent } from 'ngx-webrtc-lib';
 
 @Component({
   standalone: true,
+  template: `<ngx-webrtc .../>`,
   imports: [
     WebRtcComponent,
   ],
@@ -104,7 +103,8 @@ onDialogOpen(): void {
     token: this.token,
     channel: this.channelId,
     outcome: this.outcome,
-    user: this.user,
+    remoteUser: this.remoteUser,
+    localUser: this.localUser,
   });
 
   setTimeout(() => dialog.close(), 7000);
@@ -170,6 +170,8 @@ To use this library, please follow the versioning specified in the following tab
 | @Input() token: string                | Agora token for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow). Default value `null` |
 | @Input() channel: string              | Channel identifier.                                                                                                                       |
 | @Input() displaySmallScreen: boolean  | Display small screen toggle. Default value `false`                                                                                        |
+| @Input() remoteUser: User             | Represents the remote user in the call. Optional, used for reference or display purposes.                                                 |
+| @Input() localUser: User              | Represents the current user in the call. Optional, used for reference or display purposes.                                                |
 | @Output() callEnd: EventEmitter<void> | Event that is emitted when the call is ended.                                                                                             |
 
 ### VideoCallDialogService
@@ -185,8 +187,9 @@ To use this library, please follow the versioning specified in the following tab
 | uid: string          | User identifier.                                                                                                                          |
 | channel: string      | Channel identifier.                                                                                                                       |
 | token: string        | Agora token for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow). Default value `null` |
-| outcome: boolean     | Defines the UI for incoming or outgoing call modes.                                                                                           |
-| user: User           | User name and photo URL.                                                                                                                  |
+| outcome: boolean     | Defines the UI for incoming or outgoing call modes.                                                                                       |
+| remoteUser: User     | Represents the remote user in the call.  It replaces the `user` field and should be used instead.                                         |
+| localUser: User      | Represents the current user in the call.  Optional, used for reference or display purposes.                                               |
 
 ### VideoCallDialog
 
@@ -196,3 +199,10 @@ To use this library, please follow the versioning specified in the following tab
 | close: () => void                                                 | Closes the dialog with video-call confirmation component.                              |
 | afterConfirmation: () => Observable<VideoCallDialogData \| null>; | Returns Observable with the data depends on accepting or declining the call.           |
 | afterCallEnd: () => Observable<boolean>;                          | Returns Observable with the value when the call is ended.                              |
+
+### User
+
+| Name                 | Description                          |
+| ---------------------| ------------------------------------ |
+| name: string         | The name of the user.                |
+| photoURL: string     | The URL of the user's profile photo. |

@@ -1,9 +1,9 @@
 import { BehaviorSubject } from 'rxjs';
 
+import { VideoCallComponent } from '../components';
+import { VideoCallDialog, VideoCallDialogData } from '../models';
 import { DialogService } from './dialog.service';
 import { VideoCallDialogService } from './video-call-dialog.service';
-import { VideoCallDialog, VideoCallDialogData } from '../models';
-import { VideoCallComponent } from '../components';
 
 describe('VideoCallDialogService', () => {
   let service: VideoCallDialogService;
@@ -24,7 +24,7 @@ describe('VideoCallDialogService', () => {
       channel: 'channelId_1234',
       outcome: true,
       uid: 'uid-12345',
-      user: {
+      remoteUser: {
         name: 'Test',
         photoURL: 'url',
       },
