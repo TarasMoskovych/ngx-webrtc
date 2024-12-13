@@ -1,4 +1,9 @@
-<div @fade [@.disabled]="!animate" *ngIf="shown">
+<div
+  *ngIf="shown"
+  @fade
+  (@fade.done)="onInitWebRtc()"
+  [@.disabled]="!animate"
+>
   <div *ngIf="streamState$ | async as streamState" class="container">
     <ngx-spinner
       *ngIf="streamState.loading"
