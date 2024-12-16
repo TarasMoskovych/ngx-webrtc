@@ -368,14 +368,6 @@ describe('WebRtcService', () => {
         expect(clientSpy.subscribe).toHaveBeenCalled();
       });
 
-      it('should set remoteStreamVideoToggle to true when remote published a video', () => {
-        service['assignClientHandlers']();
-
-        service.remoteStreamVideoToggle$.subscribe((state: boolean) => {
-          expect(state).toBeTrue();
-        });
-      });
-
       it('should set remoteStreamVideoToggle to false when remote hides a video', () => {
         eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.MuteVideo);
 

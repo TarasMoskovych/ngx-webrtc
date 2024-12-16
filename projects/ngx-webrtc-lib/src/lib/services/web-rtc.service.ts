@@ -71,6 +71,8 @@ export class WebRtcService {
 
   deinit(): void {
     this.streamState.next(DEFAULT_STREAM_STATE);
+    this.remoteStreamAudioToggle.next(true);
+    this.remoteStreamVideoToggle.next(true);
   }
 
   endCall(): void {

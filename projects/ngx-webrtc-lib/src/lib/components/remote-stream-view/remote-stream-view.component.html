@@ -7,8 +7,8 @@
 
   @if (!cameraEnabled) {
     <div class="remote-stream-view__info">
-      @if (user) {
-        <img [src]="user.photoURL" alt="User icon" />
+      @if (user?.photoURL; as photoURL) {
+        <img [src]="photoURL" alt="User icon" />
       } @else {
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="user" clip-path="url(#clip0)">
