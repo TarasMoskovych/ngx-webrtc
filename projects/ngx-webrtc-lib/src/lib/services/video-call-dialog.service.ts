@@ -37,6 +37,8 @@ export class VideoCallDialogService {
             uid: data.uid,
             token: data.token,
             channel: data.channel,
+            localUser: data.localUser,
+            remoteUser: data.remoteUser,
             displaySmallScreen: true,
           }).afterClosed.asObservable();
         }

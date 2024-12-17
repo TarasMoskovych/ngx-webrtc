@@ -4,8 +4,10 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
   ControlsComponent,
   LocalStreamViewComponent,
+  RemoteStreamViewComponent,
   SpinnerComponent,
   TimerComponent,
+  UserStateComponent,
   VideoCallComponent,
 } from './components';
 import { WebRtcComponent } from './webrtc.component';
@@ -30,11 +32,13 @@ import { WebRtcService } from './services';
   declarations: [
     ControlsComponent,
     LocalStreamViewComponent,
+    RemoteStreamViewComponent,
     WebRtcComponent,
     TimerComponent,
     SpinnerComponent,
     ToggleDirective,
     VideoCallComponent,
+    UserStateComponent,
   ],
   imports: [
     CommonModule,

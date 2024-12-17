@@ -40,3 +40,8 @@ $small-window-size: 200px;
   height: 64px;
   width: 64px;
 }
+
+@mixin x-large-icon {
+  height: 128px;
+  width: 128px;
+}

@@ -22,9 +22,16 @@ export interface VideoCallDialogData {
   outcome: boolean;
 
   /**
-   * Information about the user, including name and photo URL.
+   * Represents the remote user in the call.
+   * It replaces the `user` field and should be used instead.
    */
-  user: User;
+  remoteUser: User;
+
+  /**
+   * Represents the current user in the call.
+   * Optional, used for reference or display purposes.
+   */
+  localUser?: User;
 
   /**
    * Agora token used for [Secure Authentication](https://docs.agora.io/en/video-calling/get-started/authentication-workflow).
