@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, tap } from 'rxjs/operators';
 
-import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
 // import { VideoCallDialogService, VideoCallDialogData, VideoCallDialog } from 'ngx-webrtc-lib';
+import { VideoCallDialog, VideoCallDialogData, VideoCallDialogService } from 'projects/ngx-webrtc-lib/src/public-api';
+
+import { LOCAL_USER, REMOTE_USER } from '../conference/conference.component';
 
 @Component({
   selector: 'app-home',
@@ -51,10 +53,8 @@ export class HomeComponent implements OnInit {
       uid: String(Math.floor(Math.random() * 100)),
       channel: this.channelId,
       outcome: this.outcome,
-      user: {
-        name: 'Test User',
-        photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvDtoEwuV9E2kHqNDi6MnBzXlefn8TfyrwgQ&usqp=CAU',
-      },
+      remoteUser: REMOTE_USER,
+      localUser: LOCAL_USER,
     });
 
     const timeout = setTimeout(() => this.dialog?.close(), 7000);

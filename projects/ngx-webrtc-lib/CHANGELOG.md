@@ -2,6 +2,7 @@
 
 ## 3.2.0
 - Virtual background feature support
+- Display users info during the call
 - Lazy loading of Agora SDK
 
 ## 3.1.0

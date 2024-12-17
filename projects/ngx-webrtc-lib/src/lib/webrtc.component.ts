@@ -8,10 +8,12 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 import { take } from 'rxjs/operators';
 import { fadeAnimation } from './animations';
 import { DialogComponent } from './components';
+import { User } from './models';
 import { WebRtcService } from './services';
 
 interface OnInitWebRtc {
@@ -51,6 +53,18 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   @Input() channel: string;
 
   /**
+   * Represents the current user in the call.
+   * Optional, used for reference or display purposes.
+   */
+  @Input() localUser: User;
+
+  /**
+   * Represents the remote user in the call.
+   * Optional, used for reference or display purposes.
+   */
+  @Input() remoteUser: User;
+
+  /**
    * Flag to enable/disable animation in the WebRTC component.
    * Default is true.
    */
@@ -71,6 +85,8 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
 
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
+  public remoteStreamAudioToggle$ = this.webRtcService.remoteStreamAudioToggle$;
+  public controlsVisibility$ = new BehaviorSubject<boolean>(true);
   public webRtcInitialized = false;
 
   constructor(

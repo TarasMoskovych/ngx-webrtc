@@ -1,0 +1,116 @@
+@import "variables";
+
+$userStateWithControls: 130px;
+$userStateNoControls: 15px;
+
+$userStateWithControlsSmall: 55px;
+$userStateNoControlsSmall: 5px;
+
+@mixin userStatePosition($position) {
+  ngx-user-state ::ng-deep .user-state {
+    bottom: $position;
+  }
+}
+
+.remote-stream-view {
+  @include userStatePosition($userStateNoControls);
+
+  &.controls-visible {
+    @include userStatePosition($userStateWithControls);
+  }
+
+  &--small {
+    @include userStatePosition($userStateNoControlsSmall);
+
+    &.controls-visible {
+      @include userStatePosition($userStateWithControlsSmall);
+    }
+
+    .remote-stream-view {
+      &__container {
+        border-radius: $border-radius-medium;
+        height: $small-window-size;
+        width: $small-window-size;
+
+        ::ng-deep {
+          & > div {
+            border-radius: $border-radius-medium;
+          }
+        }
+      }
+
+      &__info {
+        padding: 10px;
+
+        img {
+          max-height: 64px;
+        }
+
+        svg {
+          padding: 0;
+          @include medium-icon;
+        }
+      }
+    }
+  }
+
+  &__container {
+    background-color: $color-dark;
+    height: 100vh;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    @include transition;
+
+    ::ng-deep {
+      & > div {
+        @include transition;
+      }
+    }
+
+    &.hidden {
+      display: none;
+
+      & + .remote-stream-view__info {
+        display: block;
+      }
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__info {
+    background: $color-dark-transparent;
+    border-radius: $border-radius-rounded;
+    box-shadow: $box-shadow-secondary;
+    display: none;
+    left: 50%;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+
+    img {
+      max-height: 128px;
+    }
+
+    svg {
+      padding: 10px;
+      @include x-large-icon;
+    }
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .remote-stream-view {
+    @include userStatePosition($userStateWithControls);
+
+    &--small {
+      @include userStatePosition($userStateWithControlsSmall);
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { User } from '../../models';
 
 @Component({
   selector: 'ngx-local-stream-view',
@@ -12,7 +13,12 @@ export class LocalStreamViewComponent {
   @Input() microphoneEnabled: boolean;
   @Input() useVirtualBackground: boolean;
   @Input() blurEnabled: boolean;
+  @Input() user: User | null;
   @Output() toggleBlur = new EventEmitter<boolean>();
+
+  get userName(): string {
+    return this.user?.name || 'Me';
+  }
 
   onToggleBlur(): void {
     this.toggleBlur.emit(this.blurEnabled);
