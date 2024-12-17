@@ -22,6 +22,14 @@ export class VideoCallComponent extends DialogComponent implements OnInit, OnDes
     super(cdr);
   }
 
+  get remoteUserName(): string {
+    return this.data.remoteUser.name;
+  }
+
+  get remoteUserPhotoURL(): string {
+    return this.data.remoteUser.photoURL;
+  }
+
   ngOnInit(): void {
     this.play(`assets/${this.data.outcome ? 'outcome' : 'income'}.mp3`);
   }

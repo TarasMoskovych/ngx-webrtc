@@ -1,6 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WebRtcComponent } from '@app/ngx-webrtc-lib';
+import { User, WebRtcComponent } from '@app/ngx-webrtc-lib';
+
+export const LOCAL_USER: User = {
+  name: 'Me',
+  photoURL: 'assets/local-user.png',
+};
+
+export const REMOTE_USER: User = {
+  name: 'Remote',
+  photoURL: 'assets/remote-user.png',
+};
 
 @Component({
   selector: 'app-conference',
@@ -13,6 +23,8 @@ import { WebRtcComponent } from '@app/ngx-webrtc-lib';
 export class ConferenceComponent implements OnInit {
   channel: string;
   uid = String(Math.floor(Math.random() * 100));
+  remoteUser = REMOTE_USER;
+  localUser = LOCAL_USER;
 
   constructor(
     private route: ActivatedRoute,
