@@ -1,13 +1,13 @@
 <div @fade *ngIf="shown && data" class="video-call" [class.video-call--full-screen]="fullScreen">
   <div class="video-call-user">
     <div class="video-call-user__block video-call-user__block--animated">
-      <img class="video-call-user__img" [src]="data.user.photoURL" alt="">
+      <img class="video-call-user__img" [src]="remoteUserPhotoURL" alt="">
     </div>
     <p class="video-call-user__title">
       @if (data.outcome) {
-        Calling to {{ data.user.name }}
+        Calling to {{ remoteUserName }}
       } @else {
-        {{ data.user.name }} is calling
+        {{ remoteUserName }} is calling
       }
     </p>
   </div>

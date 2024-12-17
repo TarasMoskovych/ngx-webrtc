@@ -2,6 +2,7 @@
 
 ## 18.2.0
 - Virtual background feature support
+- Display users info during the call
 
 ## 18.1.0
 - Lazy loading of Agora SDK

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, OnInit, Output, Renderer2 } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -9,6 +9,8 @@ import { take } from 'rxjs/operators';
 export class ToggleDirective implements OnInit {
   private subscription: Subscription = new Subscription();
   private delay = 5000;
+
+  @Output() toggleVisibility = new EventEmitter<boolean>();
 
   @HostListener('mouseenter') onEnter(): void {
     this.subscription.unsubscribe();
@@ -34,5 +36,6 @@ export class ToggleDirective implements OnInit {
 
   setStyle(opacity: number): void {
     this.renderer.setStyle(this.el.nativeElement, 'opacity', opacity);
+    this.toggleVisibility.emit(opacity === 1);
   }
 }

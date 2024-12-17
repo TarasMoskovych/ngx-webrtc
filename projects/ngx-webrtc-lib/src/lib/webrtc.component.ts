@@ -12,10 +12,12 @@ import {
 } from '@angular/core';
 
 import { AsyncPipe, isPlatformBrowser, NgIf } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { fadeAnimation } from './animations';
-import { ControlsComponent, DialogComponent, LocalStreamViewComponent, SpinnerComponent, TimerComponent } from './components';
+import { ControlsComponent, DialogComponent, LocalStreamViewComponent, RemoteStreamViewComponent, SpinnerComponent, TimerComponent } from './components';
 import { ToggleDirective } from './directives';
+import { User } from './models';
 import { WebRtcService } from './services';
 
 interface OnInitWebRtc {
@@ -42,6 +44,7 @@ interface OnInitWebRtc {
     NgIf,
     ControlsComponent,
     LocalStreamViewComponent,
+    RemoteStreamViewComponent,
     SpinnerComponent,
     TimerComponent,
     ToggleDirective,
@@ -52,7 +55,7 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   /**
    * User identifier for the WebRTC session.
    */
-  @Input() uid: string;
+  @Input({ required: true }) uid: string;
 
   /**
    * Authentication token for the WebRTC session (optional).
@@ -62,7 +65,19 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   /**
    * Channel identifier for the WebRTC session.
    */
-  @Input() channel: string;
+  @Input({ required: true }) channel: string;
+
+  /**
+   * Represents the current user in the call.
+   * Optional, used for reference or display purposes.
+   */
+  @Input() localUser: User;
+
+  /**
+   * Represents the remote user in the call.
+   * Optional, used for reference or display purposes.
+   */
+  @Input() remoteUser: User;
 
   /**
    * Flag to enable/disable animation in the WebRTC component.
@@ -86,6 +101,8 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   private readonly platformId = inject(PLATFORM_ID);
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
+  public remoteStreamAudioToggle$ = this.webRtcService.remoteStreamAudioToggle$;
+  public controlsVisibility$ = new BehaviorSubject<boolean>(true);
   public webRtcInitialized = false;
 
   constructor(
