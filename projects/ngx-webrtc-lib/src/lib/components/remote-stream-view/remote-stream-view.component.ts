@@ -16,6 +16,5 @@ export class RemoteStreamViewComponent {
   @Input({ required: true }) cameraEnabled: boolean;
   @Input({ required: true }) microphoneEnabled: boolean;
   @Input() user: User | null;
-  @Input() controlsVisible: boolean | null;
   @Input() rootClass: object;
 }

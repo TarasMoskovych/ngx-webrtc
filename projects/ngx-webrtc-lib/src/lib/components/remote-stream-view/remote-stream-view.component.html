@@ -32,7 +32,6 @@
   @if (user?.name; as name) {
     <ngx-user-state
       [rootClass]="'user-state--centered'"
-      [rootStyle]="{ 'bottom.px': controlsVisible ? '130' : '15' }"
       [muted]="!microphoneEnabled"
       [userName]="name"
     />

@@ -3,12 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User, WebRtcComponent } from '@app/ngx-webrtc-lib';
 
 export const LOCAL_USER: User = {
-  name: 'John Doe',
+  name: 'Me',
   photoURL: 'assets/local-user.png',
 };
 
 export const REMOTE_USER: User = {
-  name: 'Emma',
+  name: 'Remote',
   photoURL: 'assets/remote-user.png',
 };
 

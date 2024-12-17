@@ -1,7 +1,31 @@
 @import "variables";
 
+$userStateWithControls: 130px;
+$userStateNoControls: 15px;
+
+$userStateWithControlsSmall: 55px;
+$userStateNoControlsSmall: 5px;
+
+@mixin userStatePosition($position) {
+  ngx-user-state ::ng-deep .user-state {
+    bottom: $position;
+  }
+}
+
 .remote-stream-view {
+  @include userStatePosition($userStateNoControls);
+
+  &.controls-visible {
+    @include userStatePosition($userStateWithControls);
+  }
+
   &--small {
+    @include userStatePosition($userStateNoControlsSmall);
+
+    &.controls-visible {
+      @include userStatePosition($userStateWithControlsSmall);
+    }
+
     .remote-stream-view {
       &__container {
         border-radius: $border-radius-medium;
@@ -27,10 +51,6 @@
           @include medium-icon;
         }
       }
-    }
-
-    ngx-user-state {
-      display: none;
     }
   }
 
@@ -86,9 +106,11 @@
 }
 
 @media screen and (max-width: 769px) {
-  ngx-user-state {
-    ::ng-deep .user-state {
-      bottom: 125px !important;
+  .remote-stream-view {
+    @include userStatePosition($userStateWithControls);
+
+    &--small {
+      @include userStatePosition($userStateWithControlsSmall);
     }
   }
 }

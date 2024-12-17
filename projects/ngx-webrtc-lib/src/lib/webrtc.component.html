@@ -32,11 +32,13 @@
     @for (call of remoteCalls; track call) {
       <ngx-remote-stream-view
         [cameraEnabled]="(remoteStreamVideoToggle$ | async) === true"
-        [controlsVisible]="controlsVisibility$ | async"
         [id]="call"
         [microphoneEnabled]="(remoteStreamAudioToggle$ | async) === true"
-        [rootClass]="{ 'remote-stream-view--small': smallScreenEnabled }"
         [user]="remoteUser"
+        [rootClass]="{
+          'remote-stream-view--small': smallScreenEnabled,
+          'controls-visible': controlsVisibility$ | async
+        }"
       />
     }
 
