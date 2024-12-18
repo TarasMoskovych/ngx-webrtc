@@ -40,15 +40,10 @@ $userStateNoControlsSmall: 5px;
       }
 
       &__info {
-        padding: 10px;
-
-        img {
-          max-height: 64px;
-        }
+        @include large-icon;
 
         svg {
-          padding: 0;
-          @include medium-icon;
+          padding: 10px;
         }
       }
     }
@@ -88,19 +83,22 @@ $userStateNoControlsSmall: 5px;
     box-shadow: $box-shadow-secondary;
     display: none;
     left: 50%;
-    padding: 20px;
     position: absolute;
     top: 50%;
     text-align: center;
     transform: translate(-50%, -50%);
+    @include x-large-icon;
 
     img {
-      max-height: 128px;
+      border-radius: $border-radius-rounded;
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
     }
 
     svg {
-      padding: 10px;
-      @include x-large-icon;
+      padding: 30px;
     }
   }
 }

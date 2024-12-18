@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.0.0
+- Improve remote img view
+
 ## 18.2.0
 - Virtual background feature support
 - Display users info during the call
