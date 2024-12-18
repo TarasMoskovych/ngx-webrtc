@@ -1,6 +1,6 @@
 {
   "name": "ngx-webrtc-lib",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Angular microapp/library for video conference using agora-rtc-sdk-ng.",
   "license": "MIT",
   "keywords": [

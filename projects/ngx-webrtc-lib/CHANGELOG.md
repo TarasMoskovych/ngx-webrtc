@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.1
+- Fix remote img view
+
 ## 3.2.0
 - Virtual background feature support
 - Display users info during the call
