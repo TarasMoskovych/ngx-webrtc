@@ -14,12 +14,12 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
+    provideClientHydration(),
     provideWebRtc({
       ...environment.configs,
       debug: true,
       useVirtualBackground: true,
     }),
-    provideClientHydration(),
     {
       provide: STORAGE,
       useFactory: () => {
