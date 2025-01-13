@@ -28,9 +28,11 @@ Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.gi
 
 [![npm version](https://badge.fury.io/js/ngx-webrtc-lib.svg)](https://badge.fury.io/js/ngx-webrtc-lib) ![npm downloads](https://img.shields.io/npm/dm/ngx-webrtc-lib) [![Build Status](https://github.com/TarasMoskovych/ngx-webrtc/workflows/premerge/badge.svg)](https://github.com/TarasMoskovych/ngx-webrtc/actions) [![codecov](https://codecov.io/gh/TarasMoskovych/ngx-webrtc/branch/main/graph/badge.svg)](https://codecov.io/gh/TarasMoskovych/ngx-webrtc)
 
-> Angular microapp/library for Agora WebRTC client from [Agora.io](https://www.agora.io) using [agora-rtc-sdk-ng](https://www.npmjs.com/package/agora-rtc-sdk-ng).
+> This library provides an easy-to-integrate UI for video communication between two users in an Angular application. Built using the [Agora WebRTC SDK](https://www.agora.io), it offers full control over the video communication experience, enabling you to customize it based on your needs.
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
+With `ngx-webrtc-lib`, you can easily integrate real-time, peer-to-peer video communication features into your web app. This is ideal for building applications that require direct video interaction, such as customer support, remote consultations, or any use case involving live, two-way video communication.
+
+![Video Communication in Action](https://raw.githubusercontent.com/TarasMoskovych/ngx-webrtc/refs/heads/main/src/assets/ngx-webrtc-lib-min.png)
 
 ## Prerequisites
 To get started with Agora, follow this [guide](https://www.agora.io/en/blog/how-to-get-started-with-agora/?utm_source=medium&utm_medium=blog&utm_campaign=Add_Video_Calling_in_your_Web_App_using_Agora_Web_NG_SDK) to retrieve the `AppID`.
