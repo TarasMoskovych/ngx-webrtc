@@ -47,10 +47,9 @@
       background: #fff;
       border-radius: $border-radius-rounded;
       border: solid 5px #fff;
-      height: 180px;
       margin: 0 auto;
       transform: scale(1);
-      width: 180px;
+      @include x-large-icon;
 
       &--animated {
         animation: play 2s ease infinite;
@@ -94,7 +93,7 @@
     position: relative;
     transform: translate3d(0, 0, 0) scale(1);
     width: 1em;
-    @include transition;
+    transition: .3s background-color;
 
     &::before,
     &:after {

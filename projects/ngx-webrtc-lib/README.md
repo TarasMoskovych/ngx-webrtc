@@ -2,9 +2,11 @@
 
 [![npm version](https://badge.fury.io/js/ngx-webrtc-lib.svg)](https://badge.fury.io/js/ngx-webrtc-lib) ![npm downloads](https://img.shields.io/npm/dm/ngx-webrtc-lib) [![Build Status](https://github.com/TarasMoskovych/ngx-webrtc/workflows/premerge/badge.svg)](https://github.com/TarasMoskovych/ngx-webrtc/actions) [![codecov](https://codecov.io/gh/TarasMoskovych/ngx-webrtc/branch/main/graph/badge.svg)](https://codecov.io/gh/TarasMoskovych/ngx-webrtc)
 
-> Angular microapp/library for Agora WebRTC client from [Agora.io](https://www.agora.io) using [agora-rtc-sdk-ng](https://www.npmjs.com/package/agora-rtc-sdk-ng).
+> This library provides an easy-to-integrate UI for video communication between two users in an Angular application. Built using the [Agora WebRTC SDK](https://www.agora.io), it offers full control over the video communication experience, enabling you to customize it based on your needs.
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
+With `ngx-webrtc-lib`, you can easily integrate real-time, peer-to-peer video communication features into your web app. This is ideal for building applications that require direct video interaction, such as customer support, remote consultations, or any use case involving live, two-way video communication.
+
+![Video Communication in Action](https://raw.githubusercontent.com/TarasMoskovych/ngx-webrtc/refs/heads/main/src/assets/ngx-webrtc-lib-min.png)
 
 ## Prerequisites
 To get started with Agora, follow this [guide](https://www.agora.io/en/blog/how-to-get-started-with-agora/?utm_source=medium&utm_medium=blog&utm_campaign=Add_Video_Calling_in_your_Web_App_using_Agora_Web_NG_SDK) to retrieve the `AppID`.
@@ -136,21 +138,10 @@ npm ci
 npm start
 ```
 
-## Compatibility
+## Version Compatibility
 
-To use this library, please follow the versioning specified in the following table.
-
-| `ngx-webrtc-lib`| Angular     | NodeJS
-| --------------- | ------------| --------------------------------------|
-| ~~1.x~~         | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
-| ~~2.x~~         | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
-| 3.x             | ^12.2.0     | ^12.14.0 \|\| ^14.15.0                |
-| 13.x            | ~13.4.0     | ^12.20.0 \|\| ^14.15.0 \|\| ^16.10.0  |
-| 14.x            | ^14.3.0     | ^14.15.0 \|\| ^16.10.0                |
-| 15.x            | ^15.2.10    | ^14.20.0 \|\| ^16.13.0 \|\| ^18.10.0  |
-| 16.x            | ^16.2.10    | ^16.14.0 \|\| ^18.10.0                |
-| 17.x            | ^17.1.2     | ^18.13.0 \|\| ^20.9.0                 |
-| 18.x            | ^18.2.10    | ^18.19.1 \|\| ^20.11.1 \|\| ^22.0.0   |
+The supported versions start from 3.x, which is compatible with Angular 12. The next major version after 3.x is 13.x, which corresponds to Angular 13. From there, each library version aligns with its respective Angular major version (e.g., 14.x for Angular 14, 15.x for Angular 15, etc.).
+For NodeJS compatibility, refer to the [Angular Version Reference](https://angular.dev/reference/versions).
 
 ## API reference
 

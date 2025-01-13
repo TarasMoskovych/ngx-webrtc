@@ -67,7 +67,7 @@
     height: 160px;
     margin: auto;
     width: 160px;
-    @include transition;
+    transition: all .3s, border-radius 0s;
   }
 
   &__icon {

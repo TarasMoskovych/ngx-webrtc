@@ -29,7 +29,7 @@ jobs:
       - name: Set env
         run: node set-env ${{ secrets.WEB_RTC_KEY }}
       - name: Build app
-        run: npm run build:prerender
+        run: npm run build:with-href
       - name: Deploy to Github pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

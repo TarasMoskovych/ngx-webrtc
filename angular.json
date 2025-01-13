@@ -19,15 +19,16 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": [
               "agora-rtc-sdk-ng",
               "agora-extension-virtual-background"
             ],
-            "outputPath": "dist/ngx-webrtc/browser",
+            "outputPath": {
+              "base": "dist/ngx-webrtc"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -51,6 +52,12 @@
               "includePaths": [
                 "src"
               ]
+            },
+            "browser": "src/main.ts",
+            "server": "src/main.server.ts",
+            "prerender": true,
+            "ssr": {
+              "entry": "src/server.ts"
             }
           },
           "configurations": {
@@ -73,13 +80,10 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "baseHref": "/ngx-webrtc/",
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -151,73 +155,6 @@
               "src/**/*.html"
             ]
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/ngx-webrtc/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src"
-              ]
-            },
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "ngx-webrtc:build:development",
-              "serverTarget": "ngx-webrtc:server:development"
-            },
-            "production": {
-              "browserTarget": "ngx-webrtc:build:production",
-              "serverTarget": "ngx-webrtc:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "routes": [
-              "/",
-              "/conference"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "ngx-webrtc:build:production",
-              "serverTarget": "ngx-webrtc:server:production"
-            },
-            "development": {
-              "browserTarget": "ngx-webrtc:build:development",
-              "serverTarget": "ngx-webrtc:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     },

@@ -99,6 +99,7 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   @HostBinding('class.active') active = false;
 
   private readonly platformId = inject(PLATFORM_ID);
+  private webRtcService = inject(WebRtcService);
   public streamState$ = this.webRtcService.streamState$;
   public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
   public remoteStreamAudioToggle$ = this.webRtcService.remoteStreamAudioToggle$;
@@ -106,7 +107,6 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   public webRtcInitialized = false;
 
   constructor(
-    private webRtcService: WebRtcService,
     cdr: ChangeDetectorRef,
   ) {
     super(cdr);
