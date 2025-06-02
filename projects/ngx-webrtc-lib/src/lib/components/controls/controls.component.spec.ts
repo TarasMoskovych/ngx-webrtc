@@ -55,6 +55,17 @@ describe('ControlsComponent', () => {
     });
   });
 
+  describe('onToggleTranscript', () => {
+    beforeEach(() => {
+      spyOn(component.toggleTranscript, 'emit');
+    });
+
+    it('should emit event with inverted transcriptEnabled', () => {
+      component.onToggleTranscript();
+      expect(component.toggleTranscript.emit).toHaveBeenCalledWith(!component.transcriptEnabled);
+    });
+  });
+
   describe('onEndCall', () => {
     beforeEach(() => {
       spyOn(component.endCall, 'emit');

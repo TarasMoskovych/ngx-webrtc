@@ -21,4 +21,11 @@ export interface AgoraConfig {
    * Defaults to `false` if not specified.
    */
   useVirtualBackground?: boolean;
+
+  /**
+   * Whether to enable transcription services.
+   * If set to `true`, the SDK will use the default transcription handler.
+   * Defaults to `false` if not specified.
+   */
+  useTranscription?: boolean;
 }

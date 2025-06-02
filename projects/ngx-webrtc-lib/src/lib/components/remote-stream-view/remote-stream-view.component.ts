@@ -17,4 +17,5 @@ export class RemoteStreamViewComponent {
   @Input({ required: true }) microphoneEnabled: boolean;
   @Input() user: User | null;
   @Input() rootClass: object;
+  @Input() transcriptString: string;
 }

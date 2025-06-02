@@ -178,6 +178,7 @@ For NodeJS compatibility, refer to the [Angular Version Reference](https://angul
 | AppID                | The App ID provided by Agora to initialize the Agora SDK.                                               |
 | debug                | Enable debugging for Agora SDK. Default value `false`                                                   |
 | useVirtualBackground | Enable Agora Virtual Background feature (only the "blur" is currently supported). Default value `false` |
+| useTranscription     | Enables real-time transcription (subtitles) during the call. Default value: `false`                     |
 
 ### WebRtcComponent
 

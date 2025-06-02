@@ -19,6 +19,7 @@ export const appConfig: ApplicationConfig = {
       ...environment.configs,
       debug: true,
       useVirtualBackground: true,
+      useTranscription: true,
     }),
     {
       provide: STORAGE,
