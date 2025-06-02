@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, Optional, PLATFORM_ID } from '@angular/core';
 import {
   IVirtualBackgroundExtension,
   IVirtualBackgroundProcessor,
@@ -14,9 +15,11 @@ import {
   IRemoteTrack,
   UID,
 } from 'agora-rtc-sdk-ng';
-import { BehaviorSubject, Observable, Subject, concatMap, from, interval } from 'rxjs';
+import { BehaviorSubject, concatMap, from, interval, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AgoraConfig, DEFAULT_STREAM_STATE, StreamState } from '../models';
+import { DefaultSpeechRecognition } from './transcript/default-speech-recognition.service';
+import { TranscriptHandler } from './transcript/transcript-handler.service';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -31,18 +34,29 @@ export class WebRtcService {
   private client: IAgoraRTCClient;
   private localTracks: { videoTrack: ICameraVideoTrack, audioTrack: IMicrophoneAudioTrack };
   private uid: string;
-  private streamState = new BehaviorSubject<StreamState>(DEFAULT_STREAM_STATE);
-  private remoteStreamVideoToggle = new BehaviorSubject<boolean>(true);
-  private remoteStreamAudioToggle = new BehaviorSubject<boolean>(true);
-  private callEnd = new Subject<void>();
+  private readonly streamState = new BehaviorSubject<StreamState>(DEFAULT_STREAM_STATE);
+  private readonly remoteStreamVideoToggle = new BehaviorSubject<boolean>(true);
+  private readonly remoteStreamAudioToggle = new BehaviorSubject<boolean>(true);
+  private readonly transcriptToggle = new BehaviorSubject<boolean>(false);
+  private readonly trancriptStream = new BehaviorSubject<string>('');
+  private readonly callEnd = new Subject<void>();
 
   public localContainerId = 'local-video';
   public remoteCalls: string[] = [];
   public remoteStreamVideoToggle$ = this.remoteStreamVideoToggle.asObservable();
   public remoteStreamAudioToggle$ = this.remoteStreamAudioToggle.asObservable();
   public streamState$ = this.streamState.asObservable();
+  public trancriptStream$ = this.trancriptStream.asObservable();
+  public transcriptEnabled$ = this.transcriptToggle.asObservable();
 
-  constructor(@Inject('AgoraConfig') private config: AgoraConfig) {
+  constructor(
+    @Inject('AgoraConfig') private config: AgoraConfig,
+    @Inject(PLATFORM_ID) private platformId: object,
+    @Optional() private transcriptHandler?: TranscriptHandler,
+  ) {
+    if (!this.transcriptHandler && this.useTranscription()) {
+      this.transcriptHandler = new DefaultSpeechRecognition(this.trancriptStream);
+    }
   }
 
   init(uid: string, channel: string, token: string | null): Observable<void> {
@@ -70,6 +84,7 @@ export class WebRtcService {
   }
 
   deinit(): void {
+    this.stopTranscript();
     this.streamState.next(DEFAULT_STREAM_STATE);
     this.remoteStreamAudioToggle.next(true);
     this.remoteStreamVideoToggle.next(true);
@@ -129,6 +144,21 @@ export class WebRtcService {
 
   useVirtualBackground(): boolean {
     return !!this.config.useVirtualBackground;
+  }
+
+  useTranscription(): boolean {
+    return !!this.config.useTranscription && isPlatformBrowser(this.platformId);
+  }
+
+  startTranscript(): void {
+    this.transcriptToggle.next(true);
+    this.transcriptHandler?.onStartTranscript();
+  }
+
+  stopTranscript(): void {
+    this.transcriptToggle.next(false);
+    this.trancriptStream.next('');
+    this.transcriptHandler?.onStopTranscript();
   }
 
   private assignClientHandlers(): void {

@@ -31,6 +31,7 @@
 
     @for (call of remoteCalls; track call) {
       <ngx-remote-stream-view
+        [transcriptString]="(trancriptStream$ | async) || ''"
         [cameraEnabled]="(remoteStreamVideoToggle$ | async) === true"
         [id]="call"
         [microphoneEnabled]="(remoteStreamAudioToggle$ | async) === true"
@@ -50,11 +51,14 @@
       [fullScreenEnabled]="fullScreenEnabled"
       [smallScreenEnabled]="smallScreenEnabled"
       [displaySmallScreen]="displaySmallScreen"
+      [displayTranscript]="displayTranscript"
+      [transcriptEnabled]="(transcriptEnabled$ | async) === true"
       (toggleCamera)="onToggleCamera($event)"
       (toggleMicrophone)="onToggleMicrophone($event)"
       (toggleFullScreen)="onToggleFullScreen($event)"
       (toggleSmallScreen)="onToggleSmallScreen($event)"
       (toggleVisibility)="controlsVisibility$.next($event)"
+      (toggleTranscript)="onToggleTranscript($event)"
       (endCall)="onEndCall()"
     />
   </div>

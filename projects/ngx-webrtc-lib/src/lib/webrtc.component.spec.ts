@@ -18,12 +18,15 @@ describe('WebRtcComponent', () => {
       'deinit',
       'isVideoEnabled',
       'isAudioEnabled',
+      'useTranscription',
       'isBlurEnabled',
       'toggleVideo',
       'toggleAudio',
       'toggleFullScreen',
       'toggleBlur',
       'useVirtualBackground',
+      'startTranscript',
+      'stopTranscript',
       'endCall',
     ], {
       streamState$: of(null),
@@ -149,6 +152,22 @@ describe('WebRtcComponent', () => {
     it('should call "toggleBlur" method with correct value', () => {
       component.onToggleBlur(true);
       expect(webRtcService.toggleBlur).toHaveBeenCalledOnceWith(true);
+    });
+  });
+
+  describe('onToggleTranscript', () => {
+    beforeEach(() => {
+      webRtcService.useTranscription.and.returnValue(true);
+    });
+
+    it('should call "startTranscript" method when transcription is enabled', () => {
+      component.onToggleTranscript(true);
+      expect(webRtcService.startTranscript).toHaveBeenCalled();
+    });
+
+    it('should call "stopTranscript" method when transcription is disabled', () => {
+      component.onToggleTranscript(false);
+      expect(webRtcService.stopTranscript).toHaveBeenCalled();
     });
   });
 

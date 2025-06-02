@@ -99,11 +99,14 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   @HostBinding('class.active') active = false;
 
   private readonly platformId = inject(PLATFORM_ID);
-  private webRtcService = inject(WebRtcService);
-  public streamState$ = this.webRtcService.streamState$;
-  public remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
-  public remoteStreamAudioToggle$ = this.webRtcService.remoteStreamAudioToggle$;
-  public controlsVisibility$ = new BehaviorSubject<boolean>(true);
+  private readonly webRtcService = inject(WebRtcService);
+  public readonly streamState$ = this.webRtcService.streamState$;
+  public readonly remoteStreamVideoToggle$ = this.webRtcService.remoteStreamVideoToggle$;
+  public readonly remoteStreamAudioToggle$ = this.webRtcService.remoteStreamAudioToggle$;
+  public readonly transcriptEnabled$ = this.webRtcService.transcriptEnabled$;
+  public readonly trancriptStream$ = this.webRtcService.trancriptStream$;
+  public readonly displayTranscript = this.webRtcService.useTranscription();
+  public readonly controlsVisibility$ = new BehaviorSubject<boolean>(true);
   public webRtcInitialized = false;
 
   constructor(
@@ -176,6 +179,10 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
 
   onToggleBlur(state: boolean): void {
     this.webRtcService.toggleBlur(state);
+  }
+
+  onToggleTranscript(state: boolean): void {
+    this.webRtcService[state ? 'startTranscript' : 'stopTranscript']();
   }
 
   onEndCall(): void {

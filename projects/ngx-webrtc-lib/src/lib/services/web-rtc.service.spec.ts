@@ -1,11 +1,18 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
-import { DEFAULT_STREAM_STATE, StreamState } from '../models';
+import { AgoraConfig, DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
 const AppID = 'app-id_12345';
 const channel = 'test-channel';
 const uid = 'user_54321';
+const platformId = 'browser' as any;
+const appConfig: AgoraConfig = {
+  AppID,
+  useVirtualBackground: true,
+  debug: false,
+  useTranscription: true,
+};
 
 describe('WebRtcService', () => {
   const eventHandlers: Record<string, (...args: any[]) => void> = {};
@@ -42,7 +49,7 @@ describe('WebRtcService', () => {
   let service: WebRtcService;
 
   beforeEach(() => {
-    service = new WebRtcService({ AppID, useVirtualBackground: true });
+    service = new WebRtcService(appConfig, platformId);
     service['agoraRTC'] = AgoraRTC;
   });
 
@@ -444,7 +451,7 @@ describe('WebRtcService', () => {
 
     describe('loadSDK', () => {
       it('should load all SDKs', async () => {
-        const webRtcService = new WebRtcService({ AppID, useVirtualBackground: true });
+        const webRtcService = new WebRtcService(appConfig, platformId);
         await webRtcService['loadSDK']();
 
         expect(webRtcService['agoraRTC']).toBeDefined();
@@ -452,7 +459,7 @@ describe('WebRtcService', () => {
       });
 
       it('should load only Agora SDK', async () => {
-        const webRtcService = new WebRtcService({ AppID });
+        const webRtcService = new WebRtcService({ AppID }, platformId);
         await webRtcService['loadSDK']();
 
         expect(webRtcService['agoraRTC']).toBeDefined();
@@ -483,6 +490,26 @@ describe('WebRtcService', () => {
       service['loadSDK']().catch((err: Error) => {
         expect(err.message).toBe('Web RTC is not supported in this browser');
         done();
+      });
+    });
+  });
+
+  describe('transcription', () => {
+    describe('startTranscript', () => {
+      it('should set transcription state to true', () => {
+        service.startTranscript();
+        service.transcriptEnabled$.subscribe((state: boolean) => {
+          expect(state).toBeTrue();
+        });
+      });
+    });
+
+     describe('stopTranscript', () => {
+      it('should set transcription state to true', () => {
+        service.stopTranscript();
+        service.transcriptEnabled$.subscribe((state: boolean) => {
+          expect(state).toBeFalse();
+        });
       });
     });
   });

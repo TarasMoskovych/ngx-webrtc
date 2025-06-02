@@ -13,4 +13,5 @@ export class UserStateComponent {
   @Input({ required: true }) userName: string;
   @Input({ required: true }) muted: boolean;
   @Input() rootClass: string;
+  @Input() transcriptString: string;
 }

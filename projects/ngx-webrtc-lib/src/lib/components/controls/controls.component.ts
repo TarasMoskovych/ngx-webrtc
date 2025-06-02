@@ -12,11 +12,14 @@ export class ControlsComponent {
   @Input() microphoneEnabled = true;
   @Input() fullScreenEnabled = false;
   @Input() smallScreenEnabled = false;
+  @Input() transcriptEnabled = false;
   @Input() displaySmallScreen = false;
+  @Input() displayTranscript = false;
   @Output() toggleCamera = new EventEmitter<boolean>();
   @Output() toggleMicrophone = new EventEmitter<boolean>();
   @Output() toggleFullScreen = new EventEmitter<boolean>();
   @Output() toggleSmallScreen = new EventEmitter<boolean>();
+  @Output() toggleTranscript = new EventEmitter<boolean>();
   @Output() endCall = new EventEmitter<void>();
 
   onToggleCamera(): void {
@@ -33,6 +36,10 @@ export class ControlsComponent {
 
   onToggleSmallScreen(): void {
     this.toggleSmallScreen.emit(this.smallScreenEnabled);
+  }
+
+  onToggleTranscript(): void {
+    this.toggleTranscript.emit(!this.transcriptEnabled);
   }
 
   onEndCall(): void {
