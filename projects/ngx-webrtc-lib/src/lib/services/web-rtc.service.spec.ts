@@ -1,6 +1,7 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { AgoraConfig, DEFAULT_STREAM_STATE, StreamState } from '../models';
+import { mockSpeechRecognition } from './transcript/default-speech-recognition.service.spec';
 import { ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
 const AppID = 'app-id_12345';
@@ -49,6 +50,7 @@ describe('WebRtcService', () => {
   let service: WebRtcService;
 
   beforeEach(() => {
+    mockSpeechRecognition();
     service = new WebRtcService(appConfig, platformId);
     service['agoraRTC'] = AgoraRTC;
   });

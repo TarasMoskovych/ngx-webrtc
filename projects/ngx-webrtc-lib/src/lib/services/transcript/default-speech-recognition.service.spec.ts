@@ -29,13 +29,18 @@ class MockSpeechRecognition {
   }
 }
 
+export const mockSpeechRecognition = () => {
+  window.SpeechRecognition = MockSpeechRecognition;
+  window.webkitSpeechRecognition = MockSpeechRecognition;
+};
+
 describe('DefaultSpeechRecognition', () => {
   const transcriptString = new BehaviorSubject<string>('');
   let service: DefaultSpeechRecognition;
 
   describe('SpeechRecognition API', () => {
     beforeAll(() => {
-      window.webkitSpeechRecognition = MockSpeechRecognition;
+      mockSpeechRecognition();
       service = new DefaultSpeechRecognition(transcriptString);
     });
 
