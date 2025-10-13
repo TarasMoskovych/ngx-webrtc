@@ -1,0 +1,38 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - 'release/**'
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install node_modules
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test:ci
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/ngx-webrtc-lib/coverage-final.json
+          fail_ci_if_error: true
+          verbose: true
+      - name: Set env
+        run: node set-env ${{ secrets.WEB_RTC_KEY }}
+      - name: Build app
+        run: npm run build:with-href
+      - name: Deploy to Github pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/ngx-webrtc/browser
