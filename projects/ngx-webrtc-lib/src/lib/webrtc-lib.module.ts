@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
-import { AgoraConfig } from './models';
+import { AGORA_CONFIG, AgoraConfig } from './models';
 import { WebRtcService } from './services';
 import { WebRtcComponent } from './webrtc.component';
 
@@ -39,7 +39,7 @@ export class WebRtcModule {
       providers: [
         WebRtcService,
         {
-          provide: 'AgoraConfig',
+          provide: AGORA_CONFIG,
           useValue: config,
         },
       ],

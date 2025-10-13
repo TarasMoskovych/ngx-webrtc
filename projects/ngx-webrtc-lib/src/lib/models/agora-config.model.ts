@@ -1,3 +1,5 @@
+import { InjectionToken } from '@angular/core';
+
 /**
  * Configuration options for the Agora SDK.
  * @publicApi
@@ -22,3 +24,6 @@ export interface AgoraConfig {
    */
   useVirtualBackground?: boolean;
 }
+
+// Injection token for providing the AgoraConfig in Angular's dependency injection system.
+export const AGORA_CONFIG = new InjectionToken<AgoraConfig>('AgoraConfig');

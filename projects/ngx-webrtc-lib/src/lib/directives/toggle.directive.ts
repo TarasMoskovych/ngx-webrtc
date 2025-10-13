@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostListener, OnInit, Output, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, Renderer2 } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -7,6 +7,8 @@ import { take } from 'rxjs/operators';
   standalone: true,
 })
 export class ToggleDirective implements OnInit {
+  private readonly renderer = inject(Renderer2);
+  private readonly el = inject(ElementRef);
   private subscription: Subscription = new Subscription();
   private delay = 5000;
 
@@ -20,8 +22,6 @@ export class ToggleDirective implements OnInit {
   @HostListener('mouseleave') onLeave(): void {
     this.hide();
   }
-
-  constructor(private renderer: Renderer2, private el: ElementRef) { }
 
   ngOnInit(): void {
     this.hide();

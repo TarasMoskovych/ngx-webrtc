@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { fadeAnimation } from '../../animations';
 import { VideoCallDialogData } from '../../models';
 import { DialogComponent } from '../abstract-dialog.component';
@@ -17,10 +17,6 @@ export class VideoCallComponent extends DialogComponent implements OnInit, OnDes
   @Input() data: VideoCallDialogData;
   public fullScreen = false;
   private audio: HTMLAudioElement;
-
-  constructor(cdr: ChangeDetectorRef) {
-    super(cdr);
-  }
 
   get remoteUserName(): string {
     return this.data.remoteUser.name;

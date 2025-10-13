@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -105,12 +104,6 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
   public remoteStreamAudioToggle$ = this.webRtcService.remoteStreamAudioToggle$;
   public controlsVisibility$ = new BehaviorSubject<boolean>(true);
   public webRtcInitialized = false;
-
-  constructor(
-    cdr: ChangeDetectorRef,
-  ) {
-    super(cdr);
-  }
 
   onInitWebRtc(): void {
     if (this.canInitWebRtc()) {
