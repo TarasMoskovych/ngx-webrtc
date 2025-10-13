@@ -1,5 +1,8 @@
 # Changelog
 
+## 20.0.0
+- Implement screen sharing
+
 ## 19.0.0
 - Improve remote img view
 - Update to Angular 19
