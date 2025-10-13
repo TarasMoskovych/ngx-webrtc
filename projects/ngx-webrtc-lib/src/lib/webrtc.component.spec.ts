@@ -19,10 +19,12 @@ describe('WebRtcComponent', () => {
       'isVideoEnabled',
       'isAudioEnabled',
       'isBlurEnabled',
+      'isScreenShared',
       'toggleVideo',
       'toggleAudio',
       'toggleFullScreen',
       'toggleBlur',
+      'toggleScreenShare',
       'useVirtualBackground',
       'endCall',
     ], {
@@ -122,6 +124,11 @@ describe('WebRtcComponent', () => {
       webRtcService.useVirtualBackground.and.returnValue(true);
       expect(component.useVirtualBackground).toBeTrue();
     });
+
+    it('should get screenShareEnabled', () => {
+      webRtcService.isScreenShared.and.returnValue(true);
+      expect(component.screenShareEnabled).toBeTrue();
+    });
   });
 
   describe('onToggleCamera', () => {
@@ -149,6 +156,13 @@ describe('WebRtcComponent', () => {
     it('should call "toggleBlur" method with correct value', () => {
       component.onToggleBlur(true);
       expect(webRtcService.toggleBlur).toHaveBeenCalledOnceWith(true);
+    });
+  });
+
+  describe('onToggleScreenShare', () => {
+    it('should call "toggleScreenShare" method with correct value', async () => {
+      await component.onToggleScreenShare(true);
+      expect(webRtcService.toggleScreenShare).toHaveBeenCalledOnceWith(true);
     });
   });
 

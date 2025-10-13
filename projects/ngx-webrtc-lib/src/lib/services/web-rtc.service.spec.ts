@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, ILocalVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
@@ -12,6 +12,7 @@ describe('WebRtcService', () => {
   const clientSpy: jasmine.SpyObj<IAgoraRTCClient> = jasmine.createSpyObj('AgoraRTCClient', [], {
     join: () => Promise.resolve(),
     publish: () => Promise.resolve(),
+    unpublish: () => Promise.resolve(),
     leave: () => Promise.resolve(),
     subscribe: jasmine.createSpy().and.resolveTo({ play: () => undefined }),
     on: jasmine.createSpy().and.callFake((eventName: string, cb: (...args: any[]) => void) => {
@@ -34,8 +35,9 @@ describe('WebRtcService', () => {
 
   const mockStreamTracks = () => {
     return {
-      audioTrack: jasmine.createSpyObj('IMicrophoneAudioTrack', ['setMuted', 'stop', 'close'], { muted: false }),
-      videoTrack: jasmine.createSpyObj('ICameraVideoTrack', ['setMuted', 'stop', 'close'], { muted: false }),
+      audioTrack: jasmine.createSpyObj('IMicrophoneAudioTrack', ['setMuted', 'stop', 'close', 'play'], { muted: false }),
+      videoTrack: jasmine.createSpyObj('ICameraVideoTrack', ['setMuted', 'stop', 'close', 'play'], { muted: false }),
+      screenTrack: jasmine.createSpyObj('ILocalVideoTrack', ['setMuted', 'stop', 'close', 'play']),
     };
   };
 
@@ -270,6 +272,50 @@ describe('WebRtcService', () => {
       });
     });
 
+    describe('toggleScreenShare', () => {
+      let screenTrackSpy: jasmine.SpyObj<ILocalVideoTrack>;
+      let stopSpy: jasmine.Spy;
+
+      beforeEach(() => {
+        const { audioTrack, videoTrack, screenTrack } = mockStreamTracks();
+        screenTrackSpy = screenTrack;
+
+        service['localTracks'] = { videoTrack, audioTrack };
+        service['client'] = clientSpy;
+        stopSpy = jasmine.createSpy('stop');
+
+        spyOn(AgoraRTC, 'createCameraVideoTrack').and.resolveTo(videoTrack);
+        spyOn(AgoraRTC, 'createMicrophoneAudioTrack').and.resolveTo(audioTrack);
+        spyOn(AgoraRTC, 'createScreenVideoTrack').and.returnValue(Promise.resolve({
+          stop: stopSpy,
+          play: jasmine.createSpy(),
+          close: jasmine.createSpy(),
+          on: jasmine.createSpy().and.callFake((eventName: string, cb: (...args: any[]) => void) => {
+            eventHandlers[eventName] = cb;
+          }),
+        } as unknown as ILocalVideoTrack));
+      });
+
+      it('should start screen sharing', fakeAsync(() => {
+        service.toggleScreenShare(false);
+
+        tick();
+        eventHandlers['track-ended']();
+
+        expect(AgoraRTC.createScreenVideoTrack).toHaveBeenCalled();
+        expect(service['localTracks'].screenTrack).toBeDefined();
+        expect(service.isScreenShared()).toBeTrue();
+      }));
+
+      it('should stop screen sharing', fakeAsync(() => {
+        service['localTracks'].screenTrack = screenTrackSpy;
+        service.toggleScreenShare(true);
+        tick();
+
+        expect(service.isScreenShared()).toBeFalse();
+      }));
+    });
+
     describe('isVideoEnabled', () => {
       let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
       let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
@@ -415,7 +461,7 @@ describe('WebRtcService', () => {
 
         service['initLocalStream']().then(() => {
           tick();
-          expect(service['localTracks']).toEqual({ audioTrack, videoTrack });
+          expect(service['localTracks']).toEqual({ audioTrack, videoTrack, screenTrack: undefined });
         });
       }));
 

@@ -55,6 +55,17 @@ describe('ControlsComponent', () => {
     });
   });
 
+  describe('onToggleScreenShare', () => {
+    beforeEach(() => {
+      spyOn(component.toggleScreenShare, 'emit');
+    });
+
+    it('should emit event', () => {
+      component.onToggleScreenShare();
+      expect(component.toggleScreenShare.emit).toHaveBeenCalledWith(component.screenShareEnabled);
+    });
+  });
+
   describe('onEndCall', () => {
     beforeEach(() => {
       spyOn(component.endCall, 'emit');

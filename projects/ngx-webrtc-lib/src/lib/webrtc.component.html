@@ -50,11 +50,13 @@
       [fullScreenEnabled]="fullScreenEnabled"
       [smallScreenEnabled]="smallScreenEnabled"
       [displaySmallScreen]="displaySmallScreen"
+      [screenShareEnabled]="screenShareEnabled"
       (toggleCamera)="onToggleCamera($event)"
       (toggleMicrophone)="onToggleMicrophone($event)"
       (toggleFullScreen)="onToggleFullScreen($event)"
       (toggleSmallScreen)="onToggleSmallScreen($event)"
       (toggleVisibility)="controlsVisibility$.next($event)"
+      (toggleScreenShare)="onToggleScreenShare($event)"
       (endCall)="onEndCall()"
     />
   </div>
