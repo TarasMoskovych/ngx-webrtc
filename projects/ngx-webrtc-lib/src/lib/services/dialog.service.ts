@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Inject, Injectable, Injector, Type } from '@angular/core';
+import { ApplicationRef, ComponentFactoryResolver, DOCUMENT, EmbeddedViewRef, Inject, Injectable, Injector, Type } from '@angular/core';
 import { delay, take } from 'rxjs/operators';
 import { DialogComponent } from '../models';
 
