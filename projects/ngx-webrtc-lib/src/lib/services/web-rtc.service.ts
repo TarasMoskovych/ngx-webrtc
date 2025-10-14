@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import {
   IVirtualBackgroundExtension,
   IVirtualBackgroundProcessor,
@@ -17,7 +17,7 @@ import {
 } from 'agora-rtc-sdk-ng';
 import { BehaviorSubject, concatMap, from, interval, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AGORA_CONFIG, DEFAULT_STREAM_STATE, StreamState } from '../models';
+import { AgoraConfig, DEFAULT_STREAM_STATE, StreamState } from '../models';
 
 const CLIENT_CONFIG: ClientConfig = {
   mode: 'rtc',
@@ -308,3 +308,6 @@ export enum UserInfoUpdatedMessages {
 }
 
 export type LocalTrack = ICameraVideoTrack | IMicrophoneAudioTrack | ILocalVideoTrack;
+
+// Injection token for providing the AgoraConfig in Angular's dependency injection system.
+export const AGORA_CONFIG = new InjectionToken<AgoraConfig>('AgoraConfig');
