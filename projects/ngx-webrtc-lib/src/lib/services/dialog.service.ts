@@ -6,10 +6,10 @@ import { DialogComponent } from '../models';
   providedIn: 'root',
 })
 export class DialogService {
-  private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
   private readonly appRef = inject(ApplicationRef);
-  private readonly injector = inject(Injector);
+  private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
   private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
   private readonly wrapperSelector = 'ngx-webrtc-wrapper';
 
   open(component: Type<any>, data: any = {}): DialogComponent {

@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, DOCUMENT, Input } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DialogComponent } from '../components';
 
@@ -9,6 +9,10 @@ import { DialogService } from './dialog.service';
 })
 class TestComponent extends DialogComponent {
   @Input() channel: string;
+
+  constructor(cdr: ChangeDetectorRef) {
+    super(cdr);
+  }
 }
 
 describe('DialogService', () => {

@@ -26,7 +26,7 @@ const CLIENT_CONFIG: ClientConfig = {
 
 @Injectable()
 export class WebRtcService {
-  private readonly config = inject(AGORA_CONFIG);
+  private readonly config: AgoraConfig = inject(AGORA_CONFIG);
   private agoraRTC: IAgoraRTC;
   private virtualBackgroundProcessor: IVirtualBackgroundProcessor;
   private virtualBackgroundExtension: IVirtualBackgroundExtension;

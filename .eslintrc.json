@@ -21,6 +21,7 @@
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
+        "@angular-eslint/prefer-inject": 1,
         "@angular-eslint/directive-selector": [
           "error",
           {
