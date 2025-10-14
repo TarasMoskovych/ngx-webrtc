@@ -137,6 +137,10 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
     return this.webRtcService.isBlurEnabled();
   }
 
+  get screenShareEnabled(): boolean {
+    return this.webRtcService.isScreenShared();
+  }
+
   get useVirtualBackground(): boolean {
     return this.webRtcService.useVirtualBackground();
   }
@@ -160,6 +164,10 @@ export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, On
 
   onToggleBlur(state: boolean): void {
     this.webRtcService.toggleBlur(state);
+  }
+
+  async onToggleScreenShare(state: boolean): Promise<void> {
+    await this.webRtcService.toggleScreenShare(state);
   }
 
   onEndCall(): void {

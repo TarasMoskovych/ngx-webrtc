@@ -41,6 +41,12 @@
   &__item {
     margin: 0 5px;
     text-align: center;
+
+    &--screen-share {
+      @media screen and (max-width: 769px) {
+        display: none;
+      }
+    }
   }
 
   &__button {

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.0
+- Implement screen sharing
+
 ## 3.2.1
 - Fix remote img view
 
