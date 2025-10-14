@@ -1,4 +1,4 @@
-# ngx-webrtc-lib
+# [ngx-webrtc-lib](https://www.npmjs.com/package/ngx-webrtc-lib)
 
 [![npm version](https://badge.fury.io/js/ngx-webrtc-lib.svg)](https://badge.fury.io/js/ngx-webrtc-lib) ![npm downloads](https://img.shields.io/npm/dm/ngx-webrtc-lib) [![Build Status](https://github.com/TarasMoskovych/ngx-webrtc/workflows/premerge/badge.svg)](https://github.com/TarasMoskovych/ngx-webrtc/actions) [![codecov](https://codecov.io/gh/TarasMoskovych/ngx-webrtc/branch/main/graph/badge.svg)](https://codecov.io/gh/TarasMoskovych/ngx-webrtc)
 
@@ -197,3 +197,7 @@ For NodeJS compatibility, refer to the [Angular Version Reference](https://angul
 | ---------------------| ------------------------------------ |
 | name: string         | The name of the user.                |
 | photoURL: string     | The URL of the user's profile photo. |
+
+## Changelog
+
+For a complete list of changes and release notes, see the [GitHub Releases](https://github.com/TarasMoskovych/ngx-webrtc/releases).
