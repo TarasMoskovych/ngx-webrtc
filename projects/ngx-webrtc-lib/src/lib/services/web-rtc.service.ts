@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import {
   IVirtualBackgroundExtension,
   IVirtualBackgroundProcessor,
@@ -15,7 +15,7 @@ import {
   IRemoteTrack,
   UID,
 } from 'agora-rtc-sdk-ng';
-import { BehaviorSubject, Observable, Subject, concatMap, from, interval } from 'rxjs';
+import { BehaviorSubject, concatMap, from, interval, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AgoraConfig, DEFAULT_STREAM_STATE, StreamState } from '../models';
 
@@ -26,6 +26,7 @@ const CLIENT_CONFIG: ClientConfig = {
 
 @Injectable()
 export class WebRtcService {
+  private readonly config: AgoraConfig = inject(AGORA_CONFIG);
   private agoraRTC: IAgoraRTC;
   private virtualBackgroundProcessor: IVirtualBackgroundProcessor;
   private virtualBackgroundExtension: IVirtualBackgroundExtension;
@@ -46,9 +47,6 @@ export class WebRtcService {
   public remoteStreamVideoToggle$ = this.remoteStreamVideoToggle.asObservable();
   public remoteStreamAudioToggle$ = this.remoteStreamAudioToggle.asObservable();
   public streamState$ = this.streamState.asObservable();
-
-  constructor(@Inject('AgoraConfig') private config: AgoraConfig) {
-  }
 
   init(uid: string, channel: string, token: string | null): Observable<void> {
     return from(this.loadSDK()).pipe(
@@ -310,3 +308,6 @@ export enum UserInfoUpdatedMessages {
 }
 
 export type LocalTrack = ICameraVideoTrack | IMicrophoneAudioTrack | ILocalVideoTrack;
+
+// Injection token for providing the AgoraConfig in Angular's dependency injection system.
+export const AGORA_CONFIG = new InjectionToken<AgoraConfig>('AgoraConfig');

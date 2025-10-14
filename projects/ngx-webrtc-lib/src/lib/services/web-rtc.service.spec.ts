@@ -1,7 +1,7 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, ILocalVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { DEFAULT_STREAM_STATE, StreamState } from '../models';
-import { ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
+import { AGORA_CONFIG, ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
 const AppID = 'app-id_12345';
 const channel = 'test-channel';
@@ -44,7 +44,19 @@ describe('WebRtcService', () => {
   let service: WebRtcService;
 
   beforeEach(() => {
-    service = new WebRtcService({ AppID, useVirtualBackground: true });
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: AGORA_CONFIG,
+          useValue: {
+            AppID,
+            useVirtualBackground: true,
+          },
+        },
+        WebRtcService,
+      ],
+    });
+    service = TestBed.inject(WebRtcService);
     service['agoraRTC'] = AgoraRTC;
   });
 
@@ -490,7 +502,20 @@ describe('WebRtcService', () => {
 
     describe('loadSDK', () => {
       it('should load all SDKs', async () => {
-        const webRtcService = new WebRtcService({ AppID, useVirtualBackground: true });
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          providers: [
+            {
+              provide: AGORA_CONFIG,
+              useValue: {
+                AppID,
+                useVirtualBackground: true,
+              },
+            },
+            WebRtcService,
+          ],
+        });
+        const webRtcService = TestBed.inject(WebRtcService);
         await webRtcService['loadSDK']();
 
         expect(webRtcService['agoraRTC']).toBeDefined();
@@ -498,7 +523,17 @@ describe('WebRtcService', () => {
       });
 
       it('should load only Agora SDK', async () => {
-        const webRtcService = new WebRtcService({ AppID });
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+          providers: [
+            {
+              provide: AGORA_CONFIG,
+              useValue: { AppID },
+            },
+            WebRtcService,
+          ],
+        });
+        const webRtcService = TestBed.inject(WebRtcService);
         await webRtcService['loadSDK']();
 
         expect(webRtcService['agoraRTC']).toBeDefined();

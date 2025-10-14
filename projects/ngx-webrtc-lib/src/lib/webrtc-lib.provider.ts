@@ -1,6 +1,6 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import { AgoraConfig } from './models';
-import { WebRtcService } from './services';
+import { AGORA_CONFIG, WebRtcService } from './services';
 
 /**
  * Provides WebRTC-related services and configuration for use in Angular applications.
@@ -15,7 +15,7 @@ export function provideWebRtc(config: AgoraConfig): EnvironmentProviders {
   return makeEnvironmentProviders([
     WebRtcService,
     {
-      provide: 'AgoraConfig',
+      provide: AGORA_CONFIG,
       useValue: config,
     },
   ]);

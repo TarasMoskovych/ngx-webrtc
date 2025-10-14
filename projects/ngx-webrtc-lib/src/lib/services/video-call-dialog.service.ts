@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { of, Subject } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 
@@ -16,8 +16,7 @@ import { DialogService } from './dialog.service';
   providedIn: 'root',
 })
 export class VideoCallDialogService {
-
-  constructor(private dialog: DialogService) { }
+  private readonly dialog = inject(DialogService);
 
   /**
    * Opens the video call dialog with the given data.
