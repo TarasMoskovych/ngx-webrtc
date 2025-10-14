@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, DOCUMENT, Input } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DialogComponent } from '../components';
 

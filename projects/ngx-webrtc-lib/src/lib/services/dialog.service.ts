@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Inject, Injectable, Injector, Type } from '@angular/core';
+import { ApplicationRef, ComponentFactoryResolver, DOCUMENT, EmbeddedViewRef, inject, Injectable, Injector, Type } from '@angular/core';
 import { delay, take } from 'rxjs/operators';
 import { DialogComponent } from '../models';
 
@@ -7,14 +6,11 @@ import { DialogComponent } from '../models';
   providedIn: 'root',
 })
 export class DialogService {
-  private wrapperSelector = 'ngx-webrtc-wrapper';
-
-  constructor(
-   @Inject(DOCUMENT) private document: Document,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private appRef: ApplicationRef,
-    private injector: Injector,
-  ) { }
+  private readonly appRef = inject(ApplicationRef);
+  private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
+  private readonly document = inject(DOCUMENT);
+  private readonly injector = inject(Injector);
+  private readonly wrapperSelector = 'ngx-webrtc-wrapper';
 
   open(component: Type<any>, data: any = {}): DialogComponent {
     return this.appendComponent(component, data);

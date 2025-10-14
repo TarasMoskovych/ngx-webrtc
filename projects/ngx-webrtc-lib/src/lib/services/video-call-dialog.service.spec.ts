@@ -1,3 +1,4 @@
+import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 
 import { VideoCallComponent } from '../components';
@@ -11,7 +12,17 @@ describe('VideoCallDialogService', () => {
 
   beforeEach(() => {
     dialogService = jasmine.createSpyObj('DialogService', ['open']);
-    service = new VideoCallDialogService(dialogService);
+
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: DialogService,
+          useValue: dialogService,
+        },
+      ],
+    });
+
+    service = TestBed.inject(VideoCallDialogService);
   });
 
   it('should be created', () => {
