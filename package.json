@@ -11,6 +11,7 @@
     "watch": "ng build --watch --configuration development",
     "publish": "cd ./dist/ngx-webrtc-lib && npm publish",
     "test": "ng test",
+    "test:app": "ng test --project ngx-webrtc",
     "test:lib": "ng test --project ngx-webrtc-lib",
     "test:ci": "ng test --configuration ci",
     "lint": "ng lint",

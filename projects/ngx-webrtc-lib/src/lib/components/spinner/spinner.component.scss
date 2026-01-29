@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables" as *;
 
 .spinner {
   background-color: $color-dark;

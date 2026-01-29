@@ -35,7 +35,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "app",
+            "prefix": ["app", "ngx"],
             "style": "kebab-case"
           }
         ],

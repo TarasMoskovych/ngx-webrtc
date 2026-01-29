@@ -1,5 +1,5 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { VideoCallComponent } from './video-call.component';
 
 describe('VideoCallComponent', () => {
@@ -13,9 +13,24 @@ describe('VideoCallComponent', () => {
   let cdr: jasmine.SpyObj<ChangeDetectorRef>;
   let component: VideoCallComponent;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
-    component = new VideoCallComponent(cdr);
+
+    await TestBed.configureTestingModule({
+      imports: [VideoCallComponent],
+      providers: [
+        {
+          provide: ChangeDetectorRef,
+          useValue: cdr,
+        },
+      ],
+    })
+      .compileComponents();
+
+    component = TestBed.createComponent(VideoCallComponent).componentInstance;
+  });
+
+  beforeEach(() => {
     component.data = {
       channel: '1234',
       outcome: true,

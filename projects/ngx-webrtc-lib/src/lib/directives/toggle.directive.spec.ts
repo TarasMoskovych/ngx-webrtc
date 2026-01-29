@@ -1,5 +1,5 @@
-import { Renderer2 } from '@angular/core';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { ElementRef, Renderer2 } from '@angular/core';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ToggleDirective } from './toggle.directive';
 
 describe('ToggleDirective', () => {
@@ -9,9 +9,26 @@ describe('ToggleDirective', () => {
   let renderer: jasmine.SpyObj<Renderer2>;
   let directive: ToggleDirective;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     renderer = jasmine.createSpyObj('Renderer2', ['setStyle']);
-    directive = new ToggleDirective(renderer, element);
+
+    await TestBed.configureTestingModule({
+      imports: [ToggleDirective],
+      providers: [
+        ToggleDirective,
+        {
+          provide: Renderer2,
+          useValue: renderer,
+        },
+        {
+          provide: ElementRef,
+          useValue: element,
+        },
+      ],
+    })
+      .compileComponents();
+
+    directive = TestBed.inject(ToggleDirective);
   });
 
   it('should create an instance', () => {
