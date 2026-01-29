@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { fadeAnimation } from '../../animations';
 import { VideoCallDialogData } from '../../models';
@@ -10,7 +9,7 @@ import { DialogComponent } from '../abstract-dialog.component';
   styleUrls: ['./video-call.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeAnimation],
-  imports: [NgIf],
+  imports: [],
   standalone: true,
 })
 export class VideoCallComponent extends DialogComponent implements OnInit, OnDestroy {
