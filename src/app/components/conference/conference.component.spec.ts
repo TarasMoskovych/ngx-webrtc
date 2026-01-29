@@ -1,12 +1,20 @@
+import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WebRtcComponent } from '@app/ngx-webrtc-lib';
 import { ConferenceComponent } from './conference.component';
+
+@Component({
+  selector: 'ngx-webrtc',
+})
+class MockWebRtcComponent {}
 
 describe('ConferenceComponent', () => {
   let component: ConferenceComponent;
   let router: jasmine.SpyObj<Router>;
   let route: jasmine.SpyObj<ActivatedRoute>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     router = jasmine.createSpyObj('Router', ['navigateByUrl']);
     route = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: {
@@ -15,7 +23,27 @@ describe('ConferenceComponent', () => {
         },
       },
     });
-    component = new ConferenceComponent(route, router);
+
+    TestBed.configureTestingModule({
+      imports: [ConferenceComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: route,
+        },
+        {
+          provide: Router,
+          useValue: router,
+        },
+      ],
+    })
+      .overrideComponent(ConferenceComponent, {
+        remove: { imports: [WebRtcComponent] },
+        add: { imports: [MockWebRtcComponent] },
+      })
+      .compileComponents();
+
+    component = TestBed.createComponent(ConferenceComponent).componentInstance;
   });
 
   it('should create', () => {

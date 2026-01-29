@@ -1,11 +1,10 @@
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export abstract class DialogComponent {
-  afterClosed = new Subject<any>();
+  protected readonly cdr = inject(ChangeDetectorRef);
+  readonly afterClosed = new Subject<any>();
   shown = true;
-
-  constructor(protected cdr: ChangeDetectorRef) {}
 
   closeDialog(data?: any): void {
     this.onAfterClosed(data);

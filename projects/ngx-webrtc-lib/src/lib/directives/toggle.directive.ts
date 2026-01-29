@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, HostListener, OnInit, Output, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, Renderer2 } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -8,7 +8,9 @@ import { take } from 'rxjs/operators';
 })
 export class ToggleDirective implements OnInit {
   private subscription: Subscription = new Subscription();
-  private delay = 5000;
+  private readonly delay = 5000;
+  private readonly renderer = inject(Renderer2);
+  private readonly elementRef = inject(ElementRef);
 
   @Output() toggleVisibility = new EventEmitter<boolean>();
 
@@ -20,8 +22,6 @@ export class ToggleDirective implements OnInit {
   @HostListener('mouseleave') onLeave(): void {
     this.hide();
   }
-
-  constructor(private renderer: Renderer2, private el: ElementRef) { }
 
   ngOnInit(): void {
     this.hide();
@@ -35,7 +35,7 @@ export class ToggleDirective implements OnInit {
   }
 
   setStyle(opacity: number): void {
-    this.renderer.setStyle(this.el.nativeElement, 'opacity', opacity);
+    this.renderer.setStyle(this.elementRef.nativeElement, 'opacity', opacity);
     this.toggleVisibility.emit(opacity === 1);
   }
 }

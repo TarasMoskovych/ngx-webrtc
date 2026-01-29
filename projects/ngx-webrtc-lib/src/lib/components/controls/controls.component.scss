@@ -1,4 +1,5 @@
-@import "variables";
+@use "variables" as *;
+@use "sass:color";
 
 :host {
   @include transition;
@@ -56,7 +57,7 @@
 
     &:hover {
       .controls__icon-wrapper {
-        background-color: darken($color-dark2, 15);
+        background-color: color.adjust($color-dark2, $lightness: -15%);
       }
     }
 
@@ -67,7 +68,7 @@
 
       &:hover {
         .controls__icon-wrapper {
-          background-color: lighten($color-blue, 10);
+          background-color: color.adjust($color-blue, $lightness: 10%);
         }
       }
 
@@ -83,7 +84,7 @@
 
       &:hover {
         .controls__icon-wrapper {
-          background-color: lighten($color-red, 10);
+          background-color: color.adjust($color-red, $lightness: 10%);
         }
       }
     }

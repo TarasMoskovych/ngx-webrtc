@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -25,18 +25,18 @@ import { LOCAL_USER, REMOTE_USER } from '../conference/conference.component';
   standalone: true,
 })
 export class HomeComponent implements OnInit {
-  private sessionKey = 'ngx-webrtc:channelId';
+  private readonly localStorage = inject(STORAGE);
+  private readonly formBuilder = inject(UntypedFormBuilder);
+  private readonly router = inject(Router);
+  private readonly videoCallDialogService = inject(VideoCallDialogService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly sessionKey = 'ngx-webrtc:channelId';
+
   public form: UntypedFormGroup;
   public outcome = false;
   public dialog: VideoCallDialog | null;
 
-  constructor(
-    @Inject(STORAGE) private localStorage: Storage,
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private videoCallDialogService: VideoCallDialogService,
-    private cdr: ChangeDetectorRef,
-  ) {
+  constructor() {
     afterNextRender(() => {
       this.form?.patchValue({ channelId: this.channelId });
     });

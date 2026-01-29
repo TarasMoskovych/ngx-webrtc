@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User, WebRtcComponent } from '@app/ngx-webrtc-lib';
 
@@ -21,15 +21,13 @@ export const REMOTE_USER: User = {
   standalone: true,
 })
 export class ConferenceComponent implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
   channel: string;
   uid = String(Math.floor(Math.random() * 100));
   remoteUser = REMOTE_USER;
   localUser = LOCAL_USER;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {}
 
   ngOnInit(): void {
     this.channel = this.route.snapshot.queryParams['channelId'] || 'test-channel';
