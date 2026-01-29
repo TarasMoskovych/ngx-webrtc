@@ -11,7 +11,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 
-import { AsyncPipe, isPlatformBrowser, NgIf } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { fadeAnimation } from './animations';
@@ -41,14 +41,13 @@ interface OnInitWebRtc {
   standalone: true,
   imports: [
     AsyncPipe,
-    NgIf,
     ControlsComponent,
     LocalStreamViewComponent,
     RemoteStreamViewComponent,
     SpinnerComponent,
     TimerComponent,
     ToggleDirective,
-  ],
+],
 })
 export class WebRtcComponent extends DialogComponent implements OnInitWebRtc, OnDestroy {
 

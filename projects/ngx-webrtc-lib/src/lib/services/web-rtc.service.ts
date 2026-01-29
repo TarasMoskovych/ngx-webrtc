@@ -117,7 +117,11 @@ export class WebRtcService {
   }
 
   toggleFullScreen(enabled: boolean): void {
-    enabled ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    if (enabled) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
   }
 
   toggleBlur(enabled: boolean) {

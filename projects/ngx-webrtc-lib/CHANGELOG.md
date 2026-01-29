@@ -1,5 +1,8 @@
 # Changelog
 
+## 21.0.0
+- Update to Angular 21
+
 ## 20.0.0
 - Implement screen sharing
 - Update to Angular 20

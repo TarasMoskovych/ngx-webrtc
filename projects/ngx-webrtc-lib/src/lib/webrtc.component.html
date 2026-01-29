@@ -1,63 +1,69 @@
-<div
-  *ngIf="shown"
-  @fade
-  (@fade.done)="onInitWebRtc()"
-  [@.disabled]="!animate"
->
-  <div *ngIf="streamState$ | async as streamState" class="container">
-    <ngx-spinner
-      *ngIf="streamState.loading"
-      [error]="streamState.error"
-      [text]="streamState.statusText"
-      [connected]="streamState.connected"
-      [ended]="streamState.ended"
-      [small]="smallScreenEnabled"
-    />
+@if (shown) {
+  <div
+    @fade
+    (@fade.done)="onInitWebRtc()"
+    [@.disabled]="!animate"
+  >
+    @if (streamState$ | async; as streamState) {
+      <div class="container">
+        @if (streamState.loading) {
+          <ngx-spinner
+            [error]="streamState.error"
+            [text]="streamState.statusText"
+            [connected]="streamState.connected"
+            [ended]="streamState.ended"
+            [small]="smallScreenEnabled"
+          />
+        }
 
-    <ngx-timer
-      *ngIf="streamState.started"
-      [started]="streamState.started"
-    />
+        @if (streamState.started) {
+          <ngx-timer
+            [started]="streamState.started"
+          />
+        }
 
-    <ngx-local-stream-view
-      [blurEnabled]="blurEnabled"
-      [hidden]="!cameraEnabled || smallScreenEnabled"
-      [localContainerId]="localContainerId"
-      [microphoneEnabled]="microphoneEnabled"
-      [useVirtualBackground]="useVirtualBackground"
-      [user]="localUser"
-      (toggleBlur)="onToggleBlur($event)"
-    />
+        <ngx-local-stream-view
+          [blurEnabled]="blurEnabled"
+          [hidden]="!cameraEnabled || smallScreenEnabled"
+          [localContainerId]="localContainerId"
+          [microphoneEnabled]="microphoneEnabled"
+          [useVirtualBackground]="useVirtualBackground"
+          [user]="localUser"
+          (toggleBlur)="onToggleBlur($event)"
+        />
 
-    @for (call of remoteCalls; track call) {
-      <ngx-remote-stream-view
-        [cameraEnabled]="(remoteStreamVideoToggle$ | async) === true"
-        [id]="call"
-        [microphoneEnabled]="(remoteStreamAudioToggle$ | async) === true"
-        [user]="remoteUser"
-        [rootClass]="{
-          'remote-stream-view--small': smallScreenEnabled,
-          'controls-visible': controlsVisibility$ | async
-        }"
-      />
+        @for (call of remoteCalls; track call) {
+          <ngx-remote-stream-view
+            [cameraEnabled]="(remoteStreamVideoToggle$ | async) === true"
+            [id]="call"
+            [microphoneEnabled]="(remoteStreamAudioToggle$ | async) === true"
+            [user]="remoteUser"
+            [rootClass]="{
+              'remote-stream-view--small': smallScreenEnabled,
+              'controls-visible': controlsVisibility$ | async
+            }"
+          />
+        }
+
+        @if (streamState.connected && !streamState.ended) {
+          <ngx-controls
+            ngxToggle
+            [cameraEnabled]="cameraEnabled"
+            [microphoneEnabled]="microphoneEnabled"
+            [fullScreenEnabled]="fullScreenEnabled"
+            [smallScreenEnabled]="smallScreenEnabled"
+            [displaySmallScreen]="displaySmallScreen"
+            [screenShareEnabled]="screenShareEnabled"
+            (toggleCamera)="onToggleCamera($event)"
+            (toggleMicrophone)="onToggleMicrophone($event)"
+            (toggleFullScreen)="onToggleFullScreen($event)"
+            (toggleSmallScreen)="onToggleSmallScreen($event)"
+            (toggleVisibility)="controlsVisibility$.next($event)"
+            (toggleScreenShare)="onToggleScreenShare($event)"
+            (endCall)="onEndCall()"
+          />
+        }
+      </div>
     }
-
-    <ngx-controls
-      *ngIf="streamState.connected && !streamState.ended"
-      ngxToggle
-      [cameraEnabled]="cameraEnabled"
-      [microphoneEnabled]="microphoneEnabled"
-      [fullScreenEnabled]="fullScreenEnabled"
-      [smallScreenEnabled]="smallScreenEnabled"
-      [displaySmallScreen]="displaySmallScreen"
-      [screenShareEnabled]="screenShareEnabled"
-      (toggleCamera)="onToggleCamera($event)"
-      (toggleMicrophone)="onToggleMicrophone($event)"
-      (toggleFullScreen)="onToggleFullScreen($event)"
-      (toggleSmallScreen)="onToggleSmallScreen($event)"
-      (toggleVisibility)="controlsVisibility$.next($event)"
-      (toggleScreenShare)="onToggleScreenShare($event)"
-      (endCall)="onEndCall()"
-    />
   </div>
-</div>
+}
