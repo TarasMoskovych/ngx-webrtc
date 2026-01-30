@@ -29,9 +29,6 @@
               "base": "dist/ngx-webrtc"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -113,10 +110,6 @@
           "builder": "@angular/build:karma",
           "options": {
             "codeCoverage": true,
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
@@ -195,11 +188,7 @@
               "includePaths": [
                 "src"
               ]
-            },
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            }
           },
           "configurations": {
             "ci": {

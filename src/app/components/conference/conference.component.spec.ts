@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebRtcComponent } from '@app/ngx-webrtc-lib';
@@ -27,6 +27,7 @@ describe('ConferenceComponent', () => {
     TestBed.configureTestingModule({
       imports: [ConferenceComponent],
       providers: [
+        provideZonelessChangeDetection(),
         {
           provide: ActivatedRoute,
           useValue: route,

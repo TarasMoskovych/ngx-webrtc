@@ -1,5 +1,5 @@
-import { ElementRef, Renderer2 } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ElementRef, provideZonelessChangeDetection, Renderer2 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { ToggleDirective } from './toggle.directive';
 
 describe('ToggleDirective', () => {
@@ -15,6 +15,7 @@ describe('ToggleDirective', () => {
     await TestBed.configureTestingModule({
       imports: [ToggleDirective],
       providers: [
+        provideZonelessChangeDetection(),
         ToggleDirective,
         {
           provide: Renderer2,
@@ -63,14 +64,16 @@ describe('ToggleDirective', () => {
   });
 
   describe('hide', () => {
-    it('should call "setStyle" method after delay', fakeAsync(() => {
+    it('should call "setStyle" method after delay', () => {
+      jasmine.clock().install();
       spyOn(directive, 'setStyle');
       directive.hide();
 
-      tick(5000);
+      jasmine.clock().tick(5000);
 
       expect(directive.setStyle).toHaveBeenCalledOnceWith(0);
-    }));
+      jasmine.clock().uninstall();
+    });
   });
 
   describe('setStyle', () => {
