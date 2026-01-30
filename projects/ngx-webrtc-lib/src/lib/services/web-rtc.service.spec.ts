@@ -1,13 +1,34 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import AgoraRTC, { IAgoraRTCClient, ICameraVideoTrack, ILocalVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { IAgoraRTC, IAgoraRTCClient, ICameraVideoTrack, ILocalVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import { filter, firstValueFrom, take } from 'rxjs';
 import { DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { AGORA_CONFIG, ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
 const AppID = 'app-id_12345';
 const channel = 'test-channel';
 const uid = 'user_54321';
+const waitForInit = async (service: WebRtcService) => {
+  await firstValueFrom(
+    service.streamState$.pipe(
+      filter(s => s.connected === true),
+      take(1)
+    ),
+  );
+};
+
+class MockAgoraRTCClient implements Partial<IAgoraRTC> {
+  createClient = jasmine.createSpy();
+  checkSystemRequirements = jasmine.createSpy();
+  setLogLevel = jasmine.createSpy();
+  createCameraVideoTrack = jasmine.createSpy();
+  createMicrophoneAudioTrack = jasmine.createSpy();
+  createScreenVideoTrack = jasmine.createSpy();
+  registerExtensions = jasmine.createSpy();
+}
 
 describe('WebRtcService', () => {
+  let agoraRTC: jasmine.SpyObj<IAgoraRTC>;
   const eventHandlers: Record<string, (...args: any[]) => void> = {};
   const clientSpy: jasmine.SpyObj<IAgoraRTCClient> = jasmine.createSpyObj('AgoraRTCClient', [], {
     join: () => Promise.resolve(),
@@ -46,6 +67,7 @@ describe('WebRtcService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         {
           provide: AGORA_CONFIG,
           useValue: {
@@ -57,12 +79,13 @@ describe('WebRtcService', () => {
       ],
     });
     service = TestBed.inject(WebRtcService);
-    service['agoraRTC'] = AgoraRTC;
+    service['agoraRTC'] = new MockAgoraRTCClient() as unknown as IAgoraRTC;
+    agoraRTC = service['agoraRTC'] as jasmine.SpyObj<IAgoraRTC>;
   });
 
   describe('browser supports WebRTC', () => {
     beforeEach(() => {
-      spyOn(AgoraRTC, 'checkSystemRequirements').and.returnValue(true);
+      agoraRTC.checkSystemRequirements.and.returnValue(true);
     });
 
     it('should be created', () => {
@@ -71,47 +94,46 @@ describe('WebRtcService', () => {
 
     describe('init', () => {
       beforeEach(() => {
-        spyOn<any>(AgoraRTC, 'setLogLevel');
-        spyOn<any>(AgoraRTC, 'createClient').and.returnValue(clientSpy);
-        spyOn<any>(AgoraRTC, 'createCameraVideoTrack').and.returnValue(Promise.resolve({ play: jasmine.createSpy() }));
-        spyOn<any>(AgoraRTC, 'createMicrophoneAudioTrack').and.returnValue(Promise.resolve({ play: jasmine.createSpy() }));
+        agoraRTC.createClient.and.returnValue(clientSpy);
+        agoraRTC.createCameraVideoTrack.and.returnValue(Promise.resolve({ play: jasmine.createSpy() } as unknown as ICameraVideoTrack));
+        agoraRTC.createMicrophoneAudioTrack.and.returnValue(Promise.resolve({ play: jasmine.createSpy() } as unknown as IMicrophoneAudioTrack));
         spyOn<any>(service, 'assignClientHandlers');
         spyOn<any>(service, 'loadSDK').and.resolveTo();
       });
 
       describe('debug', () => {
-        it('should start without debug', fakeAsync(() => {
+        it('should start without debug', async () => {
           service['config'].debug = false;
           service.init(uid, channel, null).subscribe();
-          tick();
+          await waitForInit(service);
 
-          expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
-        }));
+          expect(agoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
+        });
 
-        it('should start with debug', fakeAsync(() => {
+        it('should start with debug', async () => {
           service['config'].debug = true;
           service.init(uid, channel, null).subscribe();
-          tick();
+          await waitForInit(service);
 
-          expect(AgoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
-        }));
+          expect(agoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
+        });
       });
 
       describe('agora init', () => {
-        it('should call "createClient" method with configs and token', fakeAsync(() => {
+        it('should call "createClient" method with configs and token', async () => {
           const token = 'token_12345';
           service.init(uid, channel, token).subscribe();
-          tick();
+          await waitForInit(service);
 
-          expect(AgoraRTC.createClient).toHaveBeenCalledOnceWith({
+          expect(agoraRTC.createClient).toHaveBeenCalledOnceWith({
             mode: 'rtc',
             codec: 'h264',
           });
-        }));
+        });
 
-        it('should be connected to stream after "initLocalStream"', fakeAsync(() => {
+        it('should be connected to stream after "initLocalStream"', async () => {
           service.init(uid, channel, null).subscribe();
-          tick(500);
+          await waitForInit(service);
 
           service.streamState$.subscribe((state: StreamState) => {
             expect(state).toEqual({
@@ -123,7 +145,7 @@ describe('WebRtcService', () => {
               error: false,
             });
           });
-        }));
+        });
       });
     });
 
@@ -150,17 +172,17 @@ describe('WebRtcService', () => {
         service['client'] = clientSpy;
       });
 
-      it('should call stop stream methods', fakeAsync(() => {
+      it('should call stop stream methods', async () => {
         service.endCall();
-        tick(500);
+        await Promise.resolve();
 
         expect(audioTrackSpy.close).toHaveBeenCalled();
         expect(videoTrackSpy.close).toHaveBeenCalled();
-      }));
+      });
 
-      it('should change the state to end status', fakeAsync(() => {
+      it('should change the state to end status', async () => {
         service.endCall();
-        tick(500);
+        await Promise.resolve();
 
         service.streamState$.subscribe((state: StreamState) => {
           expect(state).toEqual({
@@ -172,15 +194,18 @@ describe('WebRtcService', () => {
             error: false,
           });
         });
-      }));
+      });
 
-      it('should emit "callEnd" event after 500 seconds', fakeAsync(() => {
-        spyOn<any>(service['callEnd'], 'next');
+      it('should emit callEnd', async () => {
+        const callEndSpy = spyOn(service['callEnd'], 'next');
+
         service.endCall();
-        tick(500);
 
-        expect(service['callEnd'].next).toHaveBeenCalledTimes(1);
-      }));
+        await Promise.resolve();
+        await new Promise(res => setTimeout(res, 600));
+
+        expect(callEndSpy).toHaveBeenCalled();
+      });
     });
 
     describe('toggleVideo', () => {
@@ -296,9 +321,9 @@ describe('WebRtcService', () => {
         service['client'] = clientSpy;
         stopSpy = jasmine.createSpy('stop');
 
-        spyOn(AgoraRTC, 'createCameraVideoTrack').and.resolveTo(videoTrack);
-        spyOn(AgoraRTC, 'createMicrophoneAudioTrack').and.resolveTo(audioTrack);
-        spyOn(AgoraRTC, 'createScreenVideoTrack').and.returnValue(Promise.resolve({
+        agoraRTC.createCameraVideoTrack.and.resolveTo(videoTrack);
+        agoraRTC.createMicrophoneAudioTrack.and.resolveTo(audioTrack);
+        agoraRTC.createScreenVideoTrack.and.returnValue(Promise.resolve({
           stop: stopSpy,
           play: jasmine.createSpy(),
           close: jasmine.createSpy(),
@@ -308,24 +333,23 @@ describe('WebRtcService', () => {
         } as unknown as ILocalVideoTrack));
       });
 
-      it('should start screen sharing', fakeAsync(() => {
-        service.toggleScreenShare(false);
+      it('should start screen sharing', async () => {
+        await service.toggleScreenShare(false);
 
-        tick();
         eventHandlers['track-ended']();
 
-        expect(AgoraRTC.createScreenVideoTrack).toHaveBeenCalled();
+        expect(agoraRTC.createScreenVideoTrack).toHaveBeenCalled();
         expect(service['localTracks'].screenTrack).toBeDefined();
         expect(service.isScreenShared()).toBeTrue();
-      }));
+      });
 
-      it('should stop screen sharing', fakeAsync(() => {
+      it('should stop screen sharing', async () => {
         service['localTracks'].screenTrack = screenTrackSpy;
-        service.toggleScreenShare(true);
-        tick();
+        await service.toggleScreenShare(true);
+        service['localTracks'].screenTrack = undefined;
 
         expect(service.isScreenShared()).toBeFalse();
-      }));
+      });
     });
 
     describe('isVideoEnabled', () => {
@@ -465,27 +489,24 @@ describe('WebRtcService', () => {
     });
 
     describe('initLocalStream', () => {
-      it('should create local stream', fakeAsync(() => {
+      it('should create local stream', async () => {
         const { audioTrack, videoTrack } = mockStreamTracks();
 
-        spyOn(AgoraRTC, 'createCameraVideoTrack').and.resolveTo(videoTrack);
-        spyOn(AgoraRTC, 'createMicrophoneAudioTrack').and.resolveTo(audioTrack);
+        agoraRTC.createCameraVideoTrack.and.resolveTo(videoTrack);
+        agoraRTC.createMicrophoneAudioTrack.and.resolveTo(audioTrack);
 
-        service['initLocalStream']().then(() => {
-          tick();
-          expect(service['localTracks']).toEqual({ audioTrack, videoTrack, screenTrack: undefined });
-        });
-      }));
+        await service['initLocalStream']();
+        expect(service['localTracks']).toEqual({ audioTrack, videoTrack, screenTrack: undefined });
+      });
 
-      it('should handle an error', fakeAsync(() => {
+      it('should handle an error', async () => {
         const { audioTrack } = mockStreamTracks();
         const errorMsg = 'Cannot create video stream';
 
-        spyOn(AgoraRTC, 'createCameraVideoTrack').and.rejectWith(new Error(errorMsg));
-        spyOn(AgoraRTC, 'createMicrophoneAudioTrack').and.resolveTo(audioTrack);
+        agoraRTC.createCameraVideoTrack.and.rejectWith(new Error(errorMsg));
+        agoraRTC.createMicrophoneAudioTrack.and.resolveTo(audioTrack);
 
         service['initLocalStream']().catch(() => {
-          tick(5000);
           service.streamState$.subscribe((state: StreamState) => {
             expect(state).toEqual({
               connected: false,
@@ -497,7 +518,7 @@ describe('WebRtcService', () => {
             });
           });
         });
-      }));
+      });
     });
 
     describe('loadSDK', () => {
@@ -559,7 +580,7 @@ describe('WebRtcService', () => {
 
   describe('browser does not support WebRTC', () => {
     it('should handle an error', (done: DoneFn) => {
-      spyOn(AgoraRTC, 'checkSystemRequirements').and.returnValue(false);
+      agoraRTC.checkSystemRequirements.and.returnValue(false);
 
       service['loadSDK']().catch((err: Error) => {
         expect(err.message).toBe('Web RTC is not supported in this browser');

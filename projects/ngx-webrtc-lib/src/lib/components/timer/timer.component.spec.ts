@@ -1,11 +1,17 @@
-import { discardPeriodicTasks, fakeAsync, tick } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { TimerComponent } from './timer.component';
 
 describe('TimerComponent', () => {
   let component: TimerComponent;
 
-  beforeEach(() => {
-    component = new TimerComponent();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TimerComponent],
+      providers: [provideZonelessChangeDetection()],
+    }).compileComponents();
+
+    component = TestBed.createComponent(TimerComponent).componentInstance;
     component.started = 0;
   });
 
@@ -17,17 +23,20 @@ describe('TimerComponent', () => {
     beforeEach(() => {
       spyOn(Date, 'now').and.returnValue(100);
       spyOn(component, 'format');
-
+      jasmine.clock().install();
       component.ngOnInit();
     });
 
-    it('should call "format" value with correct data', fakeAsync(() => {
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
+
+    it('should call "format" value with correct data', () => {
       component.time$.subscribe();
-      tick();
+      jasmine.clock().tick(0);
 
       expect(component.format).toHaveBeenCalledWith(100);
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('format', () => {

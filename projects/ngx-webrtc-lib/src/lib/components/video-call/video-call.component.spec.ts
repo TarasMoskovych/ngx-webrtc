@@ -1,5 +1,5 @@
-import { ChangeDetectorRef } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, provideZonelessChangeDetection } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { VideoCallComponent } from './video-call.component';
 
 describe('VideoCallComponent', () => {
@@ -19,6 +19,7 @@ describe('VideoCallComponent', () => {
     await TestBed.configureTestingModule({
       imports: [VideoCallComponent],
       providers: [
+        provideZonelessChangeDetection(),
         {
           provide: ChangeDetectorRef,
           useValue: cdr,
@@ -117,15 +118,17 @@ describe('VideoCallComponent', () => {
       expect(component['play']).toHaveBeenCalledWith('assets/cancel.mp3');
     });
 
-    it('should emit "closeDialog" after 200ms', fakeAsync(() => {
+    it('should emit "closeDialog" after 200ms', () => {
+      jasmine.clock().install();
       component.onDeclineCall();
 
-      tick(500);
+      jasmine.clock().tick(500);
       expect(component.closeDialog).toHaveBeenCalled();
-    }));
+    });
 
     afterEach(() => {
       expect(audioSpy.play).toHaveBeenCalled();
+      jasmine.clock().uninstall();
     });
   });
 });

@@ -1,5 +1,5 @@
 import { Component, DOCUMENT, Input } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { DialogComponent } from '../components';
 
 import { DialogService } from './dialog.service';
@@ -41,14 +41,16 @@ describe('DialogService', () => {
       expect(ngDocument.querySelectorAll('.ngx-webrtc-wrapper').length).toBe(1);
     });
 
-    it('should destroy the component on "afterClosed"', fakeAsync(() => {
+    it('should destroy the component on "afterClosed"', () => {
       const instance = service.open(TestComponent);
+      jasmine.clock().install();
 
       spyOn(service['appRef'], 'detachView');
       instance.afterClosed.next(undefined);
-      tick(500);
+      jasmine.clock().tick(500);
 
       expect(service['appRef'].detachView).toHaveBeenCalled();
-    }));
+      jasmine.clock().uninstall();
+    });
   });
 });

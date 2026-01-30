@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VideoCallDialogService } from '@app/ngx-webrtc-lib';
@@ -27,6 +27,7 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
+        provideZonelessChangeDetection(),
         {
           provide: Router,
           useValue: router,
@@ -124,30 +125,34 @@ describe('HomeComponent', () => {
 
     beforeEach(() => {
       spyOn(component, 'saveChannel');
+      jasmine.clock().install();
     });
 
-    it('should call "close" after 7 seconds', fakeAsync(() => {
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
+
+    it('should call "close" after 7 seconds', () => {
       const ms = 7000;
       const spy = getDialogData(ms);
 
       videoCallDialogService.open.and.returnValue(spy);
       component.onModalOpen();
 
-      tick(ms);
+      jasmine.clock().tick(ms);
       expect(spy.close).toHaveBeenCalled();
-      discardPeriodicTasks();
-    }));
+    });
 
-    it('should destroy the dialog after 5 seconds', fakeAsync(() => {
+    it('should destroy the dialog after 5 seconds', () => {
       const ms = 5000;
       const spy = getDialogData(ms);
 
       videoCallDialogService.open.and.returnValue(spy);
       component.onModalOpen();
 
-      tick(ms);
+      jasmine.clock().tick(ms);
       expect(spy.close).not.toHaveBeenCalled();
       expect(component.dialog).toBeNull();
-    }));
+    });
   });
 });
