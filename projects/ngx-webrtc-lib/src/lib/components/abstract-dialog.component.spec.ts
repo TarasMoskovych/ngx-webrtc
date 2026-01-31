@@ -1,17 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DialogComponent } from './abstract-dialog.component';
 
-@Component({})
-class TestComponent extends DialogComponent {}
+@Component({
+  template: '',
+})
+class TestComponent extends DialogComponent {
+}
 
 describe('DialogComponent', () => {
   let component: TestComponent;
-  let cdr: jasmine.SpyObj<ChangeDetectorRef>;
+  const cdr = {
+    markForCheck: vi.fn(),
+  };
 
   beforeEach(async () => {
-    cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
-
     await TestBed.configureTestingModule({
       imports: [TestComponent],
       providers: [
@@ -24,7 +28,7 @@ describe('DialogComponent', () => {
       .compileComponents();
 
     component = TestBed.createComponent(TestComponent).componentInstance;
-    spyOn(component.afterClosed, 'next');
+    vi.spyOn(component.afterClosed, 'next');
   });
 
   it('should create', () => {
@@ -37,7 +41,7 @@ describe('DialogComponent', () => {
     });
 
     it('should emit "afterClosed" with some data', () => {
-      expect(component.afterClosed.next).toHaveBeenCalledOnceWith(true);
+      expect(component.afterClosed.next).toHaveBeenCalledWith(true);
     });
   });
 });

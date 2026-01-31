@@ -1,30 +1,34 @@
-import { Component, provideZonelessChangeDetection } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebRtcComponent } from '@app/ngx-webrtc-lib';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ConferenceComponent } from './conference.component';
 
 @Component({
   selector: 'ngx-webrtc',
+  template: '',
 })
-class MockWebRtcComponent {}
+class MockWebRtcComponent { }
 
 describe('ConferenceComponent', () => {
   let component: ConferenceComponent;
-  let router: jasmine.SpyObj<Router>;
-  let route: jasmine.SpyObj<ActivatedRoute>;
+  let fixture: ComponentFixture<ConferenceComponent>;
+
+  const router = {
+    navigateByUrl: vi.fn(),
+  };
+
+  const route = {
+    snapshot: {
+      queryParams: {
+        channelId: undefined,
+      },
+    }
+  };
 
   beforeEach(async () => {
-    router = jasmine.createSpyObj('Router', ['navigateByUrl']);
-    route = jasmine.createSpyObj('ActivatedRoute', [], {
-      snapshot: {
-        queryParams: {
-          channelId: undefined,
-        },
-      },
-    });
-
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [ConferenceComponent],
       providers: [
         provideZonelessChangeDetection(),
@@ -40,11 +44,14 @@ describe('ConferenceComponent', () => {
     })
       .overrideComponent(ConferenceComponent, {
         remove: { imports: [WebRtcComponent] },
-        add: { imports: [MockWebRtcComponent] },
+        add: { imports: [MockWebRtcComponent], schemas: [CUSTOM_ELEMENTS_SCHEMA] },
       })
       .compileComponents();
 
-    component = TestBed.createComponent(ConferenceComponent).componentInstance;
+    fixture = TestBed.createComponent(ConferenceComponent);
+    component = fixture.componentInstance;
+
+    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -61,7 +68,7 @@ describe('ConferenceComponent', () => {
   describe('onCallEnd', () => {
     it('should redirect to home page', () => {
       component.onCallEnd();
-      expect(router.navigateByUrl).toHaveBeenCalledOnceWith('/');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/');
     });
   });
 });

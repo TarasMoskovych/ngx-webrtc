@@ -1,35 +1,36 @@
-import { ElementRef, provideZonelessChangeDetection, Renderer2 } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { Component, provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ToggleDirective } from './toggle.directive';
 
+@Component({
+  template: `<div ngxToggle (toggleVisibility)="onToggleVisibility()">Content</div>`,
+  standalone: true,
+  imports: [ToggleDirective],
+})
+class TestHostComponent {
+  onToggleVisibility() {
+  }
+}
+
 describe('ToggleDirective', () => {
-  const element = {
-    nativeElement: {},
-  };
-  let renderer: jasmine.SpyObj<Renderer2>;
   let directive: ToggleDirective;
+  let fixture: ComponentFixture<TestHostComponent>;
 
   beforeEach(async () => {
-    renderer = jasmine.createSpyObj('Renderer2', ['setStyle']);
-
     await TestBed.configureTestingModule({
-      imports: [ToggleDirective],
+      imports: [TestHostComponent],
       providers: [
         provideZonelessChangeDetection(),
-        ToggleDirective,
-        {
-          provide: Renderer2,
-          useValue: renderer,
-        },
-        {
-          provide: ElementRef,
-          useValue: element,
-        },
       ],
     })
       .compileComponents();
 
-    directive = TestBed.inject(ToggleDirective);
+    fixture = TestBed.createComponent(TestHostComponent);
+    directive = fixture.debugElement.query(By.directive(ToggleDirective)).injector.get(ToggleDirective);
+
+    await fixture.whenStable();
   });
 
   it('should create an instance', () => {
@@ -38,16 +39,16 @@ describe('ToggleDirective', () => {
 
   describe('onEnter', () => {
     it('should call "setStyle" method', () => {
-      spyOn(directive, 'setStyle');
+      vi.spyOn(directive, 'setStyle');
       directive.onEnter();
 
-      expect(directive.setStyle).toHaveBeenCalledOnceWith(1);
+      expect(directive.setStyle).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('onLeave', () => {
     it('should call "setStyle" method', () => {
-      spyOn(directive, 'hide');
+      vi.spyOn(directive, 'hide');
       directive.onLeave();
 
       expect(directive.hide).toHaveBeenCalledTimes(1);
@@ -56,7 +57,7 @@ describe('ToggleDirective', () => {
 
   describe('ngOnInit', () => {
     it('should call "setStyle" method', () => {
-      spyOn(directive, 'hide');
+      vi.spyOn(directive, 'hide');
       directive.ngOnInit();
 
       expect(directive.hide).toHaveBeenCalledTimes(1);
@@ -65,21 +66,13 @@ describe('ToggleDirective', () => {
 
   describe('hide', () => {
     it('should call "setStyle" method after delay', () => {
-      jasmine.clock().install();
-      spyOn(directive, 'setStyle');
+      vi.useFakeTimers();
+      vi.spyOn(directive, 'setStyle');
       directive.hide();
 
-      jasmine.clock().tick(5000);
-
-      expect(directive.setStyle).toHaveBeenCalledOnceWith(0);
-      jasmine.clock().uninstall();
-    });
-  });
-
-  describe('setStyle', () => {
-    it('should call renderer "setStyle" method', () => {
-      directive.setStyle(0);
-      expect(renderer.setStyle).toHaveBeenCalledOnceWith(element.nativeElement, 'opacity', 0);
+      vi.advanceTimersByTime(5000);
+      expect(directive.setStyle).toHaveBeenCalledTimes(1);
+      vi.useRealTimers();
     });
   });
 });

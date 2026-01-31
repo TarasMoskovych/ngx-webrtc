@@ -1,7 +1,9 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { IVirtualBackgroundExtension, IVirtualBackgroundProcessor } from 'agora-extension-virtual-background';
 import { IAgoraRTC, IAgoraRTCClient, ICameraVideoTrack, ILocalVideoTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { filter, firstValueFrom, take } from 'rxjs';
+import { beforeEach, describe, expect, it, Mock, MockedObject, vi } from 'vitest';
 import { DEFAULT_STREAM_STATE, StreamState } from '../models';
 import { AGORA_CONFIG, ClientEvents, UserInfoUpdatedMessages, WebRtcService } from './web-rtc.service';
 
@@ -9,56 +11,83 @@ const AppID = 'app-id_12345';
 const channel = 'test-channel';
 const uid = 'user_54321';
 const waitForInit = async (service: WebRtcService) => {
-  await firstValueFrom(
-    service.streamState$.pipe(
-      filter(s => s.connected === true),
-      take(1)
-    ),
-  );
+  await firstValueFrom(service.streamState$.pipe(filter(s => s.connected === true), take(1)));
 };
 
-class MockAgoraRTCClient implements Partial<IAgoraRTC> {
-  createClient = jasmine.createSpy();
-  checkSystemRequirements = jasmine.createSpy();
-  setLogLevel = jasmine.createSpy();
-  createCameraVideoTrack = jasmine.createSpy();
-  createMicrophoneAudioTrack = jasmine.createSpy();
-  createScreenVideoTrack = jasmine.createSpy();
-  registerExtensions = jasmine.createSpy();
+const mockAgoraRTCClient = {
+  createClient: vi.fn(),
+  checkSystemRequirements: vi.fn().mockReturnValue(true),
+  setLogLevel: vi.fn(),
+  createCameraVideoTrack: vi.fn(),
+  createMicrophoneAudioTrack: vi.fn(),
+  createScreenVideoTrack: vi.fn(),
+  registerExtensions: vi.fn(),
+} as MockedObject<IAgoraRTC>;
+
+class MockVirtualBackgroundExtension implements Partial<IVirtualBackgroundExtension> {
+  createProcessor = vi.fn();
 }
 
+vi.mock('agora-rtc-sdk-ng', () => {
+  return {
+    default: mockAgoraRTCClient,
+  };
+});
+
+vi.mock('agora-extension-virtual-background', () => {
+  return {
+    default: MockVirtualBackgroundExtension,
+  };
+});
+
 describe('WebRtcService', () => {
-  let agoraRTC: jasmine.SpyObj<IAgoraRTC>;
+  let agoraRTC: MockedObject<IAgoraRTC>;
   const eventHandlers: Record<string, (...args: any[]) => void> = {};
-  const clientSpy: jasmine.SpyObj<IAgoraRTCClient> = jasmine.createSpyObj('AgoraRTCClient', [], {
+  const clientSpy = {
     join: () => Promise.resolve(),
     publish: () => Promise.resolve(),
     unpublish: () => Promise.resolve(),
     leave: () => Promise.resolve(),
-    subscribe: jasmine.createSpy().and.resolveTo({ play: () => undefined }),
-    on: jasmine.createSpy().and.callFake((eventName: string, cb: (...args: any[]) => void) => {
+    subscribe: vi.fn().mockResolvedValue({ play: () => undefined }),
+    on: vi.fn().mockImplementation((eventName: string, cb: (...args: any[]) => void) => {
       eventHandlers[eventName] = cb;
-    }),
-  });
+    })
+  } as unknown as MockedObject<IAgoraRTCClient>;
 
-  const virtualBackgroundProcessor = jasmine.createSpyObj('VirtualBackgroundProcessor', [
-    'init',
-    'enable',
-    'disable',
-    'setOptions',
-  ], {
-    enabled: true,
-  });
+  const virtualBackgroundProcessor = {
+    init: vi.fn(),
+    enable: vi.fn(),
+    disable: vi.fn(),
+    setOptions: vi.fn(),
+    enabled: true
+  };
 
-  const virtualBackgroundExtenstion = jasmine.createSpyObj('VirtualBackgroundExtension', [], {
-    createProcessor: () => virtualBackgroundProcessor,
-  });
+  const virtualBackgroundExtension = {
+    createProcessor: () => virtualBackgroundProcessor
+  };
 
   const mockStreamTracks = () => {
     return {
-      audioTrack: jasmine.createSpyObj('IMicrophoneAudioTrack', ['setMuted', 'stop', 'close', 'play'], { muted: false }),
-      videoTrack: jasmine.createSpyObj('ICameraVideoTrack', ['setMuted', 'stop', 'close', 'play'], { muted: false }),
-      screenTrack: jasmine.createSpyObj('ILocalVideoTrack', ['setMuted', 'stop', 'close', 'play']),
+      audioTrack: {
+        setMuted: vi.fn(),
+        stop: vi.fn(),
+        close: vi.fn(),
+        play: vi.fn(),
+        muted: false
+      } as unknown as MockedObject<IMicrophoneAudioTrack>,
+      videoTrack: {
+        setMuted: vi.fn(),
+        stop: vi.fn(),
+        close: vi.fn(),
+        play: vi.fn(),
+        muted: false
+      } as unknown as MockedObject<ICameraVideoTrack>,
+      screenTrack: {
+        setMuted: vi.fn(),
+        stop: vi.fn(),
+        close: vi.fn(),
+        play: vi.fn()
+      } as unknown as MockedObject<ILocalVideoTrack>,
     };
   };
 
@@ -79,13 +108,13 @@ describe('WebRtcService', () => {
       ],
     });
     service = TestBed.inject(WebRtcService);
-    service['agoraRTC'] = new MockAgoraRTCClient() as unknown as IAgoraRTC;
-    agoraRTC = service['agoraRTC'] as jasmine.SpyObj<IAgoraRTC>;
+    service['agoraRTC'] = mockAgoraRTCClient;
+    agoraRTC = service['agoraRTC'] as MockedObject<IAgoraRTC>;
   });
 
   describe('browser supports WebRTC', () => {
     beforeEach(() => {
-      agoraRTC.checkSystemRequirements.and.returnValue(true);
+      agoraRTC.checkSystemRequirements.mockReturnValue(true);
     });
 
     it('should be created', () => {
@@ -94,11 +123,11 @@ describe('WebRtcService', () => {
 
     describe('init', () => {
       beforeEach(() => {
-        agoraRTC.createClient.and.returnValue(clientSpy);
-        agoraRTC.createCameraVideoTrack.and.returnValue(Promise.resolve({ play: jasmine.createSpy() } as unknown as ICameraVideoTrack));
-        agoraRTC.createMicrophoneAudioTrack.and.returnValue(Promise.resolve({ play: jasmine.createSpy() } as unknown as IMicrophoneAudioTrack));
-        spyOn<any>(service, 'assignClientHandlers');
-        spyOn<any>(service, 'loadSDK').and.resolveTo();
+        agoraRTC.createClient.mockReturnValue(clientSpy);
+        agoraRTC.createCameraVideoTrack.mockReturnValue(Promise.resolve({ play: vi.fn() } as unknown as ICameraVideoTrack));
+        agoraRTC.createMicrophoneAudioTrack.mockReturnValue(Promise.resolve({ play: vi.fn() } as unknown as IMicrophoneAudioTrack));
+        vi.spyOn(service as any, 'assignClientHandlers');
+        vi.spyOn(service as any, 'loadSDK').mockResolvedValue(undefined);
       });
 
       describe('debug', () => {
@@ -107,7 +136,7 @@ describe('WebRtcService', () => {
           service.init(uid, channel, null).subscribe();
           await waitForInit(service);
 
-          expect(agoraRTC.setLogLevel).toHaveBeenCalledOnceWith(4);
+          expect(agoraRTC.setLogLevel).toHaveBeenCalledWith(4);
         });
 
         it('should start with debug', async () => {
@@ -115,7 +144,7 @@ describe('WebRtcService', () => {
           service.init(uid, channel, null).subscribe();
           await waitForInit(service);
 
-          expect(agoraRTC.setLogLevel).toHaveBeenCalledOnceWith(0);
+          expect(agoraRTC.setLogLevel).toHaveBeenCalledWith(0);
         });
       });
 
@@ -125,7 +154,7 @@ describe('WebRtcService', () => {
           service.init(uid, channel, token).subscribe();
           await waitForInit(service);
 
-          expect(agoraRTC.createClient).toHaveBeenCalledOnceWith({
+          expect(agoraRTC.createClient).toHaveBeenCalledWith({
             mode: 'rtc',
             codec: 'h264',
           });
@@ -160,8 +189,8 @@ describe('WebRtcService', () => {
     });
 
     describe('endCall', () => {
-      let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
-      let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
+      let audioTrackSpy: MockedObject<IMicrophoneAudioTrack>;
+      let videoTrackSpy: MockedObject<ICameraVideoTrack>;
 
       beforeEach(() => {
         const { audioTrack, videoTrack } = mockStreamTracks();
@@ -197,7 +226,7 @@ describe('WebRtcService', () => {
       });
 
       it('should emit callEnd', async () => {
-        const callEndSpy = spyOn(service['callEnd'], 'next');
+        const callEndSpy = vi.spyOn(service['callEnd'], 'next');
 
         service.endCall();
 
@@ -209,8 +238,8 @@ describe('WebRtcService', () => {
     });
 
     describe('toggleVideo', () => {
-      let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
-      let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
+      let audioTrackSpy: MockedObject<IMicrophoneAudioTrack>;
+      let videoTrackSpy: MockedObject<ICameraVideoTrack>;
 
       beforeEach(() => {
         const { audioTrack, videoTrack } = mockStreamTracks();
@@ -243,8 +272,8 @@ describe('WebRtcService', () => {
     });
 
     describe('toggleAudio', () => {
-      let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
-      let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
+      let audioTrackSpy: MockedObject<IMicrophoneAudioTrack>;
+      let videoTrackSpy: MockedObject<ICameraVideoTrack>;
 
       beforeEach(() => {
         const { audioTrack, videoTrack } = mockStreamTracks();
@@ -277,25 +306,34 @@ describe('WebRtcService', () => {
     });
 
     describe('toggleFullScreen', () => {
+      let requestFullscreenSpy: Mock;
+      let exitFullscreenSpy: Mock;
+
       beforeEach(() => {
-        spyOn(document.documentElement, 'requestFullscreen');
-        spyOn(document, 'exitFullscreen');
+        requestFullscreenSpy = vi.fn();
+        exitFullscreenSpy = vi.fn();
+
+        Object.assign(document.documentElement, { requestFullscreen: requestFullscreenSpy });
+        Object.assign(document, { exitFullscreen: exitFullscreenSpy });
       });
 
       it('should call "requestFullscreen" when full screen is not enabled', () => {
         service.toggleFullScreen(false);
-        expect(document.documentElement.requestFullscreen).toHaveBeenCalledTimes(1);
+        expect(requestFullscreenSpy).toHaveBeenCalledTimes(1);
       });
 
       it('should call "exitFullscreen" when full screen is enabled', () => {
         service.toggleFullScreen(true);
-        expect(document.exitFullscreen).toHaveBeenCalledTimes(1);
+        expect(exitFullscreenSpy).toHaveBeenCalledTimes(1);
       });
     });
 
     describe('toggleBlur', () => {
       beforeEach(() => {
-        service['virtualBackgroundProcessor'] = jasmine.createSpyObj('VirtualBackgroundProcessor', ['enable', 'disable']);
+        service['virtualBackgroundProcessor'] = {
+          enable: vi.fn(),
+          disable: vi.fn()
+        } as unknown as IVirtualBackgroundProcessor;
       });
 
       it('should call "enable" method when blur is disabled', () => {
@@ -310,8 +348,8 @@ describe('WebRtcService', () => {
     });
 
     describe('toggleScreenShare', () => {
-      let screenTrackSpy: jasmine.SpyObj<ILocalVideoTrack>;
-      let stopSpy: jasmine.Spy;
+      let screenTrackSpy: MockedObject<ILocalVideoTrack>;
+      let stopSpy: Mock;
 
       beforeEach(() => {
         const { audioTrack, videoTrack, screenTrack } = mockStreamTracks();
@@ -319,15 +357,15 @@ describe('WebRtcService', () => {
 
         service['localTracks'] = { videoTrack, audioTrack };
         service['client'] = clientSpy;
-        stopSpy = jasmine.createSpy('stop');
+        stopSpy = vi.fn();
 
-        agoraRTC.createCameraVideoTrack.and.resolveTo(videoTrack);
-        agoraRTC.createMicrophoneAudioTrack.and.resolveTo(audioTrack);
-        agoraRTC.createScreenVideoTrack.and.returnValue(Promise.resolve({
+        agoraRTC.createCameraVideoTrack.mockResolvedValue(videoTrack);
+        agoraRTC.createMicrophoneAudioTrack.mockResolvedValue(audioTrack);
+        agoraRTC.createScreenVideoTrack.mockReturnValue(Promise.resolve({
           stop: stopSpy,
-          play: jasmine.createSpy(),
-          close: jasmine.createSpy(),
-          on: jasmine.createSpy().and.callFake((eventName: string, cb: (...args: any[]) => void) => {
+          play: vi.fn(),
+          close: vi.fn(),
+          on: vi.fn().mockImplementation((eventName: string, cb: (...args: any[]) => void) => {
             eventHandlers[eventName] = cb;
           }),
         } as unknown as ILocalVideoTrack));
@@ -340,7 +378,7 @@ describe('WebRtcService', () => {
 
         expect(agoraRTC.createScreenVideoTrack).toHaveBeenCalled();
         expect(service['localTracks'].screenTrack).toBeDefined();
-        expect(service.isScreenShared()).toBeTrue();
+        expect(service.isScreenShared()).toBe(true);
       });
 
       it('should stop screen sharing', async () => {
@@ -348,13 +386,13 @@ describe('WebRtcService', () => {
         await service.toggleScreenShare(true);
         service['localTracks'].screenTrack = undefined;
 
-        expect(service.isScreenShared()).toBeFalse();
+        expect(service.isScreenShared()).toBe(false);
       });
     });
 
     describe('isVideoEnabled', () => {
-      let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
-      let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
+      let audioTrackSpy: MockedObject<IMicrophoneAudioTrack>;
+      let videoTrackSpy: MockedObject<ICameraVideoTrack>;
 
       beforeEach(() => {
         const { audioTrack, videoTrack } = mockStreamTracks();
@@ -368,20 +406,20 @@ describe('WebRtcService', () => {
         });
 
         it('should return true', () => {
-          expect(service.isVideoEnabled()).toBeTrue();
+          expect(service.isVideoEnabled()).toBe(true);
         });
       });
 
       describe('local stream is not created', () => {
         it('should return false', () => {
-          expect(service.isVideoEnabled()).toBeFalse();
+          expect(service.isVideoEnabled()).toBe(false);
         });
       });
     });
 
     describe('isAudioEnabled', () => {
-      let audioTrackSpy: jasmine.SpyObj<IMicrophoneAudioTrack>;
-      let videoTrackSpy: jasmine.SpyObj<ICameraVideoTrack>;
+      let audioTrackSpy: MockedObject<IMicrophoneAudioTrack>;
+      let videoTrackSpy: MockedObject<ICameraVideoTrack>;
 
       beforeEach(() => {
         const { audioTrack, videoTrack } = mockStreamTracks();
@@ -395,39 +433,41 @@ describe('WebRtcService', () => {
         });
 
         it('should return true', () => {
-          expect(service.isAudioEnabled()).toBeTrue();
+          expect(service.isAudioEnabled()).toBe(true);
         });
       });
 
       describe('local stream is not created', () => {
         it('should return false', () => {
-          expect(service.isAudioEnabled()).toBeFalse();
+          expect(service.isAudioEnabled()).toBe(false);
         });
       });
     });
 
     describe('isBlurEnabled', () => {
       it('should return true when blur is enabled', () => {
-        service['virtualBackgroundProcessor'] = jasmine.createSpyObj('VirtualBackgroundProcessor', [], { enabled: true });
-        expect(service.isBlurEnabled()).toBeTrue();
+        service['virtualBackgroundProcessor'] = {
+          enabled: true
+        } as unknown as IVirtualBackgroundProcessor;
+        expect(service.isBlurEnabled()).toBe(true);
       });
     });
 
     describe('useVirtualBackground', () => {
       it('should return true when virtual background is enabled', () => {
         service['config'].useVirtualBackground = true;
-        expect(service.useVirtualBackground()).toBeTrue();
+        expect(service.useVirtualBackground()).toBe(true);
       });
 
       it('should return false when virtual background is disabled', () => {
         service['config'].useVirtualBackground = false;
-        expect(service.useVirtualBackground()).toBeFalse();
+        expect(service.useVirtualBackground()).toBe(false);
       });
     });
 
     describe('assignClientHandlers', () => {
       beforeEach(() => {
-        spyOn(service, 'endCall');
+        vi.spyOn(service, 'endCall');
 
         service['client'] = clientSpy;
         service['assignClientHandlers']();
@@ -454,7 +494,7 @@ describe('WebRtcService', () => {
         eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.MuteVideo);
 
         service.remoteStreamVideoToggle$.subscribe((state: boolean) => {
-          expect(state).toBeFalse();
+          expect(state).toBe(false);
         });
       });
 
@@ -462,7 +502,7 @@ describe('WebRtcService', () => {
         eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.UnmuteVideo);
 
         service.remoteStreamVideoToggle$.subscribe((state: boolean) => {
-          expect(state).toBeTrue();
+          expect(state).toBe(true);
         });
       });
 
@@ -470,7 +510,7 @@ describe('WebRtcService', () => {
         eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.MuteAudio);
 
         service.remoteStreamAudioToggle$.subscribe((state: boolean) => {
-          expect(state).toBeFalse();
+          expect(state).toBe(false);
         });
       });
 
@@ -478,7 +518,7 @@ describe('WebRtcService', () => {
         eventHandlers[ClientEvents.UserInfoUpdated]?.(uid, UserInfoUpdatedMessages.UnmuteAudio);
 
         service.remoteStreamAudioToggle$.subscribe((state: boolean) => {
-          expect(state).toBeTrue();
+          expect(state).toBe(true);
         });
       });
 
@@ -492,8 +532,8 @@ describe('WebRtcService', () => {
       it('should create local stream', async () => {
         const { audioTrack, videoTrack } = mockStreamTracks();
 
-        agoraRTC.createCameraVideoTrack.and.resolveTo(videoTrack);
-        agoraRTC.createMicrophoneAudioTrack.and.resolveTo(audioTrack);
+        agoraRTC.createCameraVideoTrack.mockResolvedValue(videoTrack);
+        agoraRTC.createMicrophoneAudioTrack.mockResolvedValue(audioTrack);
 
         await service['initLocalStream']();
         expect(service['localTracks']).toEqual({ audioTrack, videoTrack, screenTrack: undefined });
@@ -503,8 +543,8 @@ describe('WebRtcService', () => {
         const { audioTrack } = mockStreamTracks();
         const errorMsg = 'Cannot create video stream';
 
-        agoraRTC.createCameraVideoTrack.and.rejectWith(new Error(errorMsg));
-        agoraRTC.createMicrophoneAudioTrack.and.resolveTo(audioTrack);
+        agoraRTC.createCameraVideoTrack.mockRejectedValue(new Error(errorMsg));
+        agoraRTC.createMicrophoneAudioTrack.mockResolvedValue(audioTrack);
 
         service['initLocalStream']().catch(() => {
           service.streamState$.subscribe((state: StreamState) => {
@@ -565,8 +605,8 @@ describe('WebRtcService', () => {
     describe('initVirtualBackgroundProcessor', () => {
       it('should initialize virtual background processor', async () => {
         service['localTracks'] = mockStreamTracks();
-        service['localTracks'].videoTrack.pipe = jasmine.createSpy().and.returnValue({ pipe: () => undefined });
-        service['virtualBackgroundExtension'] = virtualBackgroundExtenstion;
+        service['localTracks'].videoTrack.pipe = vi.fn().mockReturnValue({ pipe: () => undefined });
+        service['virtualBackgroundExtension'] = virtualBackgroundExtension as unknown as IVirtualBackgroundExtension;
 
         await service['initVirtualBackgroundProcessor']();
 
@@ -579,12 +619,11 @@ describe('WebRtcService', () => {
   });
 
   describe('browser does not support WebRTC', () => {
-    it('should handle an error', (done: DoneFn) => {
-      agoraRTC.checkSystemRequirements.and.returnValue(false);
+    it('should handle an error', async () => {
+      agoraRTC.checkSystemRequirements.mockReturnValue(false);
 
       service['loadSDK']().catch((err: Error) => {
         expect(err.message).toBe('Web RTC is not supported in this browser');
-        done();
       });
     });
   });

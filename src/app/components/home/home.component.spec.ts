@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { VideoCallDialogService } from '@app/ngx-webrtc-lib';
-import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, of } from 'rxjs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { STORAGE } from '../../app.config';
 import { HomeComponent } from './home.component';
@@ -13,17 +13,25 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let formBuilder: UntypedFormBuilder;
-  let router: jasmine.SpyObj<Router>;
-  let localStorage: jasmine.SpyObj<Storage>;
-  let videoCallDialogService: jasmine.SpyObj<VideoCallDialogService>;
-  let cdr: jasmine.SpyObj<ChangeDetectorRef>;
+
+  const router = {
+    navigate: vi.fn(),
+  };
+
+  const localStorage = {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+  };
+
+  const videoCallDialogService = {
+    open: vi.fn(),
+  };
+
+  const cdr = {
+    markForCheck: vi.fn(),
+  };
 
   beforeEach(async () => {
-    router = jasmine.createSpyObj('Router', ['navigate']);
-    localStorage = jasmine.createSpyObj('Storage', ['getItem', 'setItem']);
-    videoCallDialogService = jasmine.createSpyObj('VideoCallDialogService', ['open']);
-    cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
-
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
       providers: [
@@ -51,6 +59,8 @@ describe('HomeComponent', () => {
     fixture = TestBed.createComponent(HomeComponent);
     formBuilder = TestBed.inject(UntypedFormBuilder);
     component = fixture.componentInstance;
+
+    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -59,13 +69,13 @@ describe('HomeComponent', () => {
 
   describe('get channelId', () => {
     it('should return default channelId', () => {
-      localStorage.getItem.and.returnValue(null);
+      localStorage.getItem(null);
       expect(component.channelId).toBe('test-channel-ngx-webrtc');
     });
 
     it('should return channelId taken from local storage', () => {
       const channelId = 'test-channel';
-      localStorage.getItem.and.returnValue(channelId);
+      localStorage.getItem.mockReturnValue(channelId);
 
       expect(component.channelId).toBe(channelId);
     });
@@ -96,50 +106,51 @@ describe('HomeComponent', () => {
     };
 
     beforeEach(() => {
-      spyOn(formBuilder, 'group').and.returnValue({ value: formData } as UntypedFormGroup);
+      vi.spyOn(formBuilder, 'group').mockReturnValue({ value: formData } as UntypedFormGroup);
       component.ngOnInit();
       component.onSubmit();
     });
 
     it('should save channelId to local storage', () => {
-      expect(localStorage.setItem).toHaveBeenCalledOnceWith('ngx-webrtc:channelId', formData.channelId);
+      expect(localStorage.setItem).toHaveBeenCalledWith('ngx-webrtc:channelId', formData.channelId);
     });
 
     it('should redirect to conference with query params', () => {
-      expect(router.navigate).toHaveBeenCalledOnceWith(
-        ['conference'],
-        { queryParams: { ...formData } },
-      );
+      expect(router.navigate).toHaveBeenCalledWith(['conference'], { queryParams: { ...formData } });
     });
   });
 
   describe('onModalOpen', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
     const getDialogData = (ms: number) => {
       return {
-        acceptCall: jasmine.createSpy(),
-        close: jasmine.createSpy(),
+        acceptCall: vi.fn(),
+        close: vi.fn(),
         afterConfirmation: () => of({}).pipe(delay(ms)),
         afterCallEnd: () => of(undefined).pipe(delay(ms)),
       } as any;
     };
 
     beforeEach(() => {
-      spyOn(component, 'saveChannel');
-      jasmine.clock().install();
+      vi.spyOn(component, 'saveChannel');
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should call "close" after 7 seconds', () => {
       const ms = 7000;
       const spy = getDialogData(ms);
 
-      videoCallDialogService.open.and.returnValue(spy);
+      videoCallDialogService.open.mockReturnValue(spy);
       component.onModalOpen();
 
-      jasmine.clock().tick(ms);
+      vi.advanceTimersByTime(ms);
       expect(spy.close).toHaveBeenCalled();
     });
 
@@ -147,10 +158,10 @@ describe('HomeComponent', () => {
       const ms = 5000;
       const spy = getDialogData(ms);
 
-      videoCallDialogService.open.and.returnValue(spy);
+      videoCallDialogService.open.mockReturnValue(spy);
       component.onModalOpen();
 
-      jasmine.clock().tick(ms);
+      vi.advanceTimersByTime(ms);
       expect(spy.close).not.toHaveBeenCalled();
       expect(component.dialog).toBeNull();
     });

@@ -1,8 +1,24 @@
 
+import { provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LocalStreamViewComponent } from './local-stream-view.component';
 
 describe('LocalStreamViewComponent', () => {
-  const component = new LocalStreamViewComponent();
+  let component: LocalStreamViewComponent;
+  let fixture: ComponentFixture<LocalStreamViewComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [LocalStreamViewComponent],
+      providers: [provideZonelessChangeDetection()],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(LocalStreamViewComponent);
+    component = fixture.componentInstance;
+
+    await fixture.whenStable();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -22,7 +38,7 @@ describe('LocalStreamViewComponent', () => {
 
   describe('onToggleBlur', () => {
     it('should emit blurEnabled', () => {
-      const toggleBlurSpy = spyOn(component.toggleBlur, 'emit');
+      const toggleBlurSpy = vi.spyOn(component.toggleBlur, 'emit');
       component.onToggleBlur();
 
       expect(toggleBlurSpy).toHaveBeenCalledWith(component.blurEnabled);
