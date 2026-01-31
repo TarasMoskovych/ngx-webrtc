@@ -1,38 +1,40 @@
 import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { beforeEach, describe, expect, it, Mocked, vi } from 'vitest';
 
+import { DEFAULT_STREAM_STATE } from './models';
 import { WebRtcService } from './services';
 import { WebRtcComponent } from './webrtc.component';
 
 describe('WebRtcComponent', () => {
   let component: WebRtcComponent;
   let fixture: ComponentFixture<WebRtcComponent>;
-  let cdr: jasmine.SpyObj<ChangeDetectorRef>;
-  let webRtcService: jasmine.SpyObj<WebRtcService>;
+  const cdr = {
+    markForCheck: vi.fn(),
+  };
+  let webRtcService: Mocked<WebRtcService>;
 
   beforeEach(async () => {
-    cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
-    webRtcService = jasmine.createSpyObj('WebRtcService', [
-      'init',
-      'deinit',
-      'isVideoEnabled',
-      'isAudioEnabled',
-      'isBlurEnabled',
-      'isScreenShared',
-      'toggleVideo',
-      'toggleAudio',
-      'toggleFullScreen',
-      'toggleBlur',
-      'toggleScreenShare',
-      'useVirtualBackground',
-      'endCall',
-    ], {
-      streamState$: of(null),
+    webRtcService = {
+      init: vi.fn(),
+      deinit: vi.fn(),
+      isVideoEnabled: vi.fn(),
+      isAudioEnabled: vi.fn(),
+      isBlurEnabled: vi.fn(),
+      isScreenShared: vi.fn(),
+      toggleVideo: vi.fn(),
+      toggleAudio: vi.fn(),
+      toggleFullScreen: vi.fn(),
+      toggleBlur: vi.fn(),
+      toggleScreenShare: vi.fn(),
+      useVirtualBackground: vi.fn(),
+      endCall: vi.fn(),
+      streamState$: of(DEFAULT_STREAM_STATE),
       remoteStreamVideoToggle$: of(false),
       localContainerId: 'local',
       remoteCalls: ['1', '2', '3'],
-    });
+    } as unknown as Mocked<WebRtcService>;
 
     await TestBed.configureTestingModule({
       imports: [WebRtcComponent],
@@ -65,14 +67,15 @@ describe('WebRtcComponent', () => {
 
   describe('onInitWebRtc', () => {
     beforeEach(() => {
-      spyOn(component.callEnd, 'emit');
-      spyOn(component, 'closeDialog');
-      webRtcService.init.and.returnValue(of(undefined));
+      vi.spyOn(component.callEnd, 'emit');
+      vi.spyOn(component, 'closeDialog');
+      webRtcService.init.mockReturnValue(of(undefined));
       component.onInitWebRtc();
     });
 
     it('should call "init" method with parameters', () => {
-      expect(webRtcService.init).toHaveBeenCalledOnceWith(component.uid, component.channel, component.token);
+      expect(webRtcService.init).toHaveBeenCalledTimes(1);
+      expect(webRtcService.init).toHaveBeenCalledWith(component.uid, component.channel, component.token);
     });
 
     it('should emit "callEnd" event after end state', () => {
@@ -101,68 +104,69 @@ describe('WebRtcComponent', () => {
     });
 
     it('should get cameraEnabled', () => {
-      webRtcService.isVideoEnabled.and.returnValue(true);
-      expect(component.cameraEnabled).toBeTrue();
+      webRtcService.isVideoEnabled.mockReturnValue(true);
+      expect(component.cameraEnabled).toBe(true);
     });
 
     it('should get microphoneEnabled', () => {
-      webRtcService.isAudioEnabled.and.returnValue(false);
-      expect(component.microphoneEnabled).toBeFalse();
+      webRtcService.isAudioEnabled.mockReturnValue(false);
+      expect(component.microphoneEnabled).toBe(false);
     });
 
     it('should get fullScreenEnabled', () => {
-      spyOnProperty(document, 'fullscreenElement').and.returnValue({} as Element);
-      expect(component.fullScreenEnabled).toBeTrue();
+      const fullscreenElement = vi.fn().mockReturnValueOnce(true);
+      Object.assign(document, { fullscreenElement });
+      expect(component.fullScreenEnabled).toBe(true);
     });
 
     it('should get blurEnabled', () => {
-      webRtcService.isBlurEnabled.and.returnValue(true);
-      expect(component.blurEnabled).toBeTrue();
+      webRtcService.isBlurEnabled.mockReturnValue(true);
+      expect(component.blurEnabled).toBe(true);
     });
 
     it('should get useVirtualBackground', () => {
-      webRtcService.useVirtualBackground.and.returnValue(true);
-      expect(component.useVirtualBackground).toBeTrue();
+      webRtcService.useVirtualBackground.mockReturnValue(true);
+      expect(component.useVirtualBackground).toBe(true);
     });
 
     it('should get screenShareEnabled', () => {
-      webRtcService.isScreenShared.and.returnValue(true);
-      expect(component.screenShareEnabled).toBeTrue();
+      webRtcService.isScreenShared.mockReturnValue(true);
+      expect(component.screenShareEnabled).toBe(true);
     });
   });
 
   describe('onToggleCamera', () => {
     it('should call "toggleVideo" method with correct value', () => {
       component.onToggleCamera(true);
-      expect(webRtcService.toggleVideo).toHaveBeenCalledOnceWith(true);
+      expect(webRtcService.toggleVideo).toHaveBeenCalledWith(true);
     });
   });
 
   describe('onToggleMicrophone', () => {
     it('should call "toggleAudio" method with correct value', () => {
       component.onToggleMicrophone(false);
-      expect(webRtcService.toggleAudio).toHaveBeenCalledOnceWith(false);
+      expect(webRtcService.toggleAudio).toHaveBeenCalledWith(false);
     });
   });
 
   describe('onToggleFullScreen', () => {
     it('should call "toggleFullScreen" method with correct value', () => {
       component.onToggleFullScreen(false);
-      expect(webRtcService.toggleFullScreen).toHaveBeenCalledOnceWith(false);
+      expect(webRtcService.toggleFullScreen).toHaveBeenCalledWith(false);
     });
   });
 
   describe('onToggleBlur', () => {
     it('should call "toggleBlur" method with correct value', () => {
       component.onToggleBlur(true);
-      expect(webRtcService.toggleBlur).toHaveBeenCalledOnceWith(true);
+      expect(webRtcService.toggleBlur).toHaveBeenCalledWith(true);
     });
   });
 
   describe('onToggleScreenShare', () => {
     it('should call "toggleScreenShare" method with correct value', async () => {
       await component.onToggleScreenShare(true);
-      expect(webRtcService.toggleScreenShare).toHaveBeenCalledOnceWith(true);
+      expect(webRtcService.toggleScreenShare).toHaveBeenCalledWith(true);
     });
   });
 
@@ -174,11 +178,11 @@ describe('WebRtcComponent', () => {
     });
 
     it('should invert "smallScreenEnabled" value', () => {
-      expect(component.smallScreenEnabled).toBeFalse();
+      expect(component.smallScreenEnabled).toBe(false);
     });
 
     it('should set "active" to true', () => {
-      expect(component.active).toBeTrue();
+      expect(component.active).toBe(true);
     });
   });
 

@@ -1,10 +1,22 @@
+import { provideZonelessChangeDetection } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ControlsComponent } from './controls.component';
 
 describe('ControlsComponent', () => {
   let component: ControlsComponent;
+  let fixture: ComponentFixture<ControlsComponent>;
 
-  beforeEach(() => {
-    component = new ControlsComponent();
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ControlsComponent],
+      providers: [provideZonelessChangeDetection()],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ControlsComponent);
+    component = fixture.componentInstance;
+
+    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -13,7 +25,7 @@ describe('ControlsComponent', () => {
 
   describe('onToggleCamera', () => {
     beforeEach(() => {
-      spyOn(component.toggleCamera, 'emit');
+      vi.spyOn(component.toggleCamera, 'emit');
     });
 
     it('should emit event', () => {
@@ -24,7 +36,7 @@ describe('ControlsComponent', () => {
 
   describe('onToggleMicrophone', () => {
     beforeEach(() => {
-      spyOn(component.toggleMicrophone, 'emit');
+      vi.spyOn(component.toggleMicrophone, 'emit');
     });
 
     it('should emit event', () => {
@@ -35,7 +47,7 @@ describe('ControlsComponent', () => {
 
   describe('onToggleFullScreen', () => {
     beforeEach(() => {
-      spyOn(component.toggleFullScreen, 'emit');
+      vi.spyOn(component.toggleFullScreen, 'emit');
     });
 
     it('should emit event', () => {
@@ -46,7 +58,7 @@ describe('ControlsComponent', () => {
 
   describe('onToggleSmallScreen', () => {
     beforeEach(() => {
-      spyOn(component.toggleSmallScreen, 'emit');
+      vi.spyOn(component.toggleSmallScreen, 'emit');
     });
 
     it('should emit event', () => {
@@ -57,7 +69,7 @@ describe('ControlsComponent', () => {
 
   describe('onToggleScreenShare', () => {
     beforeEach(() => {
-      spyOn(component.toggleScreenShare, 'emit');
+      vi.spyOn(component.toggleScreenShare, 'emit');
     });
 
     it('should emit event', () => {
@@ -68,7 +80,7 @@ describe('ControlsComponent', () => {
 
   describe('onEndCall', () => {
     beforeEach(() => {
-      spyOn(component.endCall, 'emit');
+      vi.spyOn(component.endCall, 'emit');
     });
 
     it('should emit event', () => {

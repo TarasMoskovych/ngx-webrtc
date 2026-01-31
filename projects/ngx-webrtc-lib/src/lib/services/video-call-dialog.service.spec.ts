@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { VideoCallComponent } from '../components';
 import { VideoCallDialog, VideoCallDialogData } from '../models';
@@ -8,10 +9,12 @@ import { VideoCallDialogService } from './video-call-dialog.service';
 
 describe('VideoCallDialogService', () => {
   let service: VideoCallDialogService;
-  let dialogService: jasmine.SpyObj<DialogService>;
+  const dialogService = {
+    open: vi.fn(),
+  };
 
   beforeEach(() => {
-    dialogService = jasmine.createSpyObj('DialogService', ['open']);
+    dialogService.open.mockReset();
 
     TestBed.configureTestingModule({
       providers: [
@@ -43,7 +46,7 @@ describe('VideoCallDialogService', () => {
 
     describe('accept', () => {
       beforeEach(() => {
-        dialogService.open.and.returnValue({
+        dialogService.open.mockReturnValue({
           afterClosed: new BehaviorSubject({ channel: data.channel }),
           onAcceptCall: () => undefined,
           closeDialog: () => undefined,
@@ -79,7 +82,7 @@ describe('VideoCallDialogService', () => {
 
     describe('decline', () => {
       beforeEach(() => {
-        dialogService.open.and.returnValue({
+        dialogService.open.mockReturnValue({
           afterClosed: new BehaviorSubject(null),
           onAcceptCall: () => undefined,
           closeDialog: () => undefined,
@@ -108,7 +111,7 @@ describe('VideoCallDialogService', () => {
 
       it('should be false on afterCallEnd', () => {
         publicAPI.afterCallEnd().subscribe((data: boolean) => {
-          expect(data).toBeFalse();
+          expect(data).toBe(false);
         });
       });
     });

@@ -107,36 +107,22 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "codeCoverage": true,
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "**/*",
-                "input": "./node_modules/ngx-webrtc-lib/src/assets/",
-                "output": "./assets/"
-              }
+            "coverage": true,
+            "progress": true,
+            "coverageReporters": [
+              "html",
+              "lcov"
             ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+            "coverageInclude": [
+              "src/app/**/*.ts"
             ],
-            "scripts": [],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src"
-              ]
-            }
-          },
-          "configurations": {
-            "ci": {
-              "browsers": "ChromeHeadlessCI",
-              "watch": false
+            "coverageThresholds": {
+              "statements": 80,
+              "branches": 80,
+              "functions": 80,
+              "lines": 80
             }
           }
         },
@@ -179,21 +165,25 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "codeCoverage": true,
-            "tsConfig": "projects/ngx-webrtc-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-webrtc-lib/karma.conf.js",
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src"
-              ]
-            }
-          },
-          "configurations": {
-            "ci": {
-              "browsers": "ChromeHeadlessCI",
-              "watch": false
+            "coverage": true,
+            "progress": true,
+            "coverageReporters": [
+              "html",
+              "lcov",
+              "json-summary"
+            ],
+            "coverageInclude": [
+              "projects/ngx-webrtc-lib/src/lib/**/*.ts",
+              "projects/ngx-webrtc-lib/src/lib/**/*.ts"
+
+            ],
+            "coverageThresholds": {
+              "statements": 80,
+              "branches": 80,
+              "functions": 80,
+              "lines": 80
             }
           }
         },

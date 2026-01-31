@@ -1,5 +1,6 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TimerComponent } from './timer.component';
 
 describe('TimerComponent', () => {
@@ -21,19 +22,19 @@ describe('TimerComponent', () => {
 
   describe('ngOnInit', () => {
     beforeEach(() => {
-      spyOn(Date, 'now').and.returnValue(100);
-      spyOn(component, 'format');
-      jasmine.clock().install();
+      vi.spyOn(Date, 'now').mockReturnValue(100);
+      vi.spyOn(component, 'format');
+      vi.useFakeTimers();
       component.ngOnInit();
     });
 
     afterEach(() => {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should call "format" value with correct data', () => {
       component.time$.subscribe();
-      jasmine.clock().tick(0);
+      vi.advanceTimersByTime(0);
 
       expect(component.format).toHaveBeenCalledWith(100);
     });

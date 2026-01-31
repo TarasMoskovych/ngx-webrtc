@@ -1,7 +1,7 @@
 import { Component, DOCUMENT, Input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DialogComponent } from '../components';
-
 import { DialogService } from './dialog.service';
 
 @Component({
@@ -43,14 +43,14 @@ describe('DialogService', () => {
 
     it('should destroy the component on "afterClosed"', () => {
       const instance = service.open(TestComponent);
-      jasmine.clock().install();
+      vi.useFakeTimers();
 
-      spyOn(service['appRef'], 'detachView');
+      vi.spyOn(service['appRef'], 'detachView');
       instance.afterClosed.next(undefined);
-      jasmine.clock().tick(500);
+      vi.advanceTimersByTime(500);
 
       expect(service['appRef'].detachView).toHaveBeenCalled();
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
   });
 });

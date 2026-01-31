@@ -1,25 +1,31 @@
 import { ChangeDetectorRef, provideZonelessChangeDetection } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { VideoCallComponent } from './video-call.component';
 
 describe('VideoCallComponent', () => {
   const audioSpy = {
-    play: jasmine.createSpy(),
-    pause: jasmine.createSpy(),
-    stop: jasmine.createSpy(),
-    load: jasmine.createSpy(),
-    remove: jasmine.createSpy(),
+    play: vi.fn(),
+    pause: vi.fn(),
+    stop: vi.fn(),
+    load: vi.fn(),
+    remove: vi.fn(),
   };
-  let cdr: jasmine.SpyObj<ChangeDetectorRef>;
+
+  const cdr = {
+    markForCheck: vi.fn().mockName("ChangeDetectorRef.markForCheck")
+  };
+
   let component: VideoCallComponent;
+  let fixture: ComponentFixture<VideoCallComponent>;
 
   beforeEach(async () => {
-    cdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
-
     await TestBed.configureTestingModule({
       imports: [VideoCallComponent],
       providers: [
         provideZonelessChangeDetection(),
+        provideNoopAnimations(),
         {
           provide: ChangeDetectorRef,
           useValue: cdr,
@@ -28,7 +34,8 @@ describe('VideoCallComponent', () => {
     })
       .compileComponents();
 
-    component = TestBed.createComponent(VideoCallComponent).componentInstance;
+    fixture = TestBed.createComponent(VideoCallComponent);
+    component = fixture.componentInstance;
   });
 
   beforeEach(() => {
@@ -42,8 +49,17 @@ describe('VideoCallComponent', () => {
       },
     };
 
-    spyOn(window, 'Audio').and.returnValue(audioSpy as any);
-    spyOn<any>(component, 'play').and.callThrough();
+    Object.assign(globalThis, {
+      Audio: class {
+        play = audioSpy.play;
+        pause = audioSpy.pause;
+        stop = audioSpy.stop;
+        load = audioSpy.load;
+        remove = audioSpy.remove;
+      }
+    });
+
+    vi.spyOn(component as any, 'play');
   });
 
   it('should create', () => {
@@ -92,13 +108,13 @@ describe('VideoCallComponent', () => {
 
   describe('onAcceptCall', () => {
     beforeEach(() => {
-      spyOn(component.afterClosed, 'next');
+      vi.spyOn(component.afterClosed, 'next');
       component.fullScreen = false;
       component.onAcceptCall();
     });
 
     it('should enable "fullScreen" mode', () => {
-      expect(component.fullScreen).toBeTrue();
+      expect(component.fullScreen).toBe(true);
     });
 
     it('should emit data outside', () => {
@@ -108,27 +124,25 @@ describe('VideoCallComponent', () => {
 
   describe('onDeclineCall', () => {
     beforeEach(() => {
-      spyOn(component, 'closeDialog');
+      vi.spyOn(component, 'closeDialog');
     });
 
     it('should play "cancel" sound', () => {
       component.onDeclineCall();
-      component.onDeclineCall();
-
       expect(component['play']).toHaveBeenCalledWith('assets/cancel.mp3');
     });
 
     it('should emit "closeDialog" after 200ms', () => {
-      jasmine.clock().install();
+      vi.useFakeTimers();
       component.onDeclineCall();
 
-      jasmine.clock().tick(500);
+      vi.advanceTimersByTime(500);
       expect(component.closeDialog).toHaveBeenCalled();
     });
 
     afterEach(() => {
       expect(audioSpy.play).toHaveBeenCalled();
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
   });
 });

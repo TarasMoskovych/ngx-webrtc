@@ -1,4 +1,7 @@
-@use "variables" as *;
+/** @TODO: https://github.com/angular/angular-cli/issues/30542
+ * Vitest does not support style preprocessor options for libraries.
+ */
+@use "../../../../src/variables.scss" as *;
 
 ngx-timer {
   display: block;
