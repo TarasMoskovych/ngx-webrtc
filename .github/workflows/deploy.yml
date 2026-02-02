@@ -23,7 +23,7 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/ngx-webrtc-lib/coverage-final.json
+          file: ./coverage/ngx-webrtc-lib/coverage-summary.json
           fail_ci_if_error: true
           verbose: true
       - name: Set env
