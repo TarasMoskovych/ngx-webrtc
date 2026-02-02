@@ -39,7 +39,7 @@ jobs:
       - name: Build package
         run: npm run build:lib
       - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v4
         with:
           token: ${{ secrets.NODE_AUTH_TOKEN }}
           package: dist/ngx-webrtc-lib/package.json
