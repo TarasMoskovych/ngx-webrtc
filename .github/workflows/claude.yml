@@ -30,6 +30,10 @@ jobs:
         with:
           fetch-depth: 1
 
+      # - name: Install Playwright browsers
+      #   if: github.event_name == 'issues' || github.event_name == 'issue_comment'
+      #   run: npx playwright install --with-deps chromium
+
       - name: Run Claude Code
         id: claude
         uses: anthropics/claude-code-action@v1
@@ -37,3 +41,7 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           additional_permissions: |
             actions: read
+          # claude_args: |
+          #   --mcp-config '{"mcpServers":{"playwright":{"command":"npx","args":["@playwright/mcp@latest","--headless","--isolated","--caps=vision,testing"]}}}'
+          #   --allowedTools "mcp__github_comment__update_claude_comment,mcp__github_ci__get_ci_status,mcp__playwright__browser_navigate,mcp__playwright__browser_click,mcp__playwright__browser_type,mcp__playwright__browser_snapshot,mcp__playwright__browser_take_screenshot,mcp__playwright__browser_wait_for"
+          # prompt: "${{ (github.event_name == 'issues' || github.event_name == 'issue_comment') && 'IMPORTANT: You MUST start by using the Playwright MCP tool for environment verification before doing anything else. Navigate to https://tarasmoskovych.github.io/ngx-webrtc/ and take a screenshot. Only after completing verification proceed to address the request.' || '' }}"
