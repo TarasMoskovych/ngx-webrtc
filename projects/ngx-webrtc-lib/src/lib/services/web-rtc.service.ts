@@ -57,6 +57,11 @@ export class WebRtcService {
         this.client = this.agoraRTC.createClient(CLIENT_CONFIG);
         this.assignClientHandlers();
 
+        if (!this.isValidAppID(this.config.AppID)) {
+          this.handleError(new Error('Agora App ID is missing or invalid. Please provide a valid App ID (1–2047 ASCII characters).'));
+          return this.callEnd.asObservable();
+        }
+
         this.initLocalStream().then(() => {
           this.client.join(this.config.AppID, channel, token || null, this.uid)
             .then(() => {
@@ -282,6 +287,10 @@ export class WebRtcService {
 
     this.localTracks.videoTrack.play(this.localContainerId);
     await this.client.publish(this.localTracks.videoTrack);
+  }
+
+  private isValidAppID(appId: string): boolean {
+    return typeof appId === 'string' && appId.length >= 1 && appId.length <= 2047 && /^[\x00-\x7F]+$/.test(appId);
   }
 
   private async unpublishLocalTrack(track: LocalTrack): Promise<void> {

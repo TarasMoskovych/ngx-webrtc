@@ -148,6 +148,20 @@ describe('WebRtcService', () => {
         });
       });
 
+      describe('invalid AppID', () => {
+        it('should handle error when AppID is empty', async () => {
+          service['config'].AppID = '';
+          const handleErrorSpy = vi.spyOn(service as any, 'handleError').mockImplementation(() => {});
+
+          service.init(uid, channel, null).subscribe();
+          await Promise.resolve();
+
+          expect(handleErrorSpy).toHaveBeenCalledWith(
+            new Error('Agora App ID is missing or invalid. Please provide a valid App ID (1–2047 ASCII characters).')
+          );
+        });
+      });
+
       describe('agora init', () => {
         it('should call "createClient" method with configs and token', async () => {
           const token = 'token_12345';
